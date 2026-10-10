@@ -1,0 +1,11 @@
+# secrets and private data
+.env
+leads.csv
+leads.csv.*
+tests/fixtures/.test-leads.csv
+out/
+node_modules/
+*.log
+
+# macOS
+.DS_Store
