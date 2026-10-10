@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Permaculture AI — Photograph your yard. Get a plan.</title>
+<style>
+  :root{
+    --paper:#f7f2e8; --ink:#22301e; --ink-soft:#5a6650; --rule:#cfc7b4;
+    --terra:#7a3b1d; --leaf:#3f6b3a; --paper-card:#fffdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+       background:var(--paper);color:var(--ink);line-height:1.62;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:820px;margin:0 auto;padding:0 26px}
+  header{border-bottom:1px solid var(--rule)}
+  .bar{display:flex;align-items:baseline;justify-content:space-between;padding:22px 0}
+  .brand{font-size:20px;letter-spacing:.04em}
+  .brand span{color:var(--terra)}
+  nav a{color:var(--ink-soft);text-decoration:none;margin-left:20px;font-size:14px;
+        letter-spacing:.06em;text-transform:uppercase;font-family:-apple-system,sans-serif}
+  nav a:hover{color:var(--terra)}
+  .hero{padding:64px 0 40px}
+  .kicker{font-family:-apple-system,sans-serif;font-size:12px;letter-spacing:.18em;
+          text-transform:uppercase;color:var(--terra);margin-bottom:18px}
+  h1{font-size:52px;line-height:1.08;font-weight:400;letter-spacing:-.015em}
+  h1 em{font-style:italic;color:var(--leaf)}
+  .lede{margin-top:20px;font-size:19px;color:var(--ink-soft);max-width:56ch}
+  .drop{margin:38px 0 10px;background:var(--paper-card);border:1px dashed var(--rule);
+        border-radius:2px;padding:34px;text-align:center}
+  .drop p{font-size:15px;color:var(--ink-soft);margin-bottom:14px}
+  button{font:inherit;cursor:pointer}
+  .btn{background:var(--terra);color:#fff;border:none;padding:13px 24px;border-radius:2px;
+       font-size:16px;letter-spacing:.02em}
+  .btn:hover{background:#5f2d14}
+  .btn.ghost{background:transparent;color:var(--terra);border:1px solid var(--terra)}
+  .note{font-family:-apple-system,sans-serif;font-size:12.5px;color:var(--ink-soft);margin-top:14px}
+  hr{border:none;border-top:1px solid var(--rule);margin:56px 0}
+  .hidden{display:none}
+  .sample{border:1px solid var(--rule);background:var(--paper-card);padding:26px;border-radius:2px}
+  .sample h3{font-weight:400;font-size:24px;margin-bottom:4px}
+  .sample .sub{font-family:-apple-system,sans-serif;font-size:13px;color:var(--ink-soft);
+               margin-bottom:20px}
+  .overlay{height:210px;border:1px solid var(--rule);background:
+    repeating-linear-gradient(135deg,#efe8d8,#efe8d8 12px,#e7dfcc 12px,#e7dfcc 24px);
+    display:flex;align-items:center;justify-content:center;font-family:-apple-system,sans-serif;
+    font-size:13px;color:var(--ink-soft);margin-bottom:22px}
+  ol.steps{list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;padding:11px 0 11px 44px;position:relative;
+              border-bottom:1px dotted var(--rule);font-size:16px}
+  ol.steps li:before{content:"(" counter(s) ")";position:absolute;left:0;top:11px;
+    font-family:-apple-system,sans-serif;font-size:12px;color:var(--terra);letter-spacing:.05em}
+  .tag{display:inline-block;font-family:-apple-system,sans-serif;font-size:10.5px;
+       letter-spacing:.12em;text-transform:uppercase;color:var(--leaf);border:1px solid var(--leaf);
+       padding:1px 6px;border-radius:2px;margin-right:8px;vertical-align:1px}
+  .window{margin-top:24px;border-top:2px solid var(--ink);padding-top:16px}
+  .window h4{font-family:-apple-system,sans-serif;font-size:12px;letter-spacing:.14em;
+             text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px}
+  .rows{display:flex;flex-wrap:wrap;gap:8px 26px;font-size:15px}
+  .rows b{font-weight:400;color:var(--terra)}
+  .offer{margin-top:44px;background:#efe8d8;border-left:3px solid var(--terra);padding:24px 26px}
+  .offer h3{font-weight:400;font-size:22px;margin-bottom:8px}
+  .offer p{font-size:16px;color:var(--ink-soft);margin-bottom:16px}
+  footer{padding:44px 0 60px;font-family:-apple-system,sans-serif;font-size:13px;color:var(--ink-soft)}
+  @media(max-width:640px){h1{font-size:36px}.hero{padding:44px 0 30px}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="brand">Permaculture <span>AI</span></div>
+  <nav><a href="#tool">The tool</a><a href="#run">The Preservation Run</a></nav>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="kicker">Wiscasset, Maine · for the yard you actually have</div>
+    <h1>Photograph your yard.<br>Get a <em>planting plan</em>.</h1>
+    <p class="lede">Send one photo. We sketch the beds, the paths and the water, label them
+      by number, and tell you what to put where — and when it will come in.</p>
+
+    <div class="drop" id="tool">
+      <p>Drop a photo of the space — phone shots are fine.</p>
+      <button class="btn" id="go">Choose a photo</button>
+      <p class="note">Free. Runs on our own machine. We don't keep your photo.</p>
+    </div>
+
+    <section id="sample" class="hidden" style="margin-top:34px">
+      <div class="sample">
+        <h3>Your plan — north bed, morning sun</h3>
+        <div class="sub">3 beds · 11 crops · estimated from your photo</div>
+        <div class="overlay">[ numbered overlay of your photo renders here ]</div>
+        <ol class="steps">
+          <li><span class="tag">Plant</span>'Sungold' tomato on 3 ft centers, basil between — bed 1, south edge.</li>
+          <li><span class="tag">Soil</span>Sheet-mulch the north strip this fall; skip the tiller.</li>
+          <li><span class="tag">Water</span>One soaker line down the middle of bed 1. Deep, twice a week.</li>
+          <li><span class="tag">Build</span>Cold frame at the west end, hinged south. Reuse the storm window.</li>
+          <li><span class="tag">Harvest</span>Sow Provider beans every 14 days from June 1 to keep the gap closed.</li>
+        </ol>
+        <div class="window">
+          <h4>Your preservation window</h4>
+          <div class="rows">
+            <div>Beans <b>Jul 12</b></div><div>Zucchini <b>Jul 20</b></div>
+            <div>Garlic <b>Jul 25</b></div><div>Tomatoes <b>Aug 1</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="offer" id="run">
+      <h3>The Preservation Run</h3>
+      <p>Because forty pounds of tomatoes land in ten days, and that is the part nobody plans for.
+        A canning, freezing and cellaring schedule built around your own harvest dates. $29 when
+        it's ready.</p>
+      <button class="btn ghost" id="wait">Join the list</button>
+    </section>
+  </section>
+  <hr>
+  <footer>Permaculture AI · a concept sketch, not construction drawings · Maine, zone 5b–6a
+    (confirm your own frost dates)</footer>
+</div>
+
+<script>
+  document.getElementById('go').addEventListener('click', function(){
+    var s = document.getElementById('sample');
+    s.classList.remove('hidden');
+    this.textContent = 'Choose another photo';
+    s.scrollIntoView({block:'start'});
+  });
+  document.getElementById('wait').addEventListener('click', function(){
+    this.textContent = 'On the list ✓';
+  });
+</script>
+</body>
+</html>

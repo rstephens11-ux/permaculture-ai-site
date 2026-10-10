@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Permaculture AI — yard plan generator</title>
+<style>
+  :root{
+    --bg:#12171a; --panel:#1a2126; --panel2:#212a30; --line:#2e3a42;
+    --fg:#dfe7ea; --dim:#8a9aa3; --accent:#7fd18a; --warn:#e0a862;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--fg);line-height:1.5;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+       -webkit-font-smoothing:antialiased}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .top{display:flex;justify-content:space-between;align-items:center;
+       border-bottom:1px solid var(--line);padding:12px 20px;font-size:13px}
+  .top .brand{letter-spacing:.08em;text-transform:uppercase}
+  .top .brand b{color:var(--accent)}
+  .top .status{color:var(--dim)}
+  .top .status i{color:var(--accent);font-style:normal}
+  .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:0;min-height:calc(100vh - 98px)}
+  .left{padding:26px 22px;border-right:1px solid var(--line)}
+  .right{padding:26px 22px;background:var(--panel)}
+  h1{font-size:27px;font-weight:600;letter-spacing:-.01em;margin-bottom:8px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--dim);font-size:14.5px;max-width:52ch;margin-bottom:22px}
+  label.field{display:block;font-family:ui-monospace,monospace;font-size:11px;
+              letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin:18px 0 7px}
+  .inbox{border:1px dashed var(--line);background:var(--panel);border-radius:4px;
+         padding:26px;text-align:center;font-size:14px;color:var(--dim)}
+  .inbox strong{display:block;color:var(--fg);font-size:15px;margin-bottom:4px}
+  .row{display:flex;gap:10px;align-items:center;margin-top:16px}
+  input[type=text]{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--fg);
+    padding:11px 12px;border-radius:3px;font:inherit;font-size:14px}
+  input[type=text]:focus{outline:none;border-color:var(--accent)}
+  button{font:inherit;cursor:pointer}
+
+  .btn{background:var(--accent);color:#0f1512;border:none;padding:11px 20px;border-radius:3px;
+       font-weight:600;font-size:14px}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.alt{background:transparent;color:var(--accent);border:1px solid var(--accent);font-weight:500}
+  .hint{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--dim);margin-top:10px}
+  .hint.warn{color:var(--warn)}
+
+  .queue{margin-top:20px;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .queue .qh{padding:9px 12px;background:var(--panel2);font-family:ui-monospace,monospace;
+             font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+             display:flex;justify-content:space-between}
+  .queue .qb{padding:14px 12px;font-size:14px}
+  .bar{height:5px;background:var(--panel2);border-radius:3px;margin-top:12px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent)}
+  .bar i.go{width:72%}
+  .hidden{display:none}
+  .pad{padding:14px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);
+       font-family:ui-monospace,monospace;font-size:12px;color:var(--dim);line-height:1.7}
+  .pad b{color:var(--accent);font-weight:400}
+  .pad .k{color:var(--fg)}
+  .shot{height:190px;margin:14px 0;border:1px solid var(--line);border-radius:4px;
+    background:repeating-linear-gradient(45deg,#1d252a,#1d252a 10px,#222c32 10px,#222c32 20px);
+    display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:12px}
+  ul.plan{list-style:none;margin-top:8px}
+  ul.plan li{padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;display:flex;gap:10px}
+  ul.plan li span{font-family:ui-monospace,monospace;font-size:10.5px;color:var(--accent);
+                  min-width:58px;text-transform:uppercase;letter-spacing:.08em;padding-top:2px}
+  .win{margin-top:16px;padding:14px;border:1px solid var(--line);border-left:3px solid var(--warn);
+       border-radius:3px;background:var(--panel2)}
+  .win h4{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.12em;
+          text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+  .win .cells{display:flex;gap:8px;flex-wrap:wrap}
+  .cell{border:1px solid var(--line);border-radius:3px;padding:7px 10px;font-size:13px}
+  .cell b{color:var(--warn);font-weight:500;display:block;font-family:ui-monospace,monospace;font-size:12px}
+  .cta{margin-top:16px;padding:14px;border:1px dashed var(--accent);border-radius:4px;font-size:13.5px}
+  .cta strong{color:var(--accent)}
+  .cta button{margin-top:10px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.left{border-right:none;
+    border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div class="top mono">
+  <div class="brand"><b>Permaculture AI</b> / yard-plan</div>
+  <div class="status">engine: <i>forge · qwen-image 2.1 edit</i> · queue: idle</div>
+</div>
+
+<div class="grid">
+  <div class="left">
+    <h1>Upload a photo → <span>get a plan</span></h1>
+    <p class="sub">One photo of the space. Out comes a numbered overlay and a seasonal step list,
+      plus the harvest window for what you plant. Runs locally — nothing leaves the property except
+      the photo, which is not stored.</p>
+
+    <label class="field" for="f">1 — the space</label>
+    <div class="inbox" id="drop">
+      <strong>Drop a photo here</strong>
+      or choose a file · jpg/png · max 6 MB
+    </div>
+
+    <label class="field" for="em">2 — where to send the plan</label>
+    <div class="row">
+      <input type="text" id="em" placeholder="you@example.com" value="">
+      <button class="btn" id="go">Generate plan</button>
+    </div>
+    <p class="hint">One free plan per person per day. If the machine is busy, you keep your place
+      in line and we email it when it's done.</p>
+
+    <div class="queue hidden" id="q">
+      <div class="qh"><span>job queue</span><span id="qs">waiting…</span></div>
+      <div class="qb">
+        <div>Position <b>2</b> of 3 · est. wait <b>~4 min</b></div>
+        <div class="bar"><i id="pb"></i></div>
+        <div class="hint">Dry run — no GPU was harmed. Sample output on the right.</div>
+      </div>
+    </div>
+
+    <p class="hint warn" style="margin-top:18px">Concept sketch only. Not construction drawings,
+      not a survey, not a frost-date guarantee.</p>
+  </div>
+
+  <div class="right">
+    <div class="mono" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+         color:var(--dim);margin-bottom:12px">output · sample</div>
+
+    <div class="pad">
+      <div><span class="k">job</span> 7f3a91 · <span class="k">engine</span> qwen_image_2.1 <b>i2i</b>
+        · <span class="k">refs</span> 1</div>
+      <div><span class="k">elapsed</span> 38s · <span class="k">crops</span> 11 · <span class="k">beds</span> 3</div>
+    </div>
+
+    <div class="shot">[ overlay render — numbered labels on your photo ]</div>
+
+    <ul class="plan">
+      <li><span>Plant</span>'Sungold' tomato, 3 ft centers, basil between. Bed 1, south edge.</li>
+      <li><span>Soil</span>Sheet-mulch the north strip this fall. Skip the tiller.</li>
+      <li><span>Water</span>One soaker line, middle of bed 1. Deep, twice a week.</li>
+      <li><span>Build</span>Cold frame, west end, hinged south. Reuse the storm window.</li>
+      <li><span>Harvest</span>Beans every 14 days from June 1 — keeps the gap closed.</li>
+    </ul>
+
+    <div class="win">
+      <h4>preservation window</h4>
+      <div class="cells">
+        <div class="cell">beans<b>Jul 12</b></div>
+        <div class="cell">zucchini<b>Jul 20</b></div>
+        <div class="cell">garlic<b>Jul 25</b></div>
+        <div class="cell">tomatoes<b>Aug 01</b></div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <strong>The Preservation Run</strong> — $29, when it's ready. Forty pounds of tomatoes land in
+      ten days; this is the schedule for that week.
+      <div><button class="btn alt" id="wait">Join the list</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var go = document.getElementById('go');
+  go.addEventListener('click', function(){
+    var q = document.getElementById('q');
+    q.classList.remove('hidden');
+    document.getElementById('qs').textContent = 'running';
+    document.getElementById('pb').classList.add('go');
+    go.textContent = 'Queued ✓';
+  });
+  document.getElementById('wait').addEventListener('click', function(){
+    this.textContent = 'On the list ✓';
+  });
+</script>
+</body>
+</html>

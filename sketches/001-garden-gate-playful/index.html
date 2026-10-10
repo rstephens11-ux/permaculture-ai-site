@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Permaculture AI — plan your patch</title>
+<style>
+  :root{
+    --cream:#fffdf6; --ink:#20301c; --leaf:#2f7a3f; --leaf-dark:#225c2f;
+    --carrot:#e8871e; --berry:#c2455e; --sky:#cfe6f2; --line:#20301c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;background-image:
+      radial-gradient(circle at 12% 8%, #f2f7e6 0 22%, transparent 23%),
+      radial-gradient(circle at 92% 4%, #fdf1de 0 18%, transparent 19%)}
+  .wrap{max-width:900px;margin:0 auto;padding:0 24px}
+  header{padding:20px 0}
+  .bar{display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
+  .brand .dot{width:26px;height:26px;border:2.5px solid var(--line);border-radius:9px;
+    background:var(--leaf);display:inline-flex;align-items:center;justify-content:center;
+    color:#fff;font-size:14px}
+  .pill{border:2px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13.5px;
+        font-weight:600;background:#fff;text-decoration:none;color:var(--ink);cursor:pointer}
+  .pill:hover{background:var(--sky)}
+  .hero{padding:26px 0 10px;position:relative}
+  h1{font-size:46px;line-height:1.07;letter-spacing:-.02em;font-weight:800;max-width:20ch}
+  h1 mark{background:linear-gradient(transparent 58%, #ffe08a 58%);padding:0 3px}
+  .lede{margin-top:16px;font-size:18px;color:#4a5a44;max-width:46ch}
+  .tool{margin-top:28px;border:2.5px solid var(--line);border-radius:18px;background:#fff;
+        box-shadow:6px 6px 0 var(--line);padding:26px;display:grid;
+        grid-template-columns:1fr 1fr;gap:24px}
+  .drop{border:3px dashed #b9c9b0;border-radius:14px;padding:30px 20px;text-align:center;
+        background:#f7fbf2;cursor:pointer}
+  .drop:hover{border-color:var(--leaf);background:#eef7e6}
+  .drop .big{font-size:34px;line-height:1;margin-bottom:8px}
+  .drop b{display:block;font-size:17px;margin-bottom:4px}
+  .drop small{color:#6b7a63;font-size:13px}
+  .fld{margin-top:12px}
+  .fld input{width:100%;border:2.5px solid var(--line);border-radius:12px;padding:12px 14px;
+    font:inherit;font-size:15px;background:#fff}
+  .fld input:focus{outline:none;border-color:var(--leaf);box-shadow:3px 3px 0 var(--leaf)}
+  .btn{background:var(--leaf);color:#fff;border:2.5px solid var(--line);border-radius:12px;
+       padding:13px 22px;font:inherit;font-size:16px;font-weight:700;cursor:pointer;
+       box-shadow:4px 4px 0 var(--line);width:100%;margin-top:12px}
+  .btn:hover{background:var(--leaf-dark);transform:translate(1px,1px);box-shadow:3px 3px 0 var(--line)}
+  .fine{font-size:12.5px;color:#7b8a72;margin-top:10px;text-align:center}
+  .budget{border-left:3px solid var(--carrot);padding-left:12px;font-size:13px;color:#8a7a63;
+          margin-top:14px}
+  .hidden{display:none}
+  .sticker{position:absolute;right:8px;top:14px;transform:rotate(7deg);background:#fff;
+    border:2.5px solid var(--line);border-radius:12px;padding:9px 13px;font-weight:700;font-size:13px;
+    box-shadow:4px 4px 0 var(--carrot)}
+  .out{margin-top:30px;border:2.5px solid var(--line);border-radius:18px;background:#fff;
+       padding:24px;box-shadow:6px 6px 0 var(--sky)}
+  .out h3{font-size:24px;font-weight:800;margin-bottom:4px}
+  .out .sub{color:#6b7a63;font-size:14px;margin-bottom:18px}
+  .pic{height:190px;border:2.5px solid var(--line);border-radius:14px;margin-bottom:18px;
+    background:repeating-linear-gradient(135deg,#eef7e6,#eef7e6 14px,#e3f0d6 14px,#e3f0d6 28px);
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b7a63}
+  .steps{display:grid;gap:10px}
+  .step{display:flex;gap:12px;align-items:flex-start;border:2px solid #dfe8d8;border-radius:12px;
+        padding:11px 13px;background:#fcfefa}
+  .num{flex:none;width:26px;height:26px;border-radius:50%;background:var(--carrot);color:#fff;
+       border:2px solid var(--line);font-weight:800;font-size:13px;display:flex;
+       align-items:center;justify-content:center}
+  .step .tx{font-size:15px}
+  .step .tx em{display:block;font-style:normal;font-size:12.5px;color:#7b8a72;margin-top:2px}
+  .win{margin-top:22px;border:2.5px dashed var(--berry);border-radius:16px;padding:18px;background:#fff6f8}
+  .win h4{font-size:15px;font-weight:800;color:var(--berry);margin-bottom:12px;
+          text-transform:uppercase;letter-spacing:.06em;font-size:12.5px}
+  .chips{display:flex;gap:9px;flex-wrap:wrap}
+  .chip{border:2px solid var(--line);border-radius:999px;padding:7px 13px;font-size:14px;background:#fff}
+  .chip b{color:var(--berry)}
+  .offer{margin-top:34px;border:2.5px solid var(--line);border-radius:18px;padding:26px;
+         background:#fff9e9;box-shadow:6px 6px 0 var(--carrot)}
+  .offer h3{font-size:26px;font-weight:800;margin-bottom:8px}
+  .offer p{font-size:16px;color:#5b6a53;max-width:52ch}
+  .offer .btn{width:auto;margin-top:16px}
+  .pick{margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pick div{border:2px solid #dfe8d8;border-radius:14px;padding:14px;background:#fcfefa;
+            font-size:14px}
+  .pick b{display:block;margin-bottom:4px}
+  footer{padding:40px 0 60px;color:#7b8a72;font-size:13px}
+  @media(max-width:780px){.tool{grid-template-columns:1fr}h1{font-size:34px}
+    .sticker{display:none}.pick{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <div class="brand"><span class="dot">✿</span> Permaculture AI</div>
+  <div class="pill" id="nav">The Preservation Run →</div>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="sticker">1 photo in<br>1 plan out</div>
+    <h1>Plan your patch from a <mark>single photo</mark>.</h1>
+    <p class="lede">Drop in a picture of your yard, garden or that sad strip behind the shed.
+      Back comes a numbered planting plan — what goes where, what to do first — and when it'll
+      all come in.</p>
+
+    <div class="tool" id="tool">
+      <div>
+        <div class="drop" id="drop">
+          <div class="big">📷</div>
+          <b>Drop a photo here</b>
+          <small>or tap to choose · jpg / png · phone shots are perfect</small>
+        </div>
+        <div class="fld"><input id="em" placeholder="your@email.com"></div>
+        <button class="btn" id="go">Grow me a plan 🌱</button>
+        <div class="fine">Free · no account · we don't keep your photo</div>
+        <div class="budget">Busy machine? You keep your spot in line and we email the plan when
+          it's your turn.</div>
+      </div>
+      <div>
+        <div class="pic" style="height:100%;min-height:200px">[ your photo, numbered and labelled ]</div>
+      </div>
+    </div>
+
+    <div class="out hidden" id="out">
+      <h3>Your patch — north bed, morning sun</h3>
+      <div class="sub">3 beds · 11 crops · built from your photo</div>
+      <div class="pic">[ overlay with (1) (2) (3) … on your own photo ]</div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><div class="tx">Plant 'Sungold' tomato on 3 ft centers,
+          basil between.<em>plant · bed 1, south edge</em></div></div>
+        <div class="step"><div class="num">2</div><div class="tx">Sheet-mulch the north strip this fall.
+          Skip the tiller.<em>soil</em></div></div>
+        <div class="step"><div class="num">3</div><div class="tx">One soaker line down the middle of bed 1.
+          Deep, twice a week.<em>water</em></div></div>
+        <div class="step"><div class="num">4</div><div class="tx">Cold frame at the west end, hinged
+          south.<em>build</em></div></div>
+        <div class="step"><div class="num">5</div><div class="tx">Sow beans every 14 days from June 1
+          to keep the gap closed.<em>harvest</em></div></div>
+      </div>
+      <div class="win">
+        <h4>Your preservation window</h4>
+        <div class="chips">
+          <div class="chip">beans <b>Jul 12</b></div>
+          <div class="chip">zucchini <b>Jul 20</b></div>
+          <div class="chip">garlic <b>Jul 25</b></div>
+          <div class="chip">tomatoes <b>Aug 1</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer" id="run">
+      <h3>The Preservation Run</h3>
+      <p>Forty pounds of tomatoes land in ten days. That's the week that breaks people. A canning,
+        freezing and cellaring schedule built on your own harvest dates. $29 when it's ready.</p>
+      <button class="btn" id="wait">Join the list</button>
+    </div>
+
+    <div class="pick">
+      <div><b>Free, and stays free</b>One plan a day. One photo. No account, no card.</div>
+      <div><b>Runs on our own machine</b>Your photo is processed and dropped. We don't keep it.</div>
+      <div><b>Honest about what it is</b>A concept sketch — not construction drawings or a survey.</div>
+    </div>
+  </section>
+  <footer>Permaculture AI · Wiscasset, Maine · Maine zone 5b–6a (confirm your own frost dates)</footer>
+</div>
+
+<script>
+  document.getElementById('go').addEventListener('click', function(){
+    var o = document.getElementById('out');
+    o.classList.remove('hidden');
+    this.textContent = 'Plan delivered ✓';
+    o.scrollIntoView({block:'start'});
+  });
+  document.getElementById('drop').addEventListener('click', function(){
+    this.querySelector('b').textContent = 'garden-north-bed.jpg ✓';
+  });
+  document.getElementById('wait').addEventListener('click', function(){
+    this.textContent = 'On the list ✓';
+  });
+</script>
+</body>
+</html>
