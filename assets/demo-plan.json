@@ -1,0 +1,144 @@
+{
+  "plan_image_url": "assets/img/sample-plan.jpg",
+  "engine": "mock",
+  "steps": [
+    {
+      "category": "PLANT",
+      "description": "Mark the beds. (1) tomato bed: Tomato on 3 ft centers, basil and marigold between.",
+      "plantVarieties": [
+        "'Sungold' or 'Juliet' tomato (a cherry and a paste type together)",
+        "Basil",
+        "Marigold"
+      ],
+      "companionPlants": [
+        "basil",
+        "marigold",
+        "carrot",
+        "parsley"
+      ],
+      "wateringNeeds": "Deep soak twice a week; keep leaves dry to slow blight."
+    },
+    {
+      "category": "SOIL",
+      "description": "Sheet-mulch the paths and any new ground this fall — cardboard, then compost, then whatever the town will give you. Skip the tiller; the worms do the work.",
+      "plantVarieties": [],
+      "companionPlants": [],
+      "wateringNeeds": ""
+    },
+    {
+      "category": "WATER",
+      "description": "One soaker line down the middle of the tomato bed. Deep and infrequent beats a daily sprinkle. Water at the base, deeply, once or twice a week.",
+      "plantVarieties": [],
+      "companionPlants": [],
+      "wateringNeeds": "Water at the base, deeply, once or twice a week."
+    },
+    {
+      "category": "BUILD",
+      "description": "Cold frame at the west end for the kale — hinge it south, reuse a storm window. Planted in October, harvested the following July — the one crop you plant for next year.",
+      "plantVarieties": [
+        "Winterbor kale"
+      ],
+      "companionPlants": [
+        "onion",
+        "potato",
+        "beet",
+        "marigold"
+      ],
+      "wateringNeeds": "Steady moisture; tolerates less than most brassicas."
+    },
+    {
+      "category": "HARVEST",
+      "description": "Sow the bush bean every 14 days from a week after last frost — that 14-day stagger is what keeps August from becoming one impossible week.",
+      "plantVarieties": [
+        "Provider bush bean"
+      ],
+      "companionPlants": [
+        "beet",
+        "carrot",
+        "cucumber",
+        "marigold"
+      ],
+      "wateringNeeds": "Even moisture while flowering and podding; drought = stringy pods."
+    }
+  ],
+  "harvest_window": [
+    {
+      "crop": "tomato",
+      "name": "Tomato",
+      "known": true,
+      "season": "summer",
+      "year": 2027,
+      "plant_estimate": "2027-06-07",
+      "window_open": "2027-08-06",
+      "window_close": "2027-08-31",
+      "confidence": "estimate",
+      "note": "60–85 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; crop notes from University of Maine Cooperative Extension bulletins on home vegetable production."
+    },
+    {
+      "crop": "bush-bean",
+      "name": "Bush bean",
+      "known": true,
+      "season": "summer",
+      "year": 2027,
+      "plant_estimate": "2027-06-07",
+      "window_open": "2027-07-27",
+      "window_close": "2027-08-06",
+      "confidence": "estimate",
+      "note": "50–60 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
+    },
+    {
+      "crop": "zucchini",
+      "name": "Zucchini / summer squash",
+      "known": true,
+      "season": "summer",
+      "year": 2027,
+      "plant_estimate": "2027-06-07",
+      "window_open": "2027-07-22",
+      "window_close": "2027-08-01",
+      "confidence": "estimate",
+      "note": "45–55 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
+    },
+    {
+      "crop": "kale",
+      "name": "Kale",
+      "known": true,
+      "season": "cool",
+      "year": 2027,
+      "plant_estimate": "2027-05-31",
+      "window_open": "2027-07-20",
+      "window_close": "2027-08-04",
+      "confidence": "estimate",
+      "note": "50–65 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
+    },
+    {
+      "crop": "garlic",
+      "name": "Garlic",
+      "known": true,
+      "season": "overwinter",
+      "year": 2026,
+      "plant_estimate": "2026-10-21",
+      "window_open": "2027-05-19",
+      "window_close": "2027-06-28",
+      "confidence": "estimate",
+      "note": "210–250 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
+    }
+  ],
+  "glut": {
+    "open": "2027-07-20",
+    "close": "2027-08-31",
+    "crops": 4,
+    "next_season": [
+      {
+        "name": "Garlic",
+        "planted": "2026-10-21",
+        "window_open": "2027-05-19"
+      }
+    ]
+  },
+  "concept_disclaimer": "Concept sketch only — not construction drawings, not a survey, and not a guarantee of what will grow."
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan my yard — Permaculture AI</title>
+<meta name="description" content="Drop in a photo of your yard and get a numbered planting plan, a step list and a harvest window. Free, one plan a day, runs on our own machine.">
+<link rel="icon" href="assets/img/favicon.svg">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<header class="site"><div class="wrap bar">
+  <a class="brand" href="index.html"><span class="dot">✿</span> Permaculture AI</a>
+  <nav>
+    <a class="pill quiet" href="product.html">The Preservation Run</a>
+  </nav>
+</div></header>
+
+<main>
+<section class="section"><div class="wrap">
+  <h1 style="font-size:clamp(28px,4vw,38px)">Drop in a photo.</h1>
+  <p class="lede">One plan per person per day — the machine that draws these is a single graphics card
+    in a workshop in Maine, not a data centre.</p>
+
+  <form id="tool-form" class="grid2" style="margin-top:24px" novalidate>
+    <div>
+      <div class="drop" id="drop">
+        <div class="big">📷</div>
+        <b>Drop a photo here</b>
+        <small>or tap to choose · jpg / png / webp · under 6 MB</small>
+      </div>
+      <input id="file" type="file" accept="image/jpeg,image/png,image/webp" class="hidden">
+      <img id="thumb" class="preview hidden" style="margin-top:14px" alt="The photo you chose">
+
+      <label class="fld"><span>your email (optional — for when the machine is busy)</span>
+        <input id="email" type="email" placeholder="you@example.com" autocomplete="email"></label>
+
+      <label class="fld"><span>your zip (optional — sets your harvest dates)</span>
+        <input id="zip" type="text" inputmode="numeric" placeholder="04578"></label>
+
+      <button id="go" class="btn wide" type="submit" disabled>Grow me a plan 🌱</button>
+      <p class="fine">We don't keep your photo. It's read, drawn on, and dropped.</p>
+      <p class="fine"><a href="plan.html#demo">See a finished plan first →</a></p>
+      <p id="status" class="status"></p>
+
+      <div id="queue" class="queuebox hidden">
+        <div class="row"><span>the machine</span><span id="qrow">estimating…</span></div>
+        <div class="pos" id="qpos">Working…</div>
+        <div id="qmsg" class="fine"></div>
+        <div class="progress"><i id="qbar"></i></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card flat" style="padding:18px">
+        <div class="kicker">what happens next</div>
+        <ol style="margin-left:18px;font-size:15px">
+          <li>Your photo goes to our own machine — nothing is sent to a cloud AI.</li>
+          <li>It draws the beds, paths and water onto your photo and numbers them.</li>
+          <li>You get the drawing, five steps in order, and the window each crop lands in.</li>
+        </ol>
+        <p class="fine">If the machine is asleep or mid-render, you keep your place in line and the page
+          says so. Nothing is lost.</p>
+      </div>
+    </div>
+  </form>
+</div></section>
+
+<section class="section hidden" id="result"><div class="wrap narrow">
+  <div class="kicker">your plan</div>
+  <h2 id="result-title">Your patch</h2>
+  <p id="result-demo-note" class="notice hidden" style="margin-bottom:16px">
+    <strong>This is a real plan, already drawn</strong> — from the photo of the yard on the home page.
+    Yours will follow your own space. <a href="plan.html">Send a photo of yours →</a>
+  </p>
+  <div class="shot"><img id="result-shot" alt="Your yard, redrawn as a numbered planting plan."></div>
+  <p class="fine" id="result-disclaimer"></p>
+
+  <div class="steps" id="result-steps"></div>
+
+  <div class="win">
+    <h4>your preservation window</h4>
+    <div class="chips" id="result-window"></div>
+    <p class="glut" id="result-glut"></p>
+  </div>
+
+  <div class="card warm" style="margin-top:26px">
+    <h3>The week that window opens is the hard part</h3>
+    <p>Everything arrives at once. <strong>The Preservation Run</strong> is the schedule for that week —
+      what to can, what to freeze, what to cellar, in what order, so none of it goes to the compost.
+      $29 when it's ready.</p>
+    <p style="margin-top:14px"><a class="btn carrot" href="product.html">Join the list</a></p>
+  </div>
+</div></section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <div class="finelinks">
+    <a href="index.html">Home</a><a href="product.html">The Preservation Run</a>
+    <a href="terms.html">Terms</a><a href="privacy.html">Privacy</a>
+  </div>
+  <p class="fine">Concept sketch only — not construction drawings, not a survey, and not a guarantee of
+    what will grow. Dates are estimates; confirm your own frost dates.</p>
+</div></footer>
+
+<script src="assets/js/tool.js"></script>
+</body>
+</html>
