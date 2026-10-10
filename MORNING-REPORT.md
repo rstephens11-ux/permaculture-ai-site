@@ -50,6 +50,32 @@ $ curl -s localhost:8099/api/health
 `forge: "up"` is a live probe of forge:8188. With `ENGINE=forge` the same endpoint is what drives the
 status line on the public page.
 
+### End to end over HTTP, with a real 1 MB photo
+
+```
+$ curl -s -X POST localhost:8097/api/plan -H 'content-type: application/json' -d @out/req.json
+{"job_id":"926ac596-ef5","state":"queued","position":1,"eta_seconds":45,"remaining_today":24}
+
+$ curl -s localhost:8097/api/plan/926ac596-ef5
+state: done   engine: mock
+steps: PLANT,SOIL,WATER,BUILD,HARVEST
+windows: Tomato 2027-08-06 | Bush bean 2027-07-27 | Zucchini Jul 22 | Kale Jul 20 | Garlic 2027-05-19
+glut: 2027-07-20 -> 2027-08-31 | next season: Garlic, planted 2026-10-21, off 2027-05-19
+image: 1029 KB data url returned inline
+disclaimer: Concept sketch only — not construction drawings, not a sur...
+
+$ cat out/e2e-leads.csv
+email,source,zip,created_at,note
+ryan@example.com,plan,04578,2026-10-10T06:20:58Z,submitted a photo
+
+$ (same photo again, same IP)
+HTTP 429  {"error":"per_ip_cap","message":"One free plan per person per day — the
+           machine only has so many hours."}
+```
+
+Note the dates: **2027**, not 2026 — October is past tomato season, so the plan correctly rolls to next
+year rather than handing a visitor harvest dates in the past.
+
 ### The forge smoke test — **PASS**
 
 ```
