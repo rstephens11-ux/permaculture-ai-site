@@ -135,8 +135,17 @@ label.fld span { display: block; font-family: var(--font-mono); font-size: 11px;
 .notes { margin-left: 18px; font-size: 14.5px; }
 .notes li { margin-bottom: 6px; }
 
+/* the two drawings, stacked: the illustration first, then the plan, full width so it stays readable */
+.drawings { display: grid; grid-template-columns: 1fr; gap: 30px; margin: 16px 0 20px; }
+.drawing { margin: 0; }
+.drawing .shot { margin-bottom: 0; }
+.drawing .shot canvas { display: block; width: 100%; height: auto; }
+.mixrow { display: flex; align-items: center; gap: 10px; margin: 10px 0 8px; }
+.mixrow input[type="range"] { flex: 1; accent-color: var(--leaf); }
+.drawing figcaption { margin-top: 8px; }
+.tagline { font-size: 17px; font-weight: 600; margin: 4px 0 16px; }
+
 /* the layout drawing — ours, to scale */
-.diagramwrap { margin: 18px 0 10px; }
 .diagram { border: 2.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #fffdf6; }
 .diagram svg { display: block; max-width: 100%; height: auto; }
 .sketch { margin-top: 22px; border-top: 2px dotted var(--rule); padding-top: 12px; }

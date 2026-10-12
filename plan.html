@@ -136,13 +136,39 @@
 
   <p id="result-frost" class="frostline hidden"></p>
 
-  <div class="diagramwrap">
-    <div class="diagram" id="result-diagram"></div>
-    <p class="fine" id="result-diagram-caption"></p>
+  <p class="tagline">Two drawings come out of this: your own yard in illustration, and your beds
+    actually laid out to scale.</p>
+
+  <div class="drawings">
+    <figure class="drawing">
+      <div class="kicker">1 · your yard, illustrated</div>
+      <div class="shot"><canvas id="overlay-canvas" aria-label="Your photo with an illustrated version of the same yard drawn over it."></canvas></div>
+      <div class="mixrow">
+        <span class="fine">photo</span>
+        <input type="range" id="overlay-mix" min="0" max="100" value="60"
+               aria-label="How much of the illustration shows over your photo">
+        <span class="fine">illustration</span>
+      </div>
+      <figcaption class="fine">Drag the slider left and the real photo comes back. The illustration
+        is redrawn from your picture and holds its layout — the fence, the paths, the beds — but it is
+        <em>not</em> asked for any numbers or labels. Those live in drawing 2.</figcaption>
+      <div class="actions">
+        <a class="btn small" id="download-sketch" href="#">Download the drawing (PNG)</a>
+      </div>
+    </figure>
+
+    <figure class="drawing">
+      <div class="kicker">2 · your beds, to scale</div>
+      <div class="diagram" id="result-diagram"></div>
+      <figcaption class="fine" id="result-diagram-caption"></figcaption>
+      <div class="actions">
+        <a class="btn small" id="download-plan-png" href="#">Download the plan (PNG)</a>
+        <a class="btn small" id="download-plan-svg" href="#">Download the plan (SVG)</a>
+      </div>
+    </figure>
   </div>
+
   <div class="actions">
-    <a class="btn small hidden" id="download-plan-png" href="#">Download the plan (PNG)</a>
-    <a class="btn small hidden" id="download-plan-svg" href="#">Download the plan (SVG)</a>
     <a class="btn small carrot hidden" id="calendar-btn" href="#">Add the harvest window to your calendar</a>
   </div>
   <p class="fine" id="result-disclaimer"></p>
@@ -150,14 +176,6 @@
   <div id="result-beds" class="bedlist hidden"></div>
 
   <div class="steps" id="result-steps"></div>
-
-  <details class="sketch" id="sketch-block">
-    <summary>An artist's sketch of your yard <span class="muted">— decorative, not the plan</span></summary>
-    <div class="shot"><img id="result-shot" alt="A stylised illustration of your yard, drawn from your photo."></div>
-    <p class="fine">The model that draws this is good at <em>style</em> and unreliable at <em>information</em>, so it isn't
-      asked for any: the layout is the drawing above, which we generate from your own numbers. Use
-      <strong>Download the plan</strong> for the one to take outside.</p>
-  </details>
 
   <div class="win">
     <h4>your preservation window</h4>
