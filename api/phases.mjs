@@ -78,7 +78,7 @@ export function buildPhases(opts) {
   const {
     cropList = [], geometry = "coleman_30", bedCount = 1, existing = "unsure",
     frost = {}, year = new Date().getUTCFullYear(), windows = [], glut = null, sun = "full",
-    layout = null
+    layout = null, bedPlan = null
   } = opts;
 
   const g = GEOMETRIES[geometry] || GEOMETRIES.coleman_30;
@@ -191,14 +191,16 @@ export function buildPhases(opts) {
       {
         text: `Bed geometry: ${g.label}. ${g.why}`
       },
-      // Bed by bed, because that is what you carry to the garden — and because the drawing beside this
-      // is built from the same numbers, so the picture and the text cannot drift apart.
-      ...((layout && layout.beds) || []).map((b) => ({
-        tag: `bed ${b.n}`,
-        text: `Bed ${b.n}${b.length_ft ? ` (${b.length_ft} ft long)` : ""}: ${(b.segments || [])
-          .map((s) => `${s.name} ${s.print}${s.tall ? " (tall — north end)" : ""}`)
-          .join(" · then ")}.`
-      })),
+      // Bed by bed, and NUMBERED — the same numbers that are printed on the drawing from the same
+      // allocation, so a number on the picture and a line in the plan can never describe different crops.
+      ...((bedPlan || []).map((b) => ({
+        tag: `bed ${b.bed}`,
+        text: b.text
+      }))),
+      {
+        text: "The numbered badges on the drawing match these numbers, one crop run each.",
+        tag: "the drawing"
+      },
 
       {
         text: rotation.clashes.length

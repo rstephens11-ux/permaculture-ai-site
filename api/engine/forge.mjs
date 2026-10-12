@@ -41,6 +41,21 @@ const CLIENT_ID = "permaculture-ai-" + randomUUID().slice(0, 8);
 // do what it is good at, and draw the numbered markers ourselves where we control every position.
 const OVERLAY_DENOISE = Number(process.env.FORGE_DENOISE || 1.0);
 
+/**
+ * THE MASK PROMPT — the one thing this model is asked to do for a visitor now.
+ *
+ * Measured 2026-10-12, same photo, 1K/25 steps: asked to PAINT the plan onto the photo, it redraws 44% of
+ * the background (26.1 mean pixel change outside the beds) — a convincing lie, not our photograph. Asked
+ * for a two-colour SEGMENTATION MAP instead, it returns a clean black-and-white mask whose white regions
+ * are exactly the raised beds. So it locates, and we draw. See tools/overlay experiments and BLOCKERS.md.
+ */
+export const MASK_PROMPT = [
+  "A flat two-colour segmentation map of this photograph.",
+  "The wooden raised garden beds are pure white.",
+  "Everything else — the fence, the trees, the ground, the sky, the gravel and any animal or person —",
+  "is pure black. Hard edges, no grey, no shading, no outlines, no gradients, no text."
+].join(" ");
+
 export function buildGraph({ imageName, imageNames, prompt, seed = 0, steps = 25, resolution = 1024, denoise = OVERLAY_DENOISE }) {
   const refs = (imageNames && imageNames.length ? imageNames : [imageName]).filter(Boolean);
   const graph = {

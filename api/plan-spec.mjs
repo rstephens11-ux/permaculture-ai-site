@@ -120,17 +120,24 @@ export function buildPlan(opts = {}) {
   // list all read from it, so the picture and the words cannot disagree.
   const rotation = rotationCheck(cropList);
   const layout = assignBeds(cropList, { geometry, bedCount });
-  const bedPlan = layout.beds.map((b) => ({
-    bed: b.n,
-    length_ft: b.length_ft,
-    text: `Bed ${b.n}: ` + b.segments
-      .map((s) => `${s.name} ${s.print}${s.tall ? " (tall — north end)" : ""}`)
-      .join(" · then ") + ".",
-    segments: b.segments.map((s) => ({
-      crop: s.crop, name: s.name, family: s.family, print: s.print,
-      length_ft: s.length_ft, spacing_in: s.spacing_in, note: s.note, tall: !!s.tall
-    }))
-  }));
+  // Every crop run gets a NUMBER, in bed order, and that number is what goes on the drawing, in the bed
+  // list and in the phase steps. Ryan's ask: "they should label accordingly to the step plans". One
+  // running number, assigned here, is the only way the three can't disagree.
+  let runNo = 0;
+  const bedPlan = layout.beds.map((b) => {
+    const numbered = b.segments.map((s) => Object.assign({}, s, { no: ++runNo }));
+    return {
+      bed: b.n,
+      length_ft: b.length_ft,
+      text: `Bed ${b.n}: ` + numbered
+        .map((s) => `${s.no}. ${s.name} ${s.print}${s.tall ? " (tall — north end)" : ""}`)
+        .join(" · then ") + ".",
+      segments: numbered.map((s) => ({
+        no: s.no, crop: s.crop, name: s.name, family: s.family, print: s.print,
+        length_ft: s.length_ft, spacing_in: s.spacing_in, note: s.note, tall: !!s.tall
+      }))
+    };
+  });
   const windows = windowsFor(ids, scope);
   const glut = glutWindow(ids, scope);
 
@@ -143,7 +150,7 @@ export function buildPlan(opts = {}) {
 
   // --- the season plan --------------------------------------------------------------------------
   const phases = buildPhases({
-    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun, layout
+    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun, layout, bedPlan
   });
 
   // --- the drawing: an illustration of the ground, with no numbers to get wrong ------------------

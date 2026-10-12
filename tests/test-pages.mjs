@@ -32,7 +32,11 @@ test("the overlay renderer places plants by real spacing and finds its own posit
   const src = readFileSync(new URL("../assets/js/overlay.js", import.meta.url), "utf8");
   assert.match(src, /function findGround/, "it locates the plantable ground in the photo");
   assert.match(src, /groundScore/, "with an explicit ground heuristic");
-  assert.match(src, /largest-rectangle-under-a-histogram/, "and squares off the biggest usable region");
+  assert.match(src, /Biggest rectangle of plantable ground/, "and squares off the biggest usable region");
+  assert.match(src, /function bedPolysFromMask/, "and finds the beds the mask says are there");
+  assert.match(src, /function plantSegment/, "planting each crop run at its real spacing");
+  assert.match(src, /function fillBed/, "filling the bed with the generated texture");
+  assert.match(src, /function numberBadge/, "and numbering the crop runs");
   // sprite paths are derived from the script's own URL, not the page's — a page loaded from /out/ or a
   // moved page silently fell back to placeholder markers before this
   assert.match(src, /SITE_BASE = SCRIPT_SRC\.replace\(/, "it draws the generated sprite sheet");

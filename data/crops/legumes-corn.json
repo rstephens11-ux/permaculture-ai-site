@@ -1,0 +1,182 @@
+[
+  {
+    "id": "pole-bean",
+    "name": "Pole bean",
+    "label": "bean trellis",
+    "kind": "legume",
+    "family": "Fabaceae",
+    "days_to_maturity": [60, 75],
+    "min_frost_free_days": 85,
+    "succession_days": 14,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 16,
+      "note": "one 8 ft row up a 6–8 ft trellis panel or net at the north edge of the bed, one plant per 6 in"
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 6,
+      "note": "single row against a trellis panel set at the north edge; Fedco sows 3–4 in apart along fencing, UMaine's wide-row hills run 24 in — 6 in is the bed middle ground"
+    },
+    "method": "direct",
+    "start_inside_weeks": 0,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Mexican bean beetle (defoliates; UMaine), halo blight / bean mosaic / rust in a wet year (choose resistant varieties per UMaine #2190), and skimpy germination from sowing into cold wet soil — wait for 60°F ground",
+    "companions": ["sweet-corn", "sunflower"],
+    "watering": "Even moisture from flowering to pod set; a dry spell then drops blossoms and turns pods stringy.",
+    "method_notes": "Coleman runs his rotation on legumes — beans and peas fix the nitrogen the heavy feeders spend — and trellises the vining ones so the bed face stays in full sun. Grow pole beans up a 6–8 ft panel at the bed's north edge (Fedco: fencing, plants 3–4 in apart), succession-sow every 2–3 weeks so flushes bridge instead of glutting (UMaine), and pick every few days: a plant left with mature pods stops producing. Inoculate with bean/pea Rhizobium the first time a bed grows beans (Fedco/UMaine).",
+    "source": "UMaine Cooperative Extension planting chart (pole beans 5/15–6/15 central ME, 24-in hills, ~12 lbs/10 ft); UMaine Bulletin #2190 (pole varieties: Blue Lake strains, Fortex, Kentucky Blue, Scarlet Runner); UMaine Bulletin #4311 (Mexican bean beetle, 3-week succession plantings); Fedco pole bean culture (6–8 ft fencing, 3–4 in apart, inoculate); Johnny's Fortex (60 days, trellis required) and Johnny's pole-bean video (55–65 days typical); Eliot Coleman, The New Organic Grower (3rd ed.) — 30-in bed/12-in path system, trellised legumes in rotation."
+  },
+  {
+    "id": "snow-pea",
+    "name": "Snow pea",
+    "label": "pea trellis",
+    "kind": "legume",
+    "family": "Fabaceae",
+    "days_to_maturity": [55, 65],
+    "min_frost_free_days": 65,
+    "succession_days": 14,
+    "season": "cool",
+    "planting": {
+      "unit": "row_feet",
+      "per_4x8": 16,
+      "note": "two 8 ft rows up a trellis at the north edge of the bed, seeds 2 in apart"
+    },
+    "bed30": {
+      "rows": 2,
+      "in_row_in": 2,
+      "note": "two rows 12 in apart, both climbing a trellis/net at the north edge; UMaine sows peas 1–2 in apart in rows 18–36 in apart — the bed version tightens row spacing"
+    },
+    "method": "direct",
+    "start_inside_weeks": 0,
+    "cold": true,
+    "shade": "part",
+    "watch_for": "Pea aphid spreading pea enation mosaic virus (yellowed, stunted, crinkled plants — the single worst pea disease), powdery mildew in a humid June (pick mildew-resistant types like Oregon Sugar Pod II), birds pulling seedlings — net or row-cover",
+    "companions": ["carrot", "radish", "turnip"],
+    "watering": "Even moisture at flowering; wet feet rot the vines off in a cool spring, so don't overwater.",
+    "method_notes": "The earliest real harvest of the year — sow as soon as the soil can be worked (UMaine: 4/15+ in central ME, 10–14 days earlier on the coast). Trellis from sowing day: Coleman's Four-Season Harvest design (posts plus netting) keeps 38-in vines upright, doubles the yield per bed foot and makes picking easy. Harvest flat, before the seeds swell — overmature peas turn starchy and stop the plant. Follow with a warm-season crop, or sow again for fall (MOFGA: August 1) under a row cover.",
+    "source": "UMaine Cooperative Extension planting chart (peas 1–2 in apart, 4/15–7/15 central ME; coastal 10–14 days earlier); UMaine Bulletin #4256 (snow peas as edible-pod type); UMaine pea-fall-crop answer (MOFGA Aug 1 fall sowing; see UMaine Bulletin #2752 on season extension); Johnny's Oregon Sugar Pod II (60 days, 38-in vines, mildew/PEMV-resistant class); Eliot Coleman, Four-Season Harvest (pea trellis design)."
+  },
+  {
+    "id": "fava-bean",
+    "name": "Fava bean",
+    "label": "fava rows",
+    "kind": "legume",
+    "family": "Fabaceae",
+    "days_to_maturity": [75, 90],
+    "min_frost_free_days": 90,
+    "succession_days": 0,
+    "season": "cool",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 32,
+      "note": "two 8 ft rows across the bed, one plant per 6 in; sturdy stems need no support"
+    },
+    "bed30": {
+      "rows": 2,
+      "in_row_in": 6,
+      "note": "two rows 12 in apart; MOFGA sows 6–8 in apart in drills at least 12 in apart (2–3 rows per 4.5 ft bed), Fedco sows 3–4 in apart"
+    },
+    "method": "direct",
+    "start_inside_weeks": 0,
+    "cold": true,
+    "shade": "no",
+    "watch_for": "Black bean aphid (Aphis fabae) colonies on growing tips in cool damp springs — pinch infested tips; chocolate spot (Botrytis fabae) in humid spells — space for airflow, don't overhead-water; rust (Uromyces viciae-fabae) by July",
+    "companions": ["beet", "spinach"],
+    "watering": "Steady moisture through flowering and pod set — favas are 'sensitive to heat and drought at flowering' (Fedco OGS) and will drop pods.",
+    "method_notes": "The fertility engine before the heat: favas fix nitrogen in cool soil when Phaseolus beans can't even germinate, and they thrive 40–60°F (MOFGA). Sow 'as early as peas' (Fedco) — soil just thawed, mid-to-late April on the midcoast. Whole plants (small-seeded 'bell bean' favas) can be turned in at flowering as a frost-hardy green manure — Coleman's rotation leans on exactly this legume-to-heavy-feeder turnover. In Maine fall-sown favas winterkill at 10–15°F (Fedco OGS), so treat this as an early-spring crop, not an overwintered one. Pick at green-shell stage; beans you can't squeeze out of the membrane are over-the-hill. In midcoast zone 5b/6a, sow in April and harvest before the July heat (MOFGA harvest timing: after asparagus, before shell peas).",
+    "source": "MOFGA 'Fava Beans' (sow as soil thaws, 6–8 in apart, drills ≥12 in apart, 2–3 rows per 4.5 ft bed, thrice 40–60°F; Bonsall/Thorkildsen bed-edge greens); Fedco Windsor Fava (sow 3–4 in apart 'as early as peas', green-shell harvest; veggie chart: 'ASAP, min germination 40°'); Fedco Organic Growers Supply Bell Beans (frost-hardy winter annual; winterkills at 10–15°F; drops blossoms over 70°F — spring crop in ME); AHDB field-bean guide & field-bean IPM review (black bean aphid, chocolate spot Botrytis fabae, rust Uromyces viciae-fabae); Eliot Coleman, The New Organic Grower (3rd ed.) — legumes as the rotation's fertility engine."
+  },
+  {
+    "id": "edamame",
+    "name": "Edamame",
+    "label": "edamame block",
+    "kind": "legume",
+    "family": "Fabaceae",
+    "days_to_maturity": [75, 90],
+    "min_frost_free_days": 100,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 32,
+      "note": "two 8 ft rows, one plant per 6 in; compact 2 ft bushes need no support, single main sowing for coastal Maine"
+    },
+    "bed30": {
+      "rows": 2,
+      "in_row_in": 6,
+      "note": "two rows 12–15 in apart; UMaine/Mid-Atlantic field spacing is 2–4 in within 30–36 in rows — 6 in suits a bed"
+    },
+    "method": "direct",
+    "start_inside_weeks": 0,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Soybean aphid late in the season (UMD/Mid-Atlantic thresholds: 250 per plant through pod set), deer browsing the row, and seed rot from sowing into cold wet soil — wait for 60°F ground",
+    "companions": ["sweet-corn"],
+    "watering": "Even moisture from bloom to pod fill; a dry spell at pod set cuts seeds per pod.",
+    "method_notes": "A warm-soil legume: direct-sow after frost when the soil hits 60°F — late May on the midcoast — or seed rots (UMD; getgrowli/Maine tables agree). Inoculate with soybean Bradyrhizobium the first year in ground new to soybeans (UMD). Fedco's Chiba (83 days) is the Maine-reliable pick; Shirofumi and Tankuro run 90–91. The flush is concentrated and the harvest window at green-pod stage is only days before beans harden, so one main sowing beats succession here. MOFGA's Will Bonsall plants edamame among the sweet corn to double row-foot yield — a good use of the bed edge. Pick when pods are plump and bright green.",
+    "source": "Fedco edamame (Chiba 83 d, Shirofumi 91 d, Tankuro 90 d; sow after frost); UMD Extension / Mid-Atlantic Commercial Veg Recommendations edamame factsheet (varieties 75–87 d incl. Midori Giant 75, Chiba Green 82; rows 30–36 in, seeds 2–4 in apart ≤1/2 in deep; inoculate Bradyrhizobium; soybean aphid threshold); MOFGA 'Grow Edamame' (Bonsall interplants with sweet corn); UMaine Grains, Pulses & Oilseeds soybean notes."
+  },
+  {
+    "id": "popcorn",
+    "name": "Popcorn",
+    "label": "popcorn block",
+    "kind": "grain",
+    "family": "Poaceae",
+    "days_to_maturity": [95, 110],
+    "min_frost_free_days": 120,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 24,
+      "note": "a block, not a row — a 4x8 holds four short rows of six; better still, three adjacent beds or a corner of the garden"
+    },
+    "bed30": {
+      "rows": 2,
+      "in_row_in": 8,
+      "note": "corn is wind-pollinated and needs a block — three or more adjacent 30 in beds minimum, or grow it as a patch elsewhere; within a bed, two rows 12 in apart at 6–8 in (Johnny's: 6–7 in, blocks of ≥4 rows)"
+    },
+    "method": "direct",
+    "start_inside_weeks": 0,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Corn earworm at silk, raccoons the night it's ready, and a wet cool fall that stalls dry-down — in coastal Maine pick varieties that finish under 110 days including drying (UMaine)",
+    "companions": ["pole-bean", "winter-squash"],
+    "watering": "Heavy drinker from tassel through grain fill; drought then means poor fill and weak popping.",
+    "method_notes": "Corn is wind-pollinated: grow it in a block (Johnny's: at least 4 rows) or the ears are all chaff. UMaine's Maine-specific rule for popcorn: choose varieties that mature in under 110 days including drying down to ~20% kernel moisture (Strawberry, Cherry Berry, Perdue 410, Gourmet Mushroom, Top Pop, Dakota Black), because wet falls stall the cure. Let ears dry on the stalk until husks rattle, finish curing under cover, and test-pop before storing (Johnny's: ideal 13–14.5% moisture). Heavy nitrogen feeder — plant it behind a legume bed in the rotation.",
+    "source": "UMaine Extension Ask-the-Expert 'What is the best type of popcorn to grow in Maine?' (varieties <110 days incl. dry-down to ~20% moisture; 'very thirsty'); Johnny's dry/ornamental corn growing info (sow ¾–1 in deep, 6–7 in apart, blocks of ≥4 rows for pollination; harvest hard glossy kernels, cure to 13–14.5% moisture, test-pop); Fedco corn culture (min soil 55–60°F, frost-tender, heavy N); Sand Hill Preservation popcorn catalog (varieties 80–125 days); Cornell/Wisconsin popcorn notes (maturity before frost = popping quality)."
+  },
+  {
+    "id": "sunflower",
+    "name": "Sunflower",
+    "label": "seed heads",
+    "kind": "seed",
+    "family": "Asteraceae",
+    "days_to_maturity": [90, 110],
+    "min_frost_free_days": 120,
+    "succession_days": 14,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 6,
+      "note": "one row down the middle of the bed, six plants at 18 in — confection types want room for one big head each"
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 18,
+      "note": "single row down the middle; 18 in between plants for large seed heads (UMaine oilseed rate ≈30,000/ac; tall seed types like Mammoth prefer 18–24 in)"
+    },
+    "method": "either",
+    "start_inside_weeks": 2,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Birds (goldfinches and friends) strip ripe heads — bag them as they mature; deer eat the foliage (UMaine); downy mildew in a wet year — choose resistant types",
+    "companions": ["pole-bean"],
+    "watering": "Deep weekly soak while the head forms; moisture stress at bloom cuts seed set.",
+    "method_notes": "Direct-sow after the last frost, or start 2–3 weeks inside (UMaine). For edible seed grow confection types (Mammoth Grey Stripe, Russian Mammoth — 90–110 days), not pollenless cut-flower hybrids. Succession-plant a couple of sowings 2–3 weeks apart to stretch the harvest (UMaine). Seed is ready when the head back turns lemon-yellow and the seeds show black-and-white striping (K-State), roughly 30–45 days after petals drop — cut, dry, then thresh. Fedco says Will Bonsall grows pole beans up sunflower stalks: give the sunflowers a two-week head start, about 2 bean seeds per stalk. Beyond its own harvest it is the garden's best bee pasture.",
+    "source": "UMaine Extension Q&A 'Growing sunflowers' (direct seed after last frost or start 2–3 wks inside; 50–95 d to maturity per packet; succession plantings late June–mid July; deer love them); UMaine SARE oilseed sunflower profile (May planting, ~30,000 seeds/ac); Fedco pole-bean culture (Bonsall: pole beans on sunflower stalks, 2-week head start, 2 seeds per stalk); Univ. of Minnesota Extension (70–120 d to bloom; most mature 85–95 d; mammoth types to 110+); Kansas State (maturity cues: lemon-yellow head back, black-and-white striped seed); trade/ext seed guides (Russian Mammoth ~105 d)."
+  }
+]

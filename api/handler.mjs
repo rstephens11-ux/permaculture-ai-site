@@ -10,6 +10,7 @@
 //     email they chose to give. No fingerprinting, no third-party anything.
 
 import { makeEngine } from "./engine/index.mjs";
+import { MASK_PROMPT } from "./engine/forge.mjs";
 import { makeQueue } from "./queue.mjs";
 import { makeLimiter } from "./ratelimit.mjs";
 import { makeLeadStore, validEmail } from "./leads.mjs";
@@ -40,7 +41,6 @@ function readImages(body) {
 export function createApi({
   engineName = process.env.ENGINE || "mock",
   engineOpts = {},
-  renderIllustration = null,
   leadStorePath = process.env.LEAD_STORE || "./leads.csv",
   gateStorePath = process.env.GATE_STORE || "./gate.json",
   limiter = makeLimiter({
@@ -55,14 +55,10 @@ export function createApi({
   maxDepth = Number(process.env.QUEUE_MAX || 6),
   log = () => {}
 } = {}) {
-  // A visit is deterministic by default: plan text, layout drawing and plant overlay are all built from
-  // the crop table, so there is nothing to wait for and nothing to pay for. The illustration engine is
-  // only wired in when it is explicitly asked for (RENDER_ILLUSTRATION=yes, or renderIllustration:true
-  // in tests).
-  const withIllustration = renderIllustration == null
-    ? (process.env.RENDER_ILLUSTRATION || "no") === "yes"
-    : !!renderIllustration;
-  const engine = makeEngine(withIllustration ? engineName : "none", { log, ...engineOpts });
+  // The engine's one job for a visitor is finding the BEDS: a segmentation mask, which the overlay then
+  // fills and plants. It is optional by design — the queue delivers the plan without a mask if the GPU is
+  // asleep, and the overlay falls back to laying the plan over the open ground.
+  const engine = makeEngine(engineName, { log, ...engineOpts });
   const queue = makeQueue({ engine, maxDepth, log });
   const leads = makeLeadStore(leadStorePath);
   const counters = { plans_total: 0, plans_with_email: 0, product_views: 0, email_unlocks: 0, started: new Date().toISOString() };
@@ -170,7 +166,8 @@ export function createApi({
       images: images.map((i) => ({ b64: i.b64, mime: i.mime })),
       imageB64: images[0].b64,
       mime: images[0].mime,
-      prompt: spec.prompt,
+      prompt: MASK_PROMPT,      // find the beds; the drawing of the plan is ours
+      optional: true,           // a plan without a mask still beats no plan
       spec
     });
     if (!enq.accepted) {
@@ -225,8 +222,11 @@ export function createApi({
         json: {
           state: "done",
           engine: v.result.engine,
-          // No illustration is the normal case now — the two drawings are ours.
-          plan_image_data_url: v.result.imageB64 ? `data:${v.result.mime};base64,${v.result.imageB64}` : null,
+          // The mask the overlay draws the beds from. Null when the machine was asleep or the render
+          // failed — the page then lays the plan over the open ground instead.
+          mask_data_url: v.result.imageB64 ? `data:${v.result.mime};base64,${v.result.imageB64}` : null,
+          mask_note: v.result.note || null,
+          plan_image_data_url: null,      // the per-photo illustration is retired
           phases: spec ? spec.phases : [],
           bed_plan: spec ? spec.bed_plan : [],
           layout: spec ? spec.layout : null,

@@ -54,6 +54,21 @@ export function makeQueue({ engine, maxDepth = 6, log = () => {}, pollMs = 1500 
         }
 
         if (!(await engine.available())) {
+          // An OPTIONAL job is an enhancement, not the deliverable: if the machine is down, hand back the
+          // plan without it rather than holding someone's place for a mask they never asked for.
+          if (job.input.optional) {
+            job.waited = (job.waited || 0) + pollMs;
+            if (job.waited > (job.input.optionalGraceMs || 15000)) {
+              job.result = {
+                engine: engine.name, mime: "image/png", imageB64: null,
+                spec: job.input.spec, note: "drawn without the machine — it was offline"
+              };
+              job.state = "done";
+              job.finished = Date.now();
+              log(`job ${job.id} delivered without a mask — machine offline`);
+              continue;
+            }
+          }
           job.reason = "forge_down";
           job.message = "The greenhouse is closed — the machine that draws these is offline. Your place is held.";
           await new Promise((r) => setTimeout(r, pollMs));
@@ -81,6 +96,16 @@ export function makeQueue({ engine, maxDepth = 6, log = () => {}, pollMs = 1500 
           if (secs > 2) lastJobSeconds = secs; // don't let a mock run poison the estimate
           log(`job ${job.id} done in ${secs.toFixed(1)}s`);
         } catch (err) {
+          if (job.input.optional && job.input.spec) {
+            job.result = {
+              engine: engine.name, mime: "image/png", imageB64: null,
+              spec: job.input.spec, note: "drawn without the machine — the render failed"
+            };
+            job.state = "done";
+            job.finished = Date.now();
+            log(`job ${job.id} delivered without a mask: ${err && err.message}`);
+            continue;
+          }
           job.state = "error";
           job.reason = "engine_error";
           job.message = "The render failed on the machine. Nothing was kept. Try again?";

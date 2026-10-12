@@ -20,5 +20,5 @@ export function makeEngine(name = process.env.ENGINE || "mock", opts = {}) {
       async plan() { return { engine: "none", mime: "image/png", imageB64: null }; }
     };
   }
-  return makeMockEngine();
+  return makeMockEngine(opts);   // opts carry the test switches (failPlan, down)
 }

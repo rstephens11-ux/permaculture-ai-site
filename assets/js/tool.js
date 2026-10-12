@@ -243,11 +243,13 @@ function renderResult(j) {
         frost: j.frost, glut: j.glut, geometry_label: j.geometry_label
       };
       PAOverlay.render(overlay, {
-        photoSrc, layout: j.layout,
+        photoSrc,
+        maskSrc: j.mask_data_url || null,     // the beds found in the photo; null when the machine was asleep
+        layout: j.layout,
         geometry: j.geometry_dims || { width_in: 30, path_in: 12, length_ft: 12 },
         meta
       }).then((drew) => {
-        if (!drew) return;
+        if (!drew || drew.mode === "none") return;
         const dl = $("#download-sketch");
         if (dl) {
           dl.textContent = "Download this view (PNG)";

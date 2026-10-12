@@ -1,0 +1,241 @@
+[
+  {
+    "id": "hot-pepper",
+    "name": "Hot Pepper",
+    "label": "HOT PEPPERS · 8 · ripe=red",
+    "kind": "fruiting",
+    "family": "Solanaceae (Capsicum annuum)",
+    "days_to_maturity": [
+      60,
+      85
+    ],
+    "min_frost_free_days": 100,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 8,
+      "note": "2 rows of 4, staggered at 18-24″ in-row with rows ~18″ apart. UMaine 4311: peppers fruit well when plants touch neighbors; skip 2 ft for access."
+    },
+    "bed30": {
+      "rows": 2,
+      "in_row_in": 18,
+      "note": "Two staggered rows ~14″ apart on the 30″ bed; 18″ between plants in each row (≈8 plants per 8 ft of bed)."
+    },
+    "method": "transplant",
+    "start_inside_weeks": 8,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Blossom drop and no fruit set when nights stay under ~55°F or over ~75°F (set after frost when soil is warm — UMaine: warm-soil crop, 5/25-6/20 in central ME); blossom end rot on fruit from uneven moisture, same cause as tomato BER; aphids (spread viruses); European corn borer tunnels into stems and fruit in Aug (a real NE pepper pest; slit stems, remove larvae); sunscald on exposed pods (UMaine 4311: sun scald + bird damage are the top pepper issues there); bacterial spot/anthracnose in wet years — pick resistant varieties (UMaine 2190 lists catalogs' resistance codes for peppers).",
+    "companions": [],
+    "watering": "1-1.5″/week via drip, even moisture; irregular water causes BER and blossom drop; avoid evening overhead watering.",
+    "method_notes": "Coleman program: 8-week soil-block starts (he germinates peppers/eggplants on bottom heat), harden off, and transplant only after soil is warm and weather settled — in coastal 5b that is late May to mid-June, and UMaine's own window (5/25-6/20) shows late is fine. Mulch the bed (black plastic or dark compost; Fedco recommends IRT mulch + row covers for heat) and don't rush: hot peppers love Maine heat if given a warm bed. Hot types ripen more reliably than bells; harvest green or wait for full red/orange color — UMaine: red/yellow peppers are ripe peppers, green bells are immature. Pick often to push more set.",
+    "source": "UMaine Ext. Planting Chart for the Home Vegetable Garden (peppers 18″ in-row, rows 18-24″, plant 5/25-6/20); UMaine Ext. Bulletin #4311 Sec. 17 (warm-soil crops, black plastic, peppers like to touch, sunscald/birds); UMaine Bulletin #2190 Vegetable Varieties for Maine (hot: Conchos, Numex Joe E. Parker, Thai Dragon, Tiburon); Johnny's 'Early Jalapeño' (60 d from transplant; sow ~8 wks before; 12-18″ in-row, or 2 rows on mulch 18″ between plants); Fedco Veggie Chart (start late March, 8-10 wks, 12-18″ in-row); UMaine Cumberland 'Sow Indoors' table (peppers 8-10 wks); Coleman, The New Organic Grower 3rd ed. (30″ beds, soil blocks) & Four-Season Harvest (heat-loving crops in coastal Maine)."
+  },
+  {
+    "id": "eggplant",
+    "name": "Eggplant",
+    "label": "EGGPLANT · 8 · warm bed",
+    "kind": "fruiting",
+    "family": "Solanaceae (Solanum melongena)",
+    "days_to_maturity": [
+      60,
+      85
+    ],
+    "min_frost_free_days": 110,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 8,
+      "note": "2 rows of 4 at 18-24″ in-row, rows ~20″ apart; stake or cage the tall 'Classic'-type plants. Dense but doable on a warm mulched bed."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 24,
+      "note": "Single row down the middle of the 30″ bed, 24″ between plants (UMaine chart allows 18″ in-row; Highmoor commercial trial used 15″)."
+    },
+    "method": "transplant",
+    "start_inside_weeks": 8,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Colorado potato beetle — UMaine calls eggplant a top host; adults and larvae skeletonize foliage, hand-pick orange egg masses from leaf undersides, and expect them (Highmoor picked CPB 41 days after transplant in 2023); flea beetles chew shot-holes in young leaves in June; tarnished plant bug deforms flowers/fruit; thrips scar blossom ends (Highmoor: 'Galine' badly damaged); verticillium wilt in old solanaceous ground — rotate 3-4 years. Plants will not set fruit in cool nights, extreme heat, or drought (Fedco, Highmoor confirm Maine-wide).",
+    "companions": [],
+    "watering": "1-1.5″/week, steady and at the base; drought stops fruit set and turns fruit bitter — Fedco: eggplant will not set in drought; drip + mulch.",
+    "method_notes": "Honest note: the riskiest of the nightshades in coastal 5b. Fedco: 'Growing eggplant can be a challenge in the north... some seasons even our skilled trialers get only sparse production of ripe fruit.' At Highmoor (Monmouth, central ME) even on black plastic the harvest window runs Sept 6-Oct 16. Give it the warmest bed, black plastic or IRT mulch (Fedco), row covers early, and short-season varieties from UMaine 2190 (Dusky, Black Bell, Neon, Little Fingers) or Highmoor's top performers (Annina, Classic, Picasso, Thanos, Gaudi — several with organic seed). Stake tall plants; pinch early flowers on young plants; pick glossy fruit before seeds brown to keep the plant setting.",
+    "source": "UMaine Ext. Planting Chart (eggplant 18″ in-row, rows 24-36″, plant 6/1-6/15); UMaine Bulletin #2190 (Dusky, Black Bell, Ghostbuster, Neon, Little Fingers, Kermit); UMaine Highmoor 2023 Eggplant Evaluations (seeded May 3, transplanted June 30, harvested Sept 6-Oct 16; top cvs Annina, Classic, Picasso, Thanos, Gaudi; CPB pressure noted); Fedco eggplant culture ('a challenge in the north... resent wind, will not set fruit in cold, very hot, or drought;' IRT mulch + row covers) & Fedco Veggie Chart (start April, 6-8 wks, 18-24″ in-row, 30-36″ rows); UMaine IPM Colorado potato beetle factsheets; Coleman, Four-Season Harvest (heat strategy for warm-season crops in Maine)."
+  },
+  {
+    "id": "tomatillo",
+    "name": "Tomatillo",
+    "label": "TOMATILLO · 4 · staked",
+    "kind": "fruiting",
+    "family": "Solanaceae (Physalis philadelphica)",
+    "days_to_maturity": [
+      60,
+      80
+    ],
+    "min_frost_free_days": 110,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 4,
+      "note": "2 rows of 2, ~36″ apart, each staked or caged and pruned like a tomato. Two plants minimum — single plants set almost no fruit (self-incompatible)."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 30,
+      "note": "One staked plant every 30″ down the 30″ bed (2-3 plants per 8 ft); unstaked plants sprawl 3-4 ft and need double the room."
+    },
+    "method": "transplant",
+    "start_inside_weeks": 6,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Shares tomato/solanaceous pests: flea beetles chew young plants; hornworms defoliate (hand-pick or Bt); aphids; late blight can sweep through in cool wet Augusts (UMaine tracks late blight in ME); fruit rots where husks stay wet and crowded — keep air moving and harvest as husks split. Less disease-prone than tomatoes overall.",
+    "companions": [],
+    "watering": "1-1.5″/week, consistent; established plants tolerate dry spells but steady moisture keeps husks from splitting and fruit firm.",
+    "method_notes": "The low-maintenance stand-in for peppers in this set: vigorous, forgiving, and 60-80 days from transplant. Johnny's: plant deep like a tomato (adventitious roots), set 1-2 weeks after your earliest tomatoes, at least two plants for pollination, harvest when the fruit fills and splits the papery husk; husked fruit keeps for weeks at room temp, no processing needed. UMaine has no dedicated tomatillo publication — timing above follows its solanaceous-crop guidance (warm soil, transplant after frost). A 4x8 bed with 2-4 staked plants covers a family easily.",
+    "source": "Johnny's 'Toma Verde' tomatillo (60 d from transplant; sow 4-5 wks before; 24-36″ spacing; plant deeply; 2+ plants required for fruit set); Fedco Veggie Chart (tomatillo/husk cherry: start May 1, 4-6 wks, 2-3' in-row, 3' rows); UMaine Ext. solanaceous crop timing (warm-soil transplants, late blight tracking) as nearest UMaine guidance."
+  },
+  {
+    "id": "summer-squash",
+    "name": "Summer Squash",
+    "label": "SUMMER SQUASH · 4",
+    "kind": "fruiting",
+    "family": "Cucurbitaceae (Cucurbita pepo)",
+    "days_to_maturity": [
+      45,
+      60
+    ],
+    "min_frost_free_days": 60,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 4,
+      "note": "2 rows of 2 at 30-36″ in-row (bush types); UMaine charts 48″ hills in wide rows, but 4 bush plants fit a 4x8 and a family rarely needs more than 2-3 plants."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 30,
+      "note": "One row of bush plants down the 30″ bed, 30″ apart (2-3 plants per 8 ft); Fedco sows 2-3 seeds per hill."
+    },
+    "method": "either",
+    "start_inside_weeks": 3,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Striped cucumber beetle — UMaine's #1 cucurbit pest: chews seedling leaves, feeds in flowers, and vectors bacterial wilt which kills plants suddenly; row cover until flowering, hand-pick at dawn, transplant rather than direct-seed (Maine DACF IPM). Squash vine borer: frass at the stem base and a suddenly wilted runner; slit the stem and remove the larva. Squash bugs: egg masses on leaf undersides, feeding injects a wilt toxin — crush eggs, board traps. Powdery mildew in humid late summer (up to 50% yield loss, UMaine 5085): resistant varieties, good air flow, keep foliage dry. Blossom-end rot on zucchini with uneven water.",
+    "companions": [
+      "winter-squash"
+    ],
+    "watering": "1-1.5″/week at the base (drip), keeping foliage dry to slow mildews; consistent moisture prevents blossom drop and BER.",
+    "method_notes": "Fastest payoff of the fruiting crops — 45-60 days (Johnny's zucchini DTM is from direct seed; subtract ~14 d if transplanting), and it is the one worth successions: UMaine's safe planting window (5/25-7/15) allows a second, early-July planting that carries harvest into September as the first plants tire. Coleman transplant-first logic applies: 2-3-week transplants outrun cucumber beetles and start bearing weeks earlier. Harvest every day or two at 4-7″ (NE guide: 4-6″); one softball-sized zucchini stops the plant flowering. Companion: a 'Blue Hubbard' plant at the bed edge works as a perimeter trap for cucumber beetles, squash bugs and borers (CT/NJ research; UMaine 2190 recommends Blue Hubbard for Maine).",
+    "source": "UMaine Ext. Planting Chart (summer squash 48″ hills, rows 36″, safe window 5/25-7/15); UMaine Bulletin #2190 (Spineless Beauty, Zucchini Elite, Revenue, Space Master, Sunray, Cougar, Sunburst); UMaine IPM #5038 striped cucumber beetle/bacterial wilt + Maine DACF & ATTRA squash bug/squash vine borer factsheet; UMaine Ext. #5085 powdery mildew of cucurbits; Johnny's zucchini growing info (DTM from direct seeding; 'Raven' ~48 d) ; Fedco Veggie Chart (direct late May or 2-3 wk transplants, 2-3/hill, 4' rows); Boucher & Durgy 2004, J. of Extension (Blue Hubbard PTC on NE summer squash); Coleman, The New Organic Grower 3rd ed. (transplant-first, 30″ beds)."
+  },
+  {
+    "id": "pumpkin",
+    "name": "Pumpkin",
+    "label": "PUMPKIN · 1 · vines out",
+    "kind": "fruiting",
+    "family": "Cucurbitaceae (Cucurbita pepo / C. maxima)",
+    "days_to_maturity": [
+      90,
+      115
+    ],
+    "min_frost_free_days": 105,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 1,
+      "note": "One plant per 4x8 bed, vines run out into the paths or lawn (needs 20-40 sq ft); small pie types can be trellised up a strong net with slings."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 60,
+      "note": "One plant per 30″ x 8' bed, 5-6 ft to the next; UMaine charts 48″ hills and Fedco 6' rows — inside a 30″ bed it is one plant, trained down the path."
+    },
+    "method": "either",
+    "start_inside_weeks": 3,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Squash vine borer attacks C. pepo hardest (pumpkins): frass at stem base, wilting; squash bugs (egg masses + wilt toxin); striped cucumber beetle (bacterial wilt — cover young plants, hand-pick); powdery mildew (UMaine 5085: up to 50% yield loss; humid late summer; choose PM-resistant varieties); downy mildew can blow into Maine mid-August and kill vines before fruit colors (Highmoor alert, Aug 2024) — this is the classic 'green pumpkin in October' cause. Rotation of 3+ years for soilborne diseases.",
+    "companions": [
+      "winter-squash"
+    ],
+    "watering": "1-1.5″/week, deep soak at the base; taper off once fruits size up — a drier finish helps ripening and storage quality.",
+    "method_notes": "The reliable one in this group: 'New England Pie' (100 days) and 'Baby Pam' are Maine standards (UMaine 2190), and even jack-o'-lantern types (Howden ~110 d) finish most years. Coleman/Damrosch discipline: let fruit ripen and cure on the vine — harvest when the stem corks and the skin resists a fingernail; a light frost kills the vine but not sound fruit, then pull before hard freeze and cure 1-2 weeks warm before storage (UMaine Highmoor 'How to Harvest and Store Pumpkins'). Companion: a Blue Hubbard trap plant draws cucumber beetles and squash bugs away (Rutgers 2008 trial on pumpkin).",
+    "source": "UMaine Ext. Planting Chart (pumpkin 48″ hills, rows 36″, 5/20-6/10); UMaine Bulletin #2190 (Mystic Plus, Baby Pam, New England Pie, Neon, Baby Bear, Magic Lantern, Howden, Sorcerer); UMaine Highmoor pumpkin trials (2024 jack-o'-lantern eval; 2009 small-fruited pumpkin report; harvest & storage video); UMaine IPM #5085 powdery mildew (up to 50% loss) + Highmoor downy mildew alert (Aug 2024); Fedco Veggie Chart (direct late May or 2-3 wk transplants, 2-3/hill, 6' rows); Rutgers NJAES 2008 (Blue Hubbard perimeter trap for pumpkin); Coleman & Damrosch, Four-Season Harvest / The Winter Harvest Handbook (ripening, curing and storage of hard squash)."
+  },
+  {
+    "id": "melon",
+    "name": "Muskmelon",
+    "label": "MELON · 2 · trellis",
+    "kind": "fruiting",
+    "family": "Cucurbitaceae (Cucumis melo)",
+    "days_to_maturity": [
+      70,
+      90
+    ],
+    "min_frost_free_days": 100,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 2,
+      "note": "2 plants trellised up a 6 ft net on the north side of the bed (slings for fruit); or 1 plant left to sprawl on black plastic. Highmoor commercial spacing: rows 8 ft, 18 in-row."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 48,
+      "note": "One row, one plant every 4 ft on the 30″ bed; trellis to steal vertical heat and air flow."
+    },
+    "method": "transplant",
+    "start_inside_weeks": 3,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Striped cucumber beetle — the #1 NE cucurbit pest and muskmelon's worst enemy (UMaine 5038; NE IPM ranked beetle/bacterial wilt the region's top cucurbit problem): row cover until flowering, hand-pick at dawn; bacterial wilt kills vines fast once vectored. Powdery mildew (melons very susceptible; humidity-driven, resistant varieties exist); downy mildew reached Maine cantaloupes in mid-Aug 2024 (Highmoor alert) in wet years; fusarium wilt — rotate 3-4 years; aphids (mosaic viruses). Cool, wet summers simply don't ripen melons — variety choice is the only hedge.",
+    "companions": [
+      "winter-squash"
+    ],
+    "watering": "1″/week at the base; cut back as fruit ripens (dry finish = sweeter, firmer fruit) — Highmoor irrigated through plastic with drip.",
+    "method_notes": "Honest stretch in 5b, say so. Highmoor, central Maine, grows melons only through black plastic with drip, transplanted June 4-9 from ~3-week starts; even then mid-harvest lands late Aug to mid-Sept ('Goddess' ~100 d from seeding, 'Athena' ~115 d) and a cold year is a partial write-off. Use only early short-season types from UMaine 2190 (Earliqueen, Earligold, Fastbreak; 'Jenny Lind', 'Minnesota Midget' for heirlooms), plastic mulch, and row cover until flowers open (beetle barrier + heat). Coleman at Four Season Farm treats melons as a heat crop: transplants under cover early, uncover at flowering for bees. Harvest at half-slip — melons taste best when they come off clean. A perimeter Blue Hubbard trap is research-tested on cantaloupe plantings (CT).",
+    "source": "UMaine Highmoor Muskmelon Evaluations 2007-08 (plastic mulch, seeded 5/14-20, transplanted 6/4-9; 'Goddess' mid-harvest 100 d after seeding, 'Earliqueen' 107, 'Athena' 115; brix data) and 2017 ASHS trial (rows 8' on center, 18″ in-row, black plastic, ditched covers); UMaine Bulletin #2190 (early: Earliqueen, Fastbreak, Earligold; mid: Athena, Harper Hybrid); UMaine IPM #5038 (striped cucumber beetle & bacterial wilt) + Highmoor downy mildew alert (Aug 2024); Fedco Veggie Chart (start May, 2-3 wks, 2-3' in-row, 6-8' rows); Boucher & Durgy (Blue Hubbard PTC on cantaloupe); Coleman, Four-Season Harvest (Maine-zone 5 melon culture: transplants, heat, covers)."
+  },
+  {
+    "id": "watermelon",
+    "name": "Watermelon",
+    "label": "WATERMELON · 1 · stretch",
+    "kind": "fruiting",
+    "family": "Cucurbitaceae (Citrullus lanatus)",
+    "days_to_maturity": [
+      70,
+      90
+    ],
+    "min_frost_free_days": 110,
+    "succession_days": 0,
+    "season": "warm",
+    "planting": {
+      "unit": "plants",
+      "per_4x8": 1,
+      "note": "One plant per 4x8 bed, vines sprawl 5-8 ft into paths; hill 2-3 seeds or set one transplant on black plastic."
+    },
+    "bed30": {
+      "rows": 1,
+      "in_row_in": 60,
+      "note": "One plant per 30″ x 8' bed, 5-6 ft apart (Fedco: 2-3' in-row on 6-8' rows is commercial density)."
+    },
+    "method": "transplant",
+    "start_inside_weeks": 3,
+    "cold": false,
+    "shade": "no",
+    "watch_for": "Cucumber beetles (bacterial wilt) and squash bugs — same management as melon; fusarium wilt is watermelon's worst NE disease, soilborne and long-lived: rotate 4-5 years or grow wilt-resistant types ('Crimson Sweet' carries some resistance; catalogs list Fusarium races); anthracnose and gummy stem blight in wet years; poor set in cool, wet Junes; birds and rodents at ripening. Powdery mildew rarely attacks watermelon (UMaine 5085: does not commonly attack it).",
+    "companions": [
+      "winter-squash"
+    ],
+    "watering": "1″/week, deep, at the vine base; stop watering ~2 weeks before expected harvest — dry finish means sweeter, firmer flesh.",
+    "method_notes": "The biggest stretch in zone 5b — say so plainly. Fedco's 'Blacktail Mountain' (71 days) was bred by Glenn Drowns for cold mountain nights (~43°F) and is the Maine short-season standard; UMaine 2190's seeded picks (Yellow Doll, Sweet Favorite, Festival, Sunshine) are the other early group — skip Crimson Sweet-length vines. Grow every trick: 3-week transplants, black plastic, row cover until flowering, south-facing warmest bed. Even so, a cool summer yields few or no ripe fruit — UMaine Highmoor maintains no watermelon trial (their melon page exists; watermelon does not), which is telling. Harvest by tendril browning + hollow thump (Fedco's ripeness notes), not by calendar.",
+    "source": "Fedco 'Blacktail Mountain' (71 days, bred for cold mountain nights; ripeness notes) + Fedco Veggie Chart (start May, 2-3 wks, 2-3' in-row, 6-8' rows); UMaine Bulletin #2190 (Sweet Favorite, Festival, Crimson Sweet, Yellow Doll, Sunshine; note 'in northern Maine plant only early varieties of warm-season crops'); UMaine IPM #5038 (cucumber beetles) and #5085 (PM rarely attacks watermelon); UMaine Highmoor resources-by-crop maintains melon but no watermelon trials — flagged as evidence of risk; Johnny's/Fedco catalog DTM ranges for 'Sugar Baby' (~75-80) and 'Crimson Sweet' (~85-90)."
+  }
+]

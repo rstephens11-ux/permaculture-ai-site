@@ -136,27 +136,42 @@ test("the finished job carries the phased season plan, the counts, the local fro
   assert.match(j.concept_disclaimer, /Concept sketch only/);
   assert.ok(Array.isArray(j.notes), "and the honest notes ride along");
 
-  // A visit is deterministic now: both drawings are ours, so no model runs and no image comes back.
-  // This is the whole reason a plan is instant and free to serve.
-  assert.equal(j.engine, "none", "no engine is wired in for a normal visit");
-  assert.equal(j.plan_image_data_url, null, "and no per-visit render is produced");
+  // The engine's job is now the MASK — finding the beds — and it travels as its own field. The retired
+  // per-photo illustration no longer exists.
+  assert.ok(j.mask_data_url.startsWith("data:image/"), "the bed mask comes back inline");
+  assert.equal(j.plan_image_data_url, null, "the per-photo illustration is retired");
   assert.ok(j.geometry_dims && j.geometry_dims.width_in === 30, "the drawing gets the real bed dims");
+
+  // The numbering that ties the drawing to the steps: one running number per crop run, in bed order.
+  const nos = j.bed_plan.flatMap((b) => b.segments.map((s) => s.no));
+  assert.deepEqual(nos, [1, 2, 3, 4, 5, 6], "every crop run is numbered 1..n in bed order");
+  for (const b of j.bed_plan) {
+    for (const s of b.segments) {
+      assert.ok(b.text.includes(`${s.no}. ${s.name}`), `bed text carries the same number for ${s.name}`);
+    }
+  }
+  const bedPhase = j.phases.find((p) => p.key === "layout");
+  assert.ok(bedPhase.steps.some((s) => /^Bed \d/.test(s.text)), "and the phase lists them bed by bed");
+  assert.ok(bedPhase.steps.some((s) => s.tag === "the drawing"), "and says the drawing uses those numbers");
 });
 
-test("the illustration engine can still be switched back on, deliberately", async () => {
-  // RENDER_ILLUSTRATION=yes (or renderIllustration:true) restores the old path. Kept because retiring a
-  // capability should be reversible, and because the forge render is still how the sprite sheet is made.
+test("a plan still arrives when the machine is asleep — the mask is optional", async () => {
+  // forge down is the normal case for a home tool. The plan is deterministic, so it must still be served;
+  // the overlay then falls back to laying the plan over the open ground.
   const api = createApi({
     engineName: "mock",
-    renderIllustration: true,
+    engineOpts: { failPlan: true },
     leadStorePath: join(HERE, "fixtures/.test-leads.csv"),
     gateStorePath: join(tmpdir(), `pa-plan-gate-${Math.random().toString(36).slice(2)}.json`),
     limiter: makeLimiter({ perIpPerDay: 50, globalDailyCap: 100, maxUploadMb: 6 })
   });
   const post = await render(api, null, { zip: "04578" });
   const done = await settle(api, post.json.job_id);
-  assert.equal(done.json.engine, "mock");
-  assert.ok(done.json.plan_image_data_url.startsWith("data:image/"), "the render comes back inline");
+  assert.equal(done.status, 200);
+  assert.equal(done.json.state, "done", "the job finished rather than erroring");
+  assert.equal(done.json.mask_data_url, null, "with no mask");
+  assert.ok(/without the machine/.test(done.json.mask_note || ""), "and it says why");
+  assert.ok(done.json.phases.length >= 6, "and the plan itself is intact");
 });
 
 test("with no beds yet, the plan tells you how to build them — sticks and all", async () => {
@@ -246,8 +261,7 @@ test("health reports the machine's real state and the gate's numbers", async () 
   const api = mkApi();
   const r = await api.handle({ method: "GET", path: "/api/health" });
   assert.equal(r.status, 200);
-  // No engine by default: a visit needs no GPU. The health line says so rather than reporting a maker.
-  assert.equal(r.json.engine, "none");
+  assert.equal(r.json.engine, "mock");
   assert.equal(r.json.forge, "up");
   assert.equal(typeof r.json.queue.depth, "number");
   assert.equal(typeof r.json.plans_today, "number");
