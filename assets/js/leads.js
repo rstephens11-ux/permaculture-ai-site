@@ -16,7 +16,7 @@ document.querySelectorAll("form[data-lead-form]").forEach((form) => {
     button.disabled = true;
     button.textContent = "Adding…";
     try {
-      const r = await fetch("/api/lead", {
+      const r = await fetch(((window.PA_CONFIG && window.PA_CONFIG.apiBase) || "") + "/api/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({

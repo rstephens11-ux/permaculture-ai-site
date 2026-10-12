@@ -5,7 +5,12 @@
 // promise on the page, so keep it true here.
 
 const $ = (s) => document.querySelector(s);
-const api = (path) => fetch(path, { headers: { accept: "application/json" } });
+
+// Where the machine lives. Empty = this origin (the normal case: the Mac serves pages and API together).
+// A static host with a home GPU sets apiBase to the tunnel hostname — see assets/js/config.js.
+const API_BASE = (window.PA_CONFIG && window.PA_CONFIG.apiBase) || "";
+const apiUrl = (path) => `${API_BASE}${path}`;
+const api = (path) => fetch(apiUrl(path), { headers: { accept: "application/json" } });
 
 const els = {
   file: $("#file"),
@@ -151,7 +156,7 @@ async function submit(event) {
   setQueue({ message: "Handing it to the machine…" });
 
   try {
-    const r = await fetch("/api/plan", {
+    const r = await fetch(apiUrl("/api/plan"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -230,7 +235,17 @@ if (live) {
       ? `Maker: ${engine} · open · ${h.plans_today}/${h.daily_cap} plans today`
       : `Maker: ${engine} · resting — leave your email and it'll draw yours when it wakes`;
     live.classList.remove("hidden");
-  }).catch(() => {});
+  }).catch(() => {
+    // Reached a copy of the site where the machine isn't on this origin yet. Say so, rather than
+    // letting someone press a button that silently can't work.
+    live.textContent = "The machine that draws these isn't reachable from this address yet — "
+      + "the drawing is done at home, not in a data centre.";
+    live.classList.remove("hidden");
+    if (els.go) {
+      els.go.disabled = true;
+      els.go.textContent = "Drawing machine not connected here";
+    }
+  });
 }
 
 // #demo — show a real, already-generated plan instead of asking for a photo first. The data in
