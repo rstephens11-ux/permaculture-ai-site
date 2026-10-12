@@ -250,6 +250,10 @@ function renderResult(j) {
         meta
       }).then((drew) => {
         if (!drew || drew.mode === "none") return;
+        // Record how it drew, so the page can be checked without a screenshot: data-mode="beds" means the
+        // beds in the photo were found and drawn on; "sheet" means the fallback was used.
+        overlay.dataset.mode = drew.mode;
+        overlay.dataset.beds = String(drew.beds);
         const dl = $("#download-sketch");
         if (dl) {
           dl.textContent = "Download this view (PNG)";
