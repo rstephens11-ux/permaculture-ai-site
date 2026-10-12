@@ -597,8 +597,11 @@ if (location.hash === "#demo" && els.result) {
     .then((j) => {
       document.body.dataset.demoPhoto = "assets/img/sample-before.jpg";
       renderResult({
-        plan_image_data_url: j.plan_image_url,
+        // Carry the mask through: without it the demo silently renders the fallback sheet, which looks
+        // nothing like what a real visit produces.
+        mask_data_url: j.mask_data_url || null,
         diagram_svg: j.diagram_svg, layout: j.layout,
+        geometry_dims: j.geometry_dims,
         phases: j.phases, bed_plan: j.bed_plan, rotation: j.rotation, geometry_label: j.geometry_label,
         harvest_window: j.harvest_window, glut: j.glut, frost: j.frost,
         notes: j.notes || [], concept_disclaimer: j.concept_disclaimer
