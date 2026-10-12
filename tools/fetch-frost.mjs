@@ -25,7 +25,7 @@
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE = join(ROOT, "out/frost-cache");
@@ -89,7 +89,9 @@ function clean(cell) {
   return String(cell || "").replace(/^"|"$/g, "").trim();
 }
 
-function parseBatch(csv, stations) {
+// Exported for tests: this parser is the only thing standing between the site and NCEI's missing-value
+// sentinel (-9999.0), which would become a spectacular "last frost" if it ever got through.
+export function parseBatch(csv, stations) {
   const lines = csv.split("\n").filter((l) => l.trim());
   if (!lines.length) return [];
   const head = lines[0].split(",").map(clean);
@@ -181,4 +183,7 @@ async function main() {
   console.log("Boulder sanity check: 05/06 ✓");
 }
 
-main().catch((err) => { console.error("FAILED:", err.message); process.exit(1); });
+// Only fetch when run directly — importing this module (for tests) must not hit NOAA.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => { console.error("FAILED:", err.message); process.exit(1); });
+}
