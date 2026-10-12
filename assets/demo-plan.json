@@ -1,105 +1,354 @@
 {
   "plan_image_url": "assets/img/sample-plan.jpg",
   "engine": "mock",
-  "steps": [
+  "phases": [
     {
-      "category": "PLANT",
-      "description": "Mark it out in one four-by-eight bed. (1) Tomato: 4 plants — 2–3 ft apart, staked or caged; fewer plants, better fruit. (2) Lettuce: 24 row-feet — three 8 ft rows, cut-and-come-again. (3) Kale: 6 plants — 18 in apart; it keeps giving until the ground freezes. (4) Bush bean: 16 row-feet — two 8 ft rows, seed 3–4 in apart. (5) Cherry tomato: 3 plants — 3 ft apart and give them a tall stake — they get big.",
-      "plantVarieties": [
-        "Tomato",
-        "Lettuce",
-        "Kale",
-        "Bush bean",
-        "Cherry tomato"
-      ],
-      "companionPlants": [
-        "basil",
-        "marigold",
-        "carrot",
-        "radish",
-        "onion",
-        "potato",
-        "beet"
-      ],
-      "wateringNeeds": "Deep soak twice a week; keep leaves dry to slow blight."
+      "n": 1,
+      "key": "beds",
+      "title": "Build the beds",
+      "when": "now, 4–8 weeks before you plant",
+      "why": "Everything in this plan assumes ground that is ready to take roots.",
+      "steps": [
+        {
+          "text": "Mark it out before you dig anything: 30 in beds, 30-inch beds with 12-inch paths between them. Worked from the path, never stood on. Narrow enough to reach the middle from either side, which is the whole point — compaction is what costs you yield."
+        },
+        {
+          "text": "Cheapest and quickest — sheet mulch. Flat cardboard, overlapped generously and soaked, then an inch of compost, then whatever mulch the town or the woods will give you. Plant straight into holes cut in it this season; the bed improves underneath you while you use it.",
+          "tag": "no dig"
+        },
+        {
+          "text": "If what you have is lawn or hard-packed ground — and only then — one pass with a broadfork, or a single pass of a tiller, to break the pan. Sheet mulch over a hard lawn is a two-year proposition, and most people quit before the payoff. Tilling once to open ground up is a tool. Tilling it every year is what ruins it.",
+          "tag": "the exception",
+          "hidden": false
+        },
+        {
+          "text": "If you want to build the bed out of what is already on the property, this is the hugelkultur version, bottom to top:",
+          "tag": "from the land",
+          "sub": [
+            "Cardboard flat on the ground, overlapped, soaked.",
+            "Woody material — branches, rotten logs, sticks, brush — filling the BOTTOM THIRD only. Thickest pieces lowest, gaps packed with smaller stuff. Water each layer as you go.",
+            "A sprinkle of native soil or old compost over the wood, as inoculum.",
+            "Leaves, straw, grass clippings, garden waste.",
+            "2–3 inches of finished compost.",
+            "Topsoil or a compost-mix to fill the last few inches."
+          ]
+        },
+        {
+          "text": "Two honest caveats on hugelkultur: it sinks as the wood rots, so put anything perennial at the edges and not in the middle; and fresh wood ties up nitrogen for a season, so give the heavy feeders a mid-season top-dress. Do not sow carrots or anything with fine seed into a fresh one — it will not be an even seedbed yet."
+        }
+      ]
     },
     {
-      "category": "SOIL",
-      "description": "Sheet-mulch the paths and any new ground this fall — cardboard, then compost, then whatever the town will give you. Skip the tiller; the worms do the work.",
-      "plantVarieties": [],
-      "companionPlants": [],
-      "wateringNeeds": ""
+      "n": 2,
+      "key": "soil",
+      "title": "Feed the soil, not the plant",
+      "when": "the same weekend as the beds",
+      "why": "Fertility you build is fertility you don't buy again next year.",
+      "steps": [
+        {
+          "text": "Compost on top, 1–2 inches, once in spring. Do not dig it in — the worms and the frost will take it down for you."
+        },
+        {
+          "text": "Coleman's fertility trick is a rotation, not a bag: at Four Season Farm roughly half the ground is in deep-rooted green manure at any time — clover, vetch, field peas — grown to be cut down and left on the surface. It feeds the soil, smothers weeds and takes the place of bought nitrogen.",
+          "tag": "Coleman"
+        },
+        {
+          "text": "Free amendments worth having here: seaweed and leaf mould. Rinse the seaweed if it is fresh, and stockpile leaves in a wire ring — two years later they are the best mulch you own."
+        },
+        {
+          "text": "Heavy feeders in this plan — tomato — get a mid-season top-dress of compost at flowering. That single handful is most of the difference between a crop and a glut."
+        }
+      ]
     },
     {
-      "category": "WATER",
-      "description": "One soaker line down the middle of the tomato bed. Deep and infrequent beats a daily sprinkle. Deep soak twice a week; keep leaves dry to slow blight.",
-      "plantVarieties": [],
-      "companionPlants": [],
-      "wateringNeeds": "Deep soak twice a week; keep leaves dry to slow blight."
+      "n": 3,
+      "key": "layout",
+      "title": "Layout and spacing",
+      "when": "the day you plant",
+      "why": "The counts below are what fits at proper spacing. Crowding is the mistake that costs the most yield for the least regret.",
+      "steps": [
+        {
+          "text": "Bed geometry: 30-inch beds, 12-inch paths (Coleman's system). Worked from the path, never stood on. Narrow enough to reach the middle from either side, which is the whole point — compaction is what costs you yield."
+        },
+        {
+          "text": "Tomato: 6 plants — one row down the middle, staked; the whole bed is then reachable without stepping on it",
+          "crop": "tomato"
+        },
+        {
+          "text": "Lettuce: 36 row-feet (about 42 plants once thinned) — three rows 9 in apart; cut the outer leaves and it keeps going",
+          "crop": "lettuce"
+        },
+        {
+          "text": "Beet: 36 row-feet (about 144 plants once thinned) — three rows 9 in apart, thinned hard — beets hate crowding",
+          "crop": "beet"
+        },
+        {
+          "text": "Mâche (corn salad): 48 row-feet (about 192 plants once thinned) — scatter across the whole bed rather than in rows",
+          "crop": "mache"
+        },
+        {
+          "text": "Cucumber: 12 plants — one row up a trellis at the north end — vertical, so the bed stays usable",
+          "crop": "cucumber"
+        },
+        {
+          "text": "Garlic: 96 plants — four rows 6 in apart each way — 30 in beds are made for garlic",
+          "crop": "garlic"
+        },
+        {
+          "text": "Families in this plan: Solanaceae, Asteraceae, Amaranthaceae, Caprifoliaceae, Cucurbitaceae, Allium — all different, which is what you want. Next year, keep each family moving to a different bed.",
+          "tag": "rotation"
+        },
+        {
+          "text": "And tell the plan what was in each bed last year — that is the one input a rotation cannot invent, and it is worth more than any fertiliser."
+        }
+      ]
     },
     {
-      "category": "BUILD",
-      "description": "Support before you plant, not after: tomato and cherry tomato need stakes, cages or a trellis on day one. Then a cold frame at one end for the lettuce — hinge it south, reuse a storm window.",
-      "plantVarieties": [],
-      "companionPlants": [],
-      "wateringNeeds": ""
+      "n": 4,
+      "key": "planting",
+      "title": "Planting and succession",
+      "when": "from now until late July",
+      "why": "A bed should always be doing something, and it should never all arrive at once.",
+      "steps": [
+        {
+          "text": "Tomato: start inside the week of Mar 9 — 7 weeks before your Apr 27 frost — and set them out after it. Transplant-first is the discipline here: it buys weeks and it beats the weeds.",
+          "crop": "tomato"
+        },
+        {
+          "text": "Lettuce: start inside the week of Mar 30 — 4 weeks before your Apr 27 frost — and set them out after it. Transplant-first is the discipline here: it buys weeks and it beats the weeds.",
+          "crop": "lettuce"
+        },
+        {
+          "text": "Cucumber: start inside the week of Apr 6 — 3 weeks before your Apr 27 frost — and set them out after it. Transplant-first is the discipline here: it buys weeks and it beats the weeds.",
+          "crop": "cucumber"
+        },
+        {
+          "text": "Sown straight into the bed, once the ground is workable: beet, mâche (corn salad), garlic."
+        },
+        {
+          "text": "Succession — this is the one that decides whether you eat well all summer or drown in one week: lettuce every 14 days, beet every 21 days, mâche (corn salad) every 14 days. Sow a short row, not a long one, and keep it up until late July.",
+          "tag": "succession"
+        },
+        {
+          "text": "No obvious gap in the season as planted — the succession sowings above are what keeps it that way.",
+          "tag": "your gap"
+        }
+      ]
     },
     {
-      "category": "HARVEST",
-      "description": "Sow the lettuce every 14 days from a week after last frost — that stagger is what keeps one impossible week from eating the whole harvest.",
-      "plantVarieties": [],
-      "companionPlants": [],
-      "wateringNeeds": "Deep soak twice a week; keep leaves dry to slow blight."
+      "n": 5,
+      "key": "pests",
+      "title": "Pests and beneficials — the short version that works",
+      "when": "as the crops go in",
+      "why": "Most companion-planting advice is folklore. These four things have evidence behind them; the rest of the chart does not.",
+      "steps": [
+        {
+          "text": "Trap crop. Put one Blue Hubbard squash at the far end of the bed, well away from your zucchini, and check it twice a week. Squash bugs and vine borers prefer it — in trial data 60–80% of the pressure went to the trap instead of the crop. It will get infested. That is it working. Crush the egg clusters you find underneath the leaves.",
+          "tag": "proven"
+        },
+        {
+          "text": "Insectary strip. Sow sweet alyssum — or dill, cilantro, phacelia — along one path edge and let it flower. In field trials roughly 10% of the area in alyssum was enough to hold aphids down, by feeding hoverflies and tiny parasitic wasps that eat them. This is the highest-value square foot in most gardens.",
+          "tag": "proven"
+        },
+        {
+          "text": "Row cover as a barrier. Over cucumbers and anything brassica from planting until they flower — it beats every spray because the pest never lands. You must lift it for pollination, and you must not leave it on in a heatwave.",
+          "tag": "proven"
+        },
+        {
+          "text": "On marigolds, since they come up every year: French and African marigolds do suppress root-knot nematodes — but only as a solid crop grown for a couple of months and then tilled in, not as a plant set beside the tomatoes. In Maine the nematodes are rarely the problem anyway, so grow them for the hoverflies and the colour, not for the myth.",
+          "tag": "the honest version"
+        },
+        {
+          "text": "Scout twice a week, and know what you're looking for: Tomato — late blight in a wet August, hornworms, blossom end rot from uneven watering rather than disease; Lettuce — slugs (the real enemy here), bolting in heat, bottom rot in a wet spell; Beet — leafminer (the blotches in the leaves), cercospora leaf spot in wet spells; Mâche (corn salad) — almost nothing — that is the point of it. Slugs, occasionally.; Cucumber — striped cucumber beetle — and the bacterial wilt it carries, which is why row cover matters early; powdery mildew. Twice a week with a coffee beats any spray, because you catch it while it's still squashable.",
+          "tag": "scouting"
+        },
+        {
+          "text": "Alternate an early crop and a late crop in the same bed — extension guidance, and Coleman's whole spring-to-fall sequence runs on it. Soil that is never bare does not grow weeds, and cover is the cheapest pest control there is.",
+          "tag": "supported"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "key": "water",
+      "title": "Water",
+      "when": "the week after planting",
+      "why": "Deep and infrequent beats a daily sprinkle — it drives roots down instead of teaching them to stay shallow.",
+      "steps": [
+        {
+          "text": "One soaker line down the middle of each 30 in bed, under the mulch. Ten minutes of drip twice a week does more than an hour with a hose."
+        },
+        {
+          "text": "Water at the base in the morning. Wet leaves at night is how you grow blight instead of tomatoes."
+        },
+        {
+          "text": "Mulch 2–3 inches: straw, leaves, grass clippings. It halves the watering and it is where the slugs live — so keep it back an inch from the stems."
+        },
+        {
+          "text": "Tomato: Deep soak twice a week; keep leaves dry to slow blight.",
+          "crop": "tomato"
+        },
+        {
+          "text": "Lettuce: Frequent, shallow water; it bolts fast when stressed.",
+          "crop": "lettuce"
+        },
+        {
+          "text": "Beet: Even moisture; the roots get woody if they dry out.",
+          "crop": "beet"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "key": "extension",
+      "title": "Stretch the season",
+      "when": "late August, and again in October",
+      "why": "This is Coleman's actual specialty, and it is why zone 5 does not have to mean six months off.",
+      "steps": [
+        {
+          "text": "A cold frame at one end of a bed, hinged on the south side, glazed with the storm window already in your basement. Open it on sunny days or you will cook what you are protecting."
+        },
+        {
+          "text": "Quick hoops — bent wire or conduit over a bed, with row cover or clear plastic clipped on. Cheapest protected growing there is, and it moves to next year's bed in ten minutes."
+        },
+        {
+          "text": "Standing into the cold, from this plan: lettuce, mâche (corn salad), garlic. Sow the greens in late summer, not spring — they come through the winter and they are the first thing you eat in March.",
+          "tag": "winter list"
+        },
+        {
+          "text": "Leave carrots in the ground under a foot of mulch and dig them as you need them, all winter. They get sweeter for it."
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "key": "harvest",
+      "title": "Harvest, and the week it all lands",
+      "when": "from early July through frost",
+      "why": "Because the peak is the part that decides whether you eat well or compost it.",
+      "steps": [
+        {
+          "text": "Everything in the main season lands between Jun 2 and Aug 3. That peak is the week that breaks people.",
+          "tag": "your window"
+        },
+        {
+          "text": "Pick every second day once the glut starts, and pick into the house, not into a bucket on the porch. A day on the porch is a day off the shelf life."
+        },
+        {
+          "text": "The glut itself is what The Preservation Run is for — what to can, freeze, cellar and ferment, in the order the harvest arrives."
+        }
+      ]
     }
   ],
   "bed_plan": [
     {
       "crop": "tomato",
       "name": "Tomato",
-      "count": 4,
+      "print": "6 plants",
+      "note": "one row down the middle, staked; the whole bed is then reachable without stepping on it",
       "unit": "plants",
-      "spacing": "2–3 ft apart, staked or caged; fewer plants, better fruit",
-      "print": "4 plants"
+      "family": "Solanaceae"
     },
     {
       "crop": "lettuce",
       "name": "Lettuce",
-      "count": 24,
+      "print": "36 row-feet",
+      "detail": "about 42 plants once thinned",
+      "note": "three rows 9 in apart; cut the outer leaves and it keeps going",
       "unit": "row_feet",
-      "spacing": "three 8 ft rows, cut-and-come-again",
-      "print": "24 row-feet"
+      "family": "Asteraceae"
     },
     {
-      "crop": "kale",
-      "name": "Kale",
-      "count": 6,
-      "unit": "plants",
-      "spacing": "18 in apart; it keeps giving until the ground freezes",
-      "print": "6 plants"
-    },
-    {
-      "crop": "bush-bean",
-      "name": "Bush bean",
-      "count": 16,
+      "crop": "beet",
+      "name": "Beet",
+      "print": "36 row-feet",
+      "detail": "about 144 plants once thinned",
+      "note": "three rows 9 in apart, thinned hard — beets hate crowding",
       "unit": "row_feet",
-      "spacing": "two 8 ft rows, seed 3–4 in apart",
-      "print": "16 row-feet"
+      "family": "Amaranthaceae"
     },
     {
-      "crop": "cherry-tomato",
-      "name": "Cherry tomato",
-      "count": 3,
+      "crop": "mache",
+      "name": "Mâche (corn salad)",
+      "print": "48 row-feet",
+      "detail": "about 192 plants once thinned",
+      "note": "scatter across the whole bed rather than in rows",
+      "unit": "row_feet",
+      "family": "Caprifoliaceae"
+    },
+    {
+      "crop": "cucumber",
+      "name": "Cucumber",
+      "print": "12 plants",
+      "note": "one row up a trellis at the north end — vertical, so the bed stays usable",
       "unit": "plants",
-      "spacing": "3 ft apart and give them a tall stake — they get big",
-      "print": "3 plants"
+      "family": "Cucurbitaceae"
+    },
+    {
+      "crop": "garlic",
+      "name": "Garlic",
+      "print": "96 plants",
+      "note": "four rows 6 in apart each way — 30 in beds are made for garlic",
+      "unit": "plants",
+      "family": "Allium"
+    }
+  ],
+  "rotation": {
+    "families": [
+      "Solanaceae",
+      "Asteraceae",
+      "Amaranthaceae",
+      "Caprifoliaceae",
+      "Cucurbitaceae",
+      "Allium"
+    ],
+    "clashes": [],
+    "clean": true
+  },
+  "geometry": "coleman_30",
+  "geometry_label": "30-inch beds, 12-inch paths (Coleman's system)",
+  "crop_list": [
+    {
+      "id": "tomato",
+      "name": "Tomato",
+      "family": "Solanaceae",
+      "method": "transplant",
+      "cold": false
+    },
+    {
+      "id": "lettuce",
+      "name": "Lettuce",
+      "family": "Asteraceae",
+      "method": "either",
+      "cold": true
+    },
+    {
+      "id": "beet",
+      "name": "Beet",
+      "family": "Amaranthaceae",
+      "method": "direct",
+      "cold": false
+    },
+    {
+      "id": "mache",
+      "name": "Mâche (corn salad)",
+      "family": "Caprifoliaceae",
+      "method": "direct",
+      "cold": true
+    },
+    {
+      "id": "cucumber",
+      "name": "Cucumber",
+      "family": "Cucurbitaceae",
+      "method": "either",
+      "cold": false
     }
   ],
   "beds": {
-    "type": "raised",
-    "count": 1,
-    "width_ft": 4,
-    "length_ft": 8
+    "geometry": "coleman_30",
+    "count": 1
   },
+  "existing": "no",
   "sun": "full",
   "frost": {
     "known": true,
@@ -115,34 +364,8 @@
     "source": "NOAA/NCEI 1991-2020 U.S. Climate Normals, nearest station (USC00175675)",
     "caveat": "measured at the nearest weather station, about 9 miles away — a cold hollow or a hilltop can differ by a week or two"
   },
+  "season": 174,
   "notes": [],
-  "labels": [
-    {
-      "n": 1,
-      "crop": "tomato",
-      "text": "tomato bed"
-    },
-    {
-      "n": 2,
-      "crop": "lettuce",
-      "text": "lettuce patch"
-    },
-    {
-      "n": 3,
-      "crop": "kale",
-      "text": "kale bed"
-    },
-    {
-      "n": 4,
-      "crop": "bush-bean",
-      "text": "bean rows"
-    },
-    {
-      "n": 5,
-      "crop": "cherry-tomato",
-      "text": "cherry tomato row"
-    }
-  ],
   "harvest_window": [
     {
       "crop": "tomato",
@@ -158,7 +381,7 @@
       "local_frost_free_days": 174,
       "confidence": "estimate",
       "note": "60–85 days from planting; variety and season move it",
-      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-vegetable bulletins for spacing."
+      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-vegetable bulletins for spacing and pest lists."
     },
     {
       "crop": "lettuce",
@@ -177,8 +400,8 @@
       "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
     },
     {
-      "crop": "kale",
-      "name": "Kale",
+      "crop": "beet",
+      "name": "Beet",
       "known": true,
       "season": "cool",
       "year": 2027,
@@ -186,43 +409,43 @@
       "window_open": "2027-06-22",
       "window_close": "2027-07-07",
       "fit": "good",
-      "needs_frost_free_days": 65,
+      "needs_frost_free_days": 70,
       "local_frost_free_days": 174,
       "confidence": "estimate",
       "note": "50–65 days from planting; variety and season move it",
       "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
     },
     {
-      "crop": "bush-bean",
-      "name": "Bush bean",
+      "crop": "mache",
+      "name": "Mâche (corn salad)",
+      "known": true,
+      "season": "cool",
+      "year": 2027,
+      "plant_estimate": "2027-05-03",
+      "window_open": "2027-06-22",
+      "window_close": "2027-07-12",
+      "fit": "good",
+      "needs_frost_free_days": 40,
+      "local_frost_free_days": 174,
+      "confidence": "estimate",
+      "note": "50–70 days from planting; variety and season move it",
+      "source": "Johnny's Selected Seeds catalog ranges; extension bulletins; Coleman's winter-harvest crop lists."
+    },
+    {
+      "crop": "cucumber",
+      "name": "Cucumber",
       "known": true,
       "season": "summer",
       "year": 2027,
       "plant_estimate": "2027-05-10",
       "window_open": "2027-06-29",
-      "window_close": "2027-07-09",
+      "window_close": "2027-07-14",
       "fit": "good",
-      "needs_frost_free_days": 75,
+      "needs_frost_free_days": 80,
       "local_frost_free_days": 174,
       "confidence": "estimate",
-      "note": "50–60 days from planting; variety and season move it",
+      "note": "50–65 days from planting; variety and season move it",
       "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-garden bulletins."
-    },
-    {
-      "crop": "cherry-tomato",
-      "name": "Cherry tomato",
-      "known": true,
-      "season": "summer",
-      "year": 2027,
-      "plant_estimate": "2027-05-10",
-      "window_open": "2027-07-04",
-      "window_close": "2027-07-19",
-      "fit": "good",
-      "needs_frost_free_days": 90,
-      "local_frost_free_days": 174,
-      "confidence": "estimate",
-      "note": "55–70 days from planting; variety and season move it",
-      "source": "Johnny's Selected Seeds / Fedco catalog maturity ranges; extension-service home-vegetable bulletins."
     },
     {
       "crop": "garlic",

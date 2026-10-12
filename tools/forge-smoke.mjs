@@ -32,7 +32,9 @@ console.log(`crops chosen: ${spec.crops.join(", ")}`);
 if (spec.notes.length) spec.notes.forEach((n) => console.log(`  note: ${n}`));
 console.log(`beds: ${spec.bed_plan.map((b) => `${b.print} ${b.name.toLowerCase()}`).join(" · ")}`);
 console.log(`photo:  ${(photo.length / 1024).toFixed(0)} KB`);
-console.log(`labels: ${spec.labels.map((l) => `(${l.n}) ${l.text}`).join(", ")}`);
+console.log(`phases: ${spec.phases.map((p) => p.n + "." + p.key).join(" ")}`);
+console.log(`geometry: ${spec.geometry_label}`);
+console.log(`drawing: illustration only — no numbers in the image (see BLOCKERS.md)`);
 console.log("submitting…");
 
 if (!(await engine.available())) {

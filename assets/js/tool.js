@@ -23,6 +23,7 @@ const els = {
   drop: $("#drop"),
   thumbs: $("#thumbs"),
   zip: $("#zip"),
+  existing: $("#existing"),
   bedsType: $("#beds-type"),
   bedsCount: $("#beds-count"),
   sun: $("#sun"),
@@ -188,29 +189,42 @@ function renderResult(j) {
 
   const beds = $("#result-beds");
   if (beds && j.bed_plan && j.bed_plan.length) {
-    beds.innerHTML = `<h4>what to put in, and how much</h4>` + j.bed_plan.map((b) => `
+    beds.innerHTML = `<h4>what to put in, and how much${j.geometry_label ? ` — ${j.geometry_label}` : ""}</h4>`
+      + j.bed_plan.map((b) => `
       <div class="bedrow">
         <span class="bcount">${b.print}</span>
         <span class="bname">${b.name}</span>
-        <span class="bnote">${b.spacing}</span>
+        <span class="bnote">${b.note || ""}${b.family ? ` · ${b.family}` : ""}</span>
       </div>`).join("");
+    if (j.rotation && j.rotation.clashes && j.rotation.clashes.length) {
+      beds.innerHTML += `<p class="fine">Rotation flag: ${j.rotation.clashes
+        .map((c) => `${c.names.join(" and ")} are both ${c.family}`).join("; ")} — different beds at minimum, and don't follow last year's same family.</p>`;
+    } else if (j.rotation) {
+      beds.innerHTML += `<p class="fine">Families: ${j.rotation.families.join(", ")} — all different, which is what you want. Next year, move each family to a different bed.</p>`;
+    }
     beds.classList.remove("hidden");
   }
 
-  const steps = $("#result-steps");
-  steps.innerHTML = "";
-  (j.steps || []).forEach((s, i) => {
-    const el = document.createElement("div");
-    el.className = "step";
-    const bits = [];
-    if (s.plantVarieties && s.plantVarieties.length) bits.push(`try ${s.plantVarieties.join(", ")}`);
-    if (s.companionPlants && s.companionPlants.length) bits.push(`with ${s.companionPlants.slice(0, 3).join(", ")}`);
-    el.innerHTML = `<div class="num">${i + 1}</div>
-      <div class="tx">${s.description}
-        ${bits.length ? `<em>${bits.join(" · ")}</em>` : ""}
-        <em>${s.category.toLowerCase()}</em>
-      </div>`;
-    steps.appendChild(el);
+  // The plan itself: eight phases, dated. This replaced a flat five-step list and is the whole point.
+  const plan = $("#result-steps");
+  plan.innerHTML = "";
+  (j.phases || []).forEach((p) => {
+    const el = document.createElement("section");
+    el.className = "phase";
+    const steps = (p.steps || []).map((s) => {
+      const tag = s.tag ? `<span class="grade">${s.tag}</span>` : "";
+      const subs = s.sub && s.sub.length
+        ? `<ul class="sub">${s.sub.map((x) => `<li>${x}</li>`).join("")}</ul>`
+        : "";
+      return `<div class="pstep">${tag}<span>${s.text}</span>${subs}</div>`;
+    }).join("");
+    el.innerHTML = `<div class="phasehead">
+        <span class="pn">${p.n}</span>
+        <span class="ptitle">${p.title}</span>
+        <span class="pwhen">${p.when}</span>
+      </div>
+      <p class="pwhy">${p.why}</p>${steps}`;
+    plan.appendChild(el);
   });
 
   const chips = $("#result-window");
@@ -303,8 +317,9 @@ function payload() {
     images: photos,
     zip: els.zip ? els.zip.value.trim() : "",
     sun: val(els.sun, "unsure"),
+    existing: val(els.existing, "unsure"),
     beds: {
-      type: val(els.bedsType, "unsure"),
+      geometry: val(els.bedsType, "unsure"),
       count: val(els.bedsCount, "unsure")
     },
     email: els.email ? els.email.value.trim() : ""
@@ -497,8 +512,9 @@ if (location.hash === "#demo" && els.result) {
     .then((j) => {
       renderResult({
         plan_image_data_url: j.plan_image_url,
-        steps: j.steps, bed_plan: j.bed_plan, harvest_window: j.harvest_window,
-        glut: j.glut, frost: j.frost, notes: j.notes || [], concept_disclaimer: j.concept_disclaimer
+        phases: j.phases, bed_plan: j.bed_plan, rotation: j.rotation, geometry_label: j.geometry_label,
+        harvest_window: j.harvest_window, glut: j.glut, frost: j.frost,
+        notes: j.notes || [], concept_disclaimer: j.concept_disclaimer
       });
       const note = $("#result-demo-note");
       if (note) note.classList.remove("hidden");

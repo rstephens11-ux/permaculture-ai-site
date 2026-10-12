@@ -11,7 +11,7 @@ import { makeLimiter } from "../api/ratelimit.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PHOTO = readFileSync(join(HERE, "fixtures/garden-sample.jpg"));
 const DATA_URL = `data:image/jpeg;base64,${PHOTO.toString("base64")}`;
-const CATEGORIES = ["PLANT", "WATER", "SOIL", "BUILD", "HARVEST"];
+const PHASE_KEYS = ["beds", "soil", "layout", "planting", "pests", "water", "extension", "harvest"];
 
 // Deterministic location data. The real tables are 40,000 ZIPs and 4,000 stations; these tests need two
 // stations and three ZIPs, and they must not depend on the data-fetch tools having been run in this
@@ -101,18 +101,27 @@ test("an email buys five renders, and the sixth says come back next week", async
   assert.equal(over.json.error, "week_used");
 });
 
-test("the finished job carries the plan, the bed counts, the local frost and the disclaimer", async () => {
+test("the finished job carries the phased season plan, the counts, the local frost and the disclaimer", async () => {
   const api = mkApi();
-  const post = await render(api, null, { sun: "part", beds: { type: "raised", count: 2 } });
+  const post = await render(api, null, { sun: "part", existing: "no", beds: { geometry: "coleman_30", count: 2 } });
   const done = await settle(api, post.json.job_id);
   assert.equal(done.status, 200, JSON.stringify(done.json).slice(0, 200));
   const j = done.json;
 
-  assert.ok(Array.isArray(j.steps) && j.steps.length >= 3, "at least three steps");
-  for (const s of j.steps) assert.ok(CATEGORIES.includes(s.category), `bad category ${s.category}`);
+  // The plan is now phases, in order, and phase 1 is the bed-building step that was missing.
+  assert.deepEqual((j.phases || []).map((p) => p.key), PHASE_KEYS);
+  for (const p of j.phases) {
+    assert.ok(p.title && p.when && p.why, `phase ${p.key} has a heading, a date and a reason`);
+    assert.ok(p.steps.length >= 1, `phase ${p.key} has something in it`);
+  }
+  assert.match(j.phases[0].title, /build the beds/i);
+
   assert.ok(j.bed_plan.length >= 3, "a bed plan with counts");
-  assert.ok(j.bed_plan.every((b) => b.count > 0 && b.print), "every bed line has a printable count");
+  assert.ok(j.bed_plan.every((b) => b.print && b.unit), "every bed line has a printable quantity");
+  assert.ok(j.bed_plan.every((b) => /\d/.test(b.print)), "with a number in it");
+  assert.ok(j.bed_plan.every((b) => b.family), "and carries its botanical family for rotation");
   assert.equal(j.beds.count, 2, "and it remembers two beds were asked for");
+  assert.equal(j.geometry, "coleman_30");
   assert.equal(j.sun, "part");
   assert.ok(j.harvest_window.length >= 1, "a harvest window");
   assert.ok(j.glut && j.glut.open, "the glut window is the point of the whole thing");
@@ -120,6 +129,32 @@ test("the finished job carries the plan, the bed counts, the local frost and the
   assert.equal(j.engine, "mock");
   assert.ok(j.plan_image_data_url.startsWith("data:image/"), "the drawing comes back inline");
   assert.ok(Array.isArray(j.notes), "and the honest notes ride along");
+});
+
+test("with no beds yet, the plan tells you how to build them — sticks and all", async () => {
+  const api = mkApi();
+  const post = await render(api, null, { existing: "no", zip: "04578" });
+  const done = await settle(api, post.json.job_id);
+  const build = done.json.phases[0];
+  const text = JSON.stringify(build);
+  assert.match(text, /cardboard/i, "sheet mulch is offered");
+  assert.match(text, /bottom third/i, "and the hugelkultur layering, with the wood at the bottom");
+  assert.match(text, /branch|log|stick/i, "specifically the sticks and branches");
+  assert.match(text, /broadfork|tiller/i, "and the one honest case for breaking hard ground");
+  assert.match(text, /compost/i, "and what goes on top");
+});
+
+test("pest advice is graded, and the marigold claim is the honest one", async () => {
+  const api = mkApi();
+  const post = await render(api, null, { beds: { geometry: "coleman_30", count: 1 } });
+  const done = await settle(api, post.json.job_id);
+  const pests = done.json.phases.find((p) => p.key === "pests");
+  const text = JSON.stringify(pests);
+  assert.match(text, /trap crop/i, "trap cropping is in there");
+  assert.match(text, /Blue Hubbard/i);
+  assert.match(text, /60–80%|trial data/i, "with the evidence behind it");
+  assert.match(text, /not as a plant set beside the tomatoes/i, "and the marigold correction, not the folklore");
+  assert.ok(pests.steps.some((s) => s.tag === "proven"), "claims carry a grade");
 });
 
 test("up to three photos are accepted", async () => {

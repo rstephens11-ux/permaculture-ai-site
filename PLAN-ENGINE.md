@@ -1,6 +1,12 @@
 # The plan engine — design
 
-**Status:** design, for Ryan's sign-off before it's built.
+**Status: BUILT, 2026-10-12.** Ryan's calls: geometry is a choice (both offered, Coleman's as the
+default), tilling is handled contextually (see `TILLING_STANCE` in `api/phases.mjs` — the one-pass
+exception survives, flip it to drop the paragraph), trap crops are in but graded so he can judge them,
+and the drawing is demoted to an unlabelled illustration. Implemented across `api/crops.json`
+(knowledge base), `api/beds.mjs` (geometry + rotation), `api/phases.mjs` (the eight phases) and
+`api/plan-spec.mjs` (assembly). Tests: `tests/test-beds.mjs` plus the phase assertions in
+`tests/test-plan.mjs`.
 **Why:** the current output is five generic steps. It says *"sheet-mulch the paths"* without knowing
 whether there are paths, and it names companions without saying what they're for. That is elementary, and
 it is the easy thing to fix — the hard half of this product is the plan, not the drawing.

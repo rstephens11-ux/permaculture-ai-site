@@ -154,7 +154,8 @@ export function createApi({
     const spec = buildPlan({
       zip,
       sun: body.sun || "full",
-      beds: body.beds || undefined
+      beds: body.beds || undefined,
+      existing: body.existing || "unsure"
     });
 
     const enq = queue.enqueue({
@@ -217,13 +218,18 @@ export function createApi({
           state: "done",
           engine: v.result.engine,
           plan_image_data_url: `data:${v.result.mime};base64,${v.result.imageB64}`,
-          steps: spec ? spec.steps : [],
+          phases: spec ? spec.phases : [],
           bed_plan: spec ? spec.bed_plan : [],
+          rotation: spec ? spec.rotation : null,
+          geometry: spec ? spec.geometry : null,
+          geometry_label: spec ? spec.geometry_label : null,
+          crop_list: spec ? spec.crop_list : [],
           beds: spec ? spec.beds : null,
+          existing: spec ? spec.existing : null,
           sun: spec ? spec.sun : null,
           frost: spec ? spec.frost : null,
+          season: spec ? spec.season : null,
           notes: spec ? spec.notes : [],
-          labels: spec ? spec.labels : [],
           harvest_window: spec ? spec.harvest_window : [],
           glut: spec ? spec.glut : null,
           concept_disclaimer: CONCEPT_DISCLAIMER
