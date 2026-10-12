@@ -157,7 +157,9 @@ const LOOKS = {
   "crimson-clover": "a crimson clover with fine clover leaves and a crimson flower spike",
   "winter-rye": "a clump of slender green rye blades with seed heads",
   "hairy-vetch": "a hairy vetch vine with fine leaflets and small purple flowers",
-  "field-peas-and-oats": "a mixed clump of grassy oat blades and pea vines",
+  // "A mixed clump of oat blades and pea vines" rendered as OATS ONLY, twice. Leading with the peas and
+  // making them the subject is what the model needs to include both halves of a mix.
+  "field-peas-and-oats": "a cover crop of field peas growing with oats: climbing field pea vines with curling tendrils, small white flowers and flat green pods, twining up through a few upright oat stems with drooping seed heads",
   // perennial vegetables
   "asparagus": "an asparagus plant with tall feathery fern-like spears",
   "rhubarb": "a rhubarb plant with huge ruffled leaves on red stalks",
