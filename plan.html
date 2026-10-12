@@ -35,18 +35,23 @@
 
       <label class="fld"><span>your zip code — this is the one we need</span>
         <input id="zip" type="text" inputmode="numeric" required placeholder="04578" autocomplete="postal-code"></label>
-      <p class="fine">We look up your real frost dates from NOAA's 1990–2020 climate records, and pick crops
+      <p class="fine">We look up your real frost dates from NOAA's 1991-2020 climate records, and pick crops
         that will finish in your season. Nothing is stored about where you are.</p>
 
+      <p class="fine" style="margin-top:14px"><strong>The next three are optional</strong> — if you're not
+        sure, leave them and the plan will cover both cases.</p>
+
       <div class="grid2" style="gap:12px">
-        <label class="fld"><span>what are you growing in</span>
+        <label class="fld"><span>what are you growing in — optional</span>
           <select id="beds-type">
+            <option value="unsure">Not sure yet</option>
             <option value="raised">Raised beds</option>
             <option value="ground">In-ground plot</option>
             <option value="containers">Containers / patio</option>
           </select></label>
-        <label class="fld"><span>how many beds (4 × 8)</span>
+        <label class="fld"><span>how many beds — optional</span>
           <select id="beds-count">
+            <option value="unsure">Not sure yet</option>
             <option value="1">One</option>
             <option value="2">Two</option>
             <option value="3">Three</option>
@@ -54,8 +59,9 @@
           </select></label>
       </div>
 
-      <label class="fld"><span>how much sun</span>
+      <label class="fld"><span>how much sun — optional</span>
         <select id="sun">
+          <option value="unsure">Not sure yet</option>
           <option value="full">Full sun — six hours or more</option>
           <option value="part">Part sun — about half the day</option>
           <option value="shade">Mostly shade</option>

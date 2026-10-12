@@ -298,13 +298,14 @@ async function poll(jobId) {
 }
 
 function payload() {
+  const val = (el, fallback) => (el && el.value && el.value !== "unsure" ? el.value : fallback);
   return {
     images: photos,
     zip: els.zip ? els.zip.value.trim() : "",
-    sun: els.sun ? els.sun.value : "full",
+    sun: val(els.sun, "unsure"),
     beds: {
-      type: els.bedsType ? els.bedsType.value : "raised",
-      count: els.bedsCount ? Number(els.bedsCount.value || 1) : 1
+      type: val(els.bedsType, "unsure"),
+      count: val(els.bedsCount, "unsure")
     },
     email: els.email ? els.email.value.trim() : ""
   };
