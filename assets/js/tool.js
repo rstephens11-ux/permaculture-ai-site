@@ -114,60 +114,6 @@ function labelledImage(dataUrl) {
   });
 }
 
-/* --------------------------------------------------- drawing 1: the illustration over the photo */
-
-const overlayState = { photo: null, sketch: null, cache: {} };
-
-/** The visitor's first photo is already in memory as a data URL; the demo falls back to the sample. */
-function photoForOverlay() {
-  if (photos && photos.length) return photos[0];
-  return document.body.dataset.demoPhoto || null;
-}
-
-function loadImg(src) {
-  if (overlayState.cache[src]) return overlayState.cache[src];
-  const p = new Promise((resolve, reject) => {
-    const i = new Image();
-    i.onload = () => resolve(i);
-    i.onerror = reject;
-    i.src = src;
-  });
-  overlayState.cache[src] = p;
-  return p;
-}
-
-async function paintOverlay() {
-  const c = $("#overlay-canvas");
-  if (!c || !overlayState.sketch) return;
-  const mixEl = $("#overlay-mix");
-  const mix = mixEl ? Number(mixEl.value) / 100 : 0.6;
-  try {
-    const sketch = await loadImg(overlayState.sketch);
-    const w = sketch.naturalWidth || 1200;
-    const h = sketch.naturalHeight || 900;
-    c.width = w;
-    c.height = h;
-    const x = c.getContext("2d");
-    x.fillStyle = "#fffdf6";
-    x.fillRect(0, 0, w, h);
-    if (overlayState.photo) {
-      const photo = await loadImg(overlayState.photo);
-      // cover-fit: the photo fills the frame, then the drawing sits over it
-      const s = Math.max(w / photo.naturalWidth, h / photo.naturalHeight);
-      const pw = photo.naturalWidth * s;
-      const ph = photo.naturalHeight * s;
-      x.drawImage(photo, (w - pw) / 2, (h - ph) / 2, pw, ph);
-    }
-    x.globalAlpha = mix;
-    x.drawImage(sketch, 0, 0, w, h);
-    x.globalAlpha = 1;
-  } catch {
-    // if the photo won't decode, show the illustration alone rather than nothing
-    const sketch = await loadImg(overlayState.sketch).catch(() => null);
-    if (sketch) { c.width = sketch.naturalWidth; c.height = sketch.naturalHeight; c.getContext("2d").drawImage(sketch, 0, 0); }
-  }
-}
-
 /** Rasterise our own SVG plan so it can be printed or sent to a phone. */
 function svgToPng(svg, scale = 2) {
   return new Promise((resolve) => {
@@ -285,23 +231,33 @@ function renderResult(j) {
     }
   }
 
-  // Drawing 1: the illustration, laid OVER the visitor's own photo, with a slider. Two reasons to
-  // composite rather than show the illustration alone: it answers "is this even my yard?", and it is
-  // honest — the photo underneath is visibly the real thing, the drawing on top is visibly a redraw.
+  // Drawing 1: the plan, drawn over the visitor's own photo. All ours — the plant art was generated once
+  // into a sprite sheet, and where each plant goes is arithmetic from the crop table. No model runs for a
+  // visit any more, which is why there is no queue to wait in and nothing to pay for.
   const overlay = $("#overlay-canvas");
-  if (overlay && j.plan_image_data_url) {
-    overlayState.sketch = j.plan_image_data_url;
-    overlayState.photo = overlayState.photo || photoForOverlay();
-    paintOverlay();
-    const mix = $("#overlay-mix");
-    if (mix) mix.oninput = () => paintOverlay();
-    const dl = $("#download-sketch");
-    if (dl) {
-      dl.onclick = (e) => {
-        e.preventDefault();
-        const url = overlay.toDataURL("image/png");
-        if (url) download("your-yard-illustrated.png", url);
+  if (overlay && j.layout && window.PAOverlay) {
+    const photoSrc = (photos && photos.length ? photos[0] : null) || document.body.dataset.demoPhoto;
+    if (photoSrc) {
+      const meta = {
+        place: j.frost && j.frost.known ? j.frost.place : null,
+        frost: j.frost, glut: j.glut, geometry_label: j.geometry_label
       };
+      PAOverlay.render(overlay, {
+        photoSrc, layout: j.layout,
+        geometry: j.geometry_dims || { width_in: 30, path_in: 12, length_ft: 12 },
+        meta
+      }).then((drew) => {
+        if (!drew) return;
+        const dl = $("#download-sketch");
+        if (dl) {
+          dl.textContent = "Download this view (PNG)";
+          dl.onclick = (e) => {
+            e.preventDefault();
+            const url = overlay.toDataURL("image/png");
+            if (url) download("garden-plan-overlay.png", url);
+          };
+        }
+      }).catch(() => { /* a photo the canvas can't read: drawing 2 still stands */ });
     }
   }
 
@@ -605,10 +561,15 @@ if (els.drop) {
 const live = $("#live-status");
 if (live) {
   api("/api/health").then((r) => r.json()).then((h) => {
-    const engine = h.engine === "forge" ? "our own machine" : "the test bench";
-    live.textContent = h.forge === "up"
-      ? `Maker: ${engine} · open · ${h.plans_today}/${h.daily_cap} plans today`
-      : `Maker: ${engine} · resting — leave your email and it'll draw yours when it wakes`;
+    if (h.engine === "none") {
+      // The honest status now: there is no render queue to be waiting in, because there is no render.
+      live.textContent = `Instant · drawn in your browser · ${h.plans_today} planned today`;
+    } else {
+      const engine = h.engine === "forge" ? "our own machine" : "the test bench";
+      live.textContent = h.forge === "up"
+        ? `Maker: ${engine} · open · ${h.plans_today}/${h.daily_cap} plans today`
+        : `Maker: ${engine} · resting — leave your email and it'll draw yours when it wakes`;
+    }
     live.classList.remove("hidden");
   }).catch(() => {
     live.textContent = "The machine that draws these isn't reachable from this address yet — "

@@ -165,6 +165,7 @@ export function buildPlan(opts = {}) {
     rotation,
     geometry,
     geometry_label: GEOMETRIES[geometry].label,
+    geometry_dims: GEOMETRIES[geometry],
     beds: { ...beds, geometry, count: bedCount },
     existing,
     sun,

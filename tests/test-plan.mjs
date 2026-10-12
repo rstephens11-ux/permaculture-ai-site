@@ -134,9 +134,29 @@ test("the finished job carries the phased season plan, the counts, the local fro
   assert.ok(j.harvest_window.length >= 1, "a harvest window");
   assert.ok(j.glut && j.glut.open, "the glut window is the point of the whole thing");
   assert.match(j.concept_disclaimer, /Concept sketch only/);
-  assert.equal(j.engine, "mock");
-  assert.ok(j.plan_image_data_url.startsWith("data:image/"), "the drawing comes back inline");
   assert.ok(Array.isArray(j.notes), "and the honest notes ride along");
+
+  // A visit is deterministic now: both drawings are ours, so no model runs and no image comes back.
+  // This is the whole reason a plan is instant and free to serve.
+  assert.equal(j.engine, "none", "no engine is wired in for a normal visit");
+  assert.equal(j.plan_image_data_url, null, "and no per-visit render is produced");
+  assert.ok(j.geometry_dims && j.geometry_dims.width_in === 30, "the drawing gets the real bed dims");
+});
+
+test("the illustration engine can still be switched back on, deliberately", async () => {
+  // RENDER_ILLUSTRATION=yes (or renderIllustration:true) restores the old path. Kept because retiring a
+  // capability should be reversible, and because the forge render is still how the sprite sheet is made.
+  const api = createApi({
+    engineName: "mock",
+    renderIllustration: true,
+    leadStorePath: join(HERE, "fixtures/.test-leads.csv"),
+    gateStorePath: join(tmpdir(), `pa-plan-gate-${Math.random().toString(36).slice(2)}.json`),
+    limiter: makeLimiter({ perIpPerDay: 50, globalDailyCap: 100, maxUploadMb: 6 })
+  });
+  const post = await render(api, null, { zip: "04578" });
+  const done = await settle(api, post.json.job_id);
+  assert.equal(done.json.engine, "mock");
+  assert.ok(done.json.plan_image_data_url.startsWith("data:image/"), "the render comes back inline");
 });
 
 test("with no beds yet, the plan tells you how to build them — sticks and all", async () => {
@@ -226,7 +246,8 @@ test("health reports the machine's real state and the gate's numbers", async () 
   const api = mkApi();
   const r = await api.handle({ method: "GET", path: "/api/health" });
   assert.equal(r.status, 200);
-  assert.equal(r.json.engine, "mock");
+  // No engine by default: a visit needs no GPU. The health line says so rather than reporting a maker.
+  assert.equal(r.json.engine, "none");
   assert.equal(r.json.forge, "up");
   assert.equal(typeof r.json.queue.depth, "number");
   assert.equal(typeof r.json.plans_today, "number");

@@ -40,6 +40,7 @@ function readImages(body) {
 export function createApi({
   engineName = process.env.ENGINE || "mock",
   engineOpts = {},
+  renderIllustration = null,
   leadStorePath = process.env.LEAD_STORE || "./leads.csv",
   gateStorePath = process.env.GATE_STORE || "./gate.json",
   limiter = makeLimiter({
@@ -54,7 +55,14 @@ export function createApi({
   maxDepth = Number(process.env.QUEUE_MAX || 6),
   log = () => {}
 } = {}) {
-  const engine = makeEngine(engineName, { log, ...engineOpts });
+  // A visit is deterministic by default: plan text, layout drawing and plant overlay are all built from
+  // the crop table, so there is nothing to wait for and nothing to pay for. The illustration engine is
+  // only wired in when it is explicitly asked for (RENDER_ILLUSTRATION=yes, or renderIllustration:true
+  // in tests).
+  const withIllustration = renderIllustration == null
+    ? (process.env.RENDER_ILLUSTRATION || "no") === "yes"
+    : !!renderIllustration;
+  const engine = makeEngine(withIllustration ? engineName : "none", { log, ...engineOpts });
   const queue = makeQueue({ engine, maxDepth, log });
   const leads = makeLeadStore(leadStorePath);
   const counters = { plans_total: 0, plans_with_email: 0, product_views: 0, email_unlocks: 0, started: new Date().toISOString() };
@@ -217,7 +225,8 @@ export function createApi({
         json: {
           state: "done",
           engine: v.result.engine,
-          plan_image_data_url: `data:${v.result.mime};base64,${v.result.imageB64}`,
+          // No illustration is the normal case now — the two drawings are ours.
+          plan_image_data_url: v.result.imageB64 ? `data:${v.result.mime};base64,${v.result.imageB64}` : null,
           phases: spec ? spec.phases : [],
           bed_plan: spec ? spec.bed_plan : [],
           layout: spec ? spec.layout : null,
@@ -225,6 +234,7 @@ export function createApi({
           rotation: spec ? spec.rotation : null,
           geometry: spec ? spec.geometry : null,
           geometry_label: spec ? spec.geometry_label : null,
+          geometry_dims: spec ? spec.geometry_dims : null,
           crop_list: spec ? spec.crop_list : [],
           beds: spec ? spec.beds : null,
           existing: spec ? spec.existing : null,

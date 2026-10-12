@@ -133,7 +133,14 @@ export function makeForgeEngine({
       }
     },
 
-    async plan({ imageB64, images, mime, prompt }) {
+    /**
+     * @param {{imageB64?: string, images?: object[], mime?: string, prompt: string,
+     *          seed?: number, resolution?: number}} opts
+     * `seed` and `resolution` exist for the plant sprite sheet: a batch of 21 assets that has to look
+     * like one illustrator drew them, which needs a fixed seed rather than a fresh dice roll per call.
+     * The per-visit render leaves both undefined, so nothing about it changes.
+     */
+    async plan({ imageB64, images, mime, prompt, seed, resolution }) {
       const photos = (images && images.length ? images : [{ b64: imageB64, mime }]).filter((p) => p && p.b64);
 
       // 1. upload each photo into ComfyUI's input dir under a unique name
@@ -155,7 +162,8 @@ export function makeForgeEngine({
       // 2. submit
       const graph = buildGraph({
         imageNames: names, prompt,
-        seed: Math.floor(Math.random() * 1e9),
+        seed: seed == null ? Math.floor(Math.random() * 1e9) : seed,
+        resolution: resolution || 1024,
         denoise: this.denoise
       });
       const sub = await fetch(`${base}/prompt`, {
