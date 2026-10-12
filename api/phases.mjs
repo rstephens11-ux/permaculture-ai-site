@@ -78,7 +78,7 @@ export function buildPhases(opts) {
   const {
     cropList = [], geometry = "coleman_30", bedCount = 1, existing = "unsure",
     frost = {}, year = new Date().getUTCFullYear(), windows = [], glut = null, sun = "full",
-    layout = null, bedPlan = null
+    layout = null, bedPlan = null, permanent = null
   } = opts;
 
   const g = GEOMETRIES[geometry] || GEOMETRIES.coleman_30;
@@ -100,6 +100,11 @@ export function buildPhases(opts) {
   const cucurbits = cropList.filter((c) => familyOf(c) === "Cucurbitaceae");
 
   const phases = [];
+
+  /* ---------------------------------------------------------------- 0. measured before it is drawn */
+  // Appended at the END as phase 9 rather than slotted in, so the numbered season phases keep the numbers
+  // they already had — a plan is read in order and renumbering it to insert a section is worse than
+  // putting the long game last, which is where it belongs anyway.
 
   /* ---------------------------------------------------------------- 1. build the beds */
   const buildSteps = [];
@@ -339,6 +344,39 @@ export function buildPhases(opts) {
       { text: "The glut itself is what The Preservation Run is for — what to can, freeze, cellar and ferment, in the order the harvest arrives." }
     ]
   });
+
+  /* ---------------------------------------------------------------- 9. the permanent plantings */
+  // Last, because it is the longest game. Twenty of the hundred crops are not season crops: they take a
+  // position and a year, not a bed slot, and the only thing that decides whether they crop for fifteen
+  // years or five is what happens in year one — which most plans never mention.
+  if (permanent && permanent.plantings && permanent.plantings.length) {
+    const steps = [
+      { text: permanent.year_one_rule, tag: "year one" },
+      {
+        text: `These ${permanent.count} don't rotate and don't take a bed: ${permanent.plantings.map((p) => p.name).join(", ")}. Give them their own ground — a border, a cane row, a sod patch, an orchard corner — and they will still be cropping when the beds have been rebuilt twice.`,
+        tag: "where they go"
+      }
+    ];
+    for (const p of permanent.plantings) {
+      const first = p.years_to_crop === 0
+        ? "crops the year after planting"
+        : `${p.years_to_crop} year${p.years_to_crop === 1 ? "" : "s"} to the first real crop`;
+      const life = p.life_years ? `about ${p.life_years} years of life` : "long-lived once established";
+      steps.push({
+        text: `${p.name}: ${p.spacing_ft} ft apart, ${first}, ${life}. ${p.site}${p.watch_for ? ` Watch for ${p.watch_for.split(",")[0]}.` : ""}`,
+        tag: p.role
+      });
+    }
+    (permanent.notes || []).forEach((n) => steps.push({ text: n, tag: "worth knowing" }));
+    phases.push({
+      n: phases.length + 1,
+      key: "permanent",
+      title: "The permanent plantings",
+      when: "any time in the first year",
+      why: "A fifth of this list isn't a season crop. These take a position for fifteen years, so they are chosen once and planted properly or regretted for a decade.",
+      steps
+    });
+  }
 
   return phases;
 }

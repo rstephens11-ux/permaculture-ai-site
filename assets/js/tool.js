@@ -339,6 +339,33 @@ function renderResult(j) {
     }
   }
 
+  // The permanent plantings: not beds, not season crops — a position and a year. They get their own
+  // section so nobody reads "asparagus" as something to sow in May.
+  const perm = $("#result-permanent");
+  if (perm && j.permanent_plantings && j.permanent_plantings.plantings.length) {
+    const P = j.permanent_plantings;
+    const y1 = $("#result-yearone");
+    if (y1) y1.textContent = P.year_one_rule;
+    $("#result-permanent-list").innerHTML = P.plantings.map((x) => `
+      <div class="bedgroup">
+        <div class="bedhead">${x.name} · ${x.role.replace("-", " ")}</div>
+        <div class="bedrow">
+          <span class="bcount">${x.spacing_ft} ft apart</span>
+          <span class="bname">${x.years_to_crop === 0 ? "crops next year" : `${x.years_to_crop} yr to crop`}</span>
+          <span class="bnote">${x.life_years ? `${x.life_years} years of life` : "long-lived"}${x.height_ft ? ` · ${x.height_ft} ft tall` : ""}${x.ph ? ` · pH ${x.ph}` : ""}</span>
+        </div>
+        <p class="fine" style="margin:4px 0 0">${x.site}</p>
+      </div>`).join("");
+    const pn = $("#result-permanent-notes");
+    let pnotes = (P.notes || []).map((n) => `<li>${n}</li>`).join("");
+    const alts = (P.alternatives || []).filter((a) => a.marginal);
+    if (alts.length) {
+      pnotes += `<li><strong>Also possible here, but a gamble:</strong> ${alts.map((a) => a.name.toLowerCase()).join(", ")} — hardiest varieties only.</li>`;
+    }
+    pn.innerHTML = pnotes;
+    perm.classList.remove("hidden");
+  }
+
   const cal = $("#calendar-btn");
   if (cal && windows.length) {
     cal.classList.remove("hidden");

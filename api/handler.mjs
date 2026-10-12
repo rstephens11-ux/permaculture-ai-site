@@ -230,6 +230,7 @@ export function createApi({
           phases: spec ? spec.phases : [],
           bed_plan: spec ? spec.bed_plan : [],
           layout: spec ? spec.layout : null,
+          permanent_plantings: spec ? spec.permanent_plantings : null,
           diagram_svg: spec ? spec.diagram_svg : null,
           rotation: spec ? spec.rotation : null,
           geometry: spec ? spec.geometry : null,

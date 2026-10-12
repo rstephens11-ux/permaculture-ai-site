@@ -11,7 +11,7 @@ import { makeLimiter } from "../api/ratelimit.mjs";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PHOTO = readFileSync(join(HERE, "fixtures/garden-sample.jpg"));
 const DATA_URL = `data:image/jpeg;base64,${PHOTO.toString("base64")}`;
-const PHASE_KEYS = ["beds", "soil", "layout", "planting", "pests", "water", "extension", "harvest"];
+const PHASE_KEYS = ["beds", "soil", "layout", "planting", "pests", "water", "extension", "harvest", "permanent"];
 
 // Deterministic location data. The real tables are 40,000 ZIPs and 4,000 stations; these tests need two
 // stations and three ZIPs, and they must not depend on the data-fetch tools having been run in this
@@ -207,6 +207,35 @@ test("pest advice is graded, and the marigold claim is the honest one", async ()
   assert.match(text, /60–80%|trial data/i, "with the evidence behind it");
   assert.match(text, /not as a plant set beside the tomatoes/i, "and the marigold correction, not the folklore");
   assert.ok(pests.steps.some((s) => s.tag === "proven"), "claims carry a grade");
+});
+
+test("the plantings that never enter a bed get their own section, and the law is respected", async () => {
+  const api = mkApi();
+  const post = await render(api, null, { zip: "04578", existing: "no", beds: { geometry: "coleman_30", count: 2 } });
+  const done = await settle(api, post.json.job_id);
+  const j = done.json;
+  const p = j.permanent_plantings;
+  assert.ok(p && p.plantings.length >= 4, `a handful of permanent plantings (got ${p && p.plantings.length})`);
+
+  // Not one of them may take a bed slot — that is the whole reason the section exists.
+  const bedIds = new Set(j.bed_plan.flatMap((b) => b.segments.map((s) => s.crop)));
+  for (const x of p.plantings) assert.ok(!bedIds.has(x.id), `${x.id} must not take a bed slot`);
+
+  // Each carries the facts that make it plantable: spacing, years to crop, and where it goes.
+  for (const x of p.plantings) {
+    assert.ok(typeof x.spacing_ft === "number" && x.spacing_ft > 0, `${x.id} has a spacing`);
+    assert.ok(typeof x.years_to_crop === "number", `${x.id} knows its years to crop`);
+    assert.ok(x.site && x.site.length > 10, `${x.id} says where it goes`);
+    assert.ok(/year one/i.test(p.year_one_rule), "and the year-one discipline is stated once");
+  }
+
+  // Wiscasset is in a white-pine-blister-rust county, so Ribes are out — and said so.
+  assert.ok(!p.plantings.some((x) => ["red-currant", "black-currant", "gooseberry"].includes(x.id)), "no ribes for Maine");
+  assert.ok(p.notes.some((n) => /white pine blister rust/i.test(n)), "and the reason is given, not just the absence");
+
+  // The phase exists and closes the plan.
+  assert.equal(j.phases[j.phases.length - 1].key, "permanent");
+  assert.ok(j.phases[j.phases.length - 1].steps.length >= p.plantings.length, "with a line per planting");
 });
 
 test("with a 106-crop table, the selection still picks a sane bed plan", async () => {

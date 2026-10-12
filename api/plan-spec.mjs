@@ -14,6 +14,7 @@
 import { crops, cropById, windowsFor, glutWindow, frostFor } from "./harvest.mjs";
 import { GEOMETRIES, bedLine, familyOf, rotationCheck } from "./beds.mjs";
 import { assignBeds, planDiagram } from "./layout.mjs";
+import { permanentPlan } from "./permanent.mjs";
 import { buildPhases } from "./phases.mjs";
 
 const CONTAINER_OK = new Set(["cherry-tomato", "pepper", "lettuce", "kale", "swiss-chard", "spinach", "bush-bean"]);
@@ -158,9 +159,12 @@ export function buildPlan(opts = {}) {
     year, frost, glut, cropList
   });
 
+  // --- the plantings that never enter a bed -----------------------------------------------------
+  const permanent = permanentPlan(frost);
+
   // --- the season plan --------------------------------------------------------------------------
   const phases = buildPhases({
-    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun, layout, bedPlan
+    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun, layout, bedPlan, permanent
   });
 
   // --- the drawing: an illustration of the ground, with no numbers to get wrong ------------------
@@ -178,6 +182,7 @@ export function buildPlan(opts = {}) {
     phases,
     bed_plan: bedPlan,
     layout,
+    permanent_plantings: permanent,
     diagram_svg: diagram,
     rotation,
     geometry,

@@ -113,7 +113,9 @@ const LOOKS = {
   "chives": "a dense clump of thin green chive tubes with purple flowers",
   "walking-onion": "a walking onion with small topset bulbs on tall stems",
   // fruiting
-  "hot-pepper": "a compact chilli plant with small pointed red peppers",
+  // The first attempt came back as an ornamental with pink flower BUDS — the model read "pointed peppers"
+  // as buds. Spelling out the fruit is what fixed it: long, thin, red, hanging from the stems.
+  "hot-pepper": "a chilli pepper plant with several long thin bright red peppers hanging from its green stems and broad green leaves",
   "eggplant": "an eggplant with broad leaves and one glossy purple fruit",
   "tomatillo": "a tomatillo plant with papery lantern husks",
   "summer-squash": "a bushy summer squash plant with a scalloped pale fruit",
