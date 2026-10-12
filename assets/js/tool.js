@@ -114,6 +114,29 @@ function labelledImage(dataUrl) {
   });
 }
 
+/** Rasterise our own SVG plan so it can be printed or sent to a phone. */
+function svgToPng(svg, scale = 2) {
+  return new Promise((resolve) => {
+    const w = Number((svg.match(/width="(\d+)"/) || [])[1] || 900);
+    const h = Number((svg.match(/height="(\d+)"/) || [])[1] || 600);
+    const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = w * scale;
+      c.height = h * scale;
+      const x = c.getContext("2d");
+      x.fillStyle = "#fffdf6";
+      x.fillRect(0, 0, c.width, c.height);
+      x.scale(scale, scale);
+      x.drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
+
 function download(name, dataUrl) {
   const a = document.createElement("a");
   a.href = dataUrl;
@@ -172,29 +195,64 @@ function renderResult(j) {
     frostLine.classList.remove("hidden");
   }
 
+  // The layout drawing. We generate this ourselves and inline it, so there is nothing to be wrong about:
+  // bed widths, paths, what goes where, to scale.
+  const diagram = $("#result-diagram");
+  if (diagram && j.diagram_svg) {
+    diagram.innerHTML = j.diagram_svg;
+    const svgEl = diagram.querySelector("svg");
+    if (svgEl) {
+      svgEl.removeAttribute("width");
+      svgEl.removeAttribute("height");
+      svgEl.style.width = "100%";
+      svgEl.style.height = "auto";
+    }
+    const cap = $("#result-diagram-caption");
+    if (cap) {
+      const beds = (j.layout && j.layout.beds) || [];
+      cap.textContent = beds.length + " bed" + (beds.length === 1 ? "" : "s")
+        + ", drawn to scale — the bed-by-bed detail is in the plan below.";
+    }
+    const pngBtn = $("#download-plan-png");
+    if (pngBtn) {
+      pngBtn.classList.remove("hidden");
+      pngBtn.onclick = (e) => {
+        e.preventDefault();
+        svgToPng(j.diagram_svg).then((url) => download("garden-plan.png", url));
+      };
+    }
+    const svgBtn = $("#download-plan-svg");
+    if (svgBtn) {
+      svgBtn.classList.remove("hidden");
+      svgBtn.onclick = (e) => {
+        e.preventDefault();
+        download("garden-plan.svg", "data:image/svg+xml;charset=utf-8," + encodeURIComponent(j.diagram_svg));
+      };
+    }
+  }
+
+  // The illustration is kept, and demoted to what it honestly is: a sketch of the yard.
   const shot = $("#result-shot");
+  const sketchBlock = $("#sketch-block");
   if (shot && j.plan_image_data_url) {
-    labelledImage(j.plan_image_data_url).then((labelled) => {
-      shot.src = labelled;
-      const dl = $("#download-drawing");
-      if (dl) {
-        dl.classList.remove("hidden");
-        dl.onclick = (e) => {
-          e.preventDefault();
-          download("permaculture-plan.png", labelled);
-        };
-      }
-    });
+    shot.src = j.plan_image_data_url;
+    if (sketchBlock) sketchBlock.classList.remove("hidden");
+  } else if (sketchBlock) {
+    sketchBlock.classList.add("hidden");
   }
 
   const beds = $("#result-beds");
   if (beds && j.bed_plan && j.bed_plan.length) {
-    beds.innerHTML = `<h4>what to put in, and how much${j.geometry_label ? ` — ${j.geometry_label}` : ""}</h4>`
+    beds.innerHTML = `<h4>bed by bed${j.geometry_label ? ` — ${j.geometry_label}` : ""}</h4>`
       + j.bed_plan.map((b) => `
-      <div class="bedrow">
-        <span class="bcount">${b.print}</span>
-        <span class="bname">${b.name}</span>
-        <span class="bnote">${b.note || ""}${b.family ? ` · ${b.family}` : ""}</span>
+      <div class="bedgroup">
+        <div class="bedhead">Bed ${b.bed}${b.length_ft ? ` · ${b.length_ft} ft long` : ""}</div>
+        ${(b.segments || []).map((s) => `
+        <div class="bedrow">
+          <span class="bcount">${s.print}</span>
+          <span class="bname">${s.name}</span>
+          <span class="bnote">${s.note || ""}${s.family ? ` · ${s.family}` : ""}${s.tall ? " · tall, north end" : ""}</span>
+        </div>`).join("")}
       </div>`).join("");
     if (j.rotation && j.rotation.clashes && j.rotation.clashes.length) {
       beds.innerHTML += `<p class="fine">Rotation flag: ${j.rotation.clashes
@@ -512,6 +570,7 @@ if (location.hash === "#demo" && els.result) {
     .then((j) => {
       renderResult({
         plan_image_data_url: j.plan_image_url,
+        diagram_svg: j.diagram_svg, layout: j.layout,
         phases: j.phases, bed_plan: j.bed_plan, rotation: j.rotation, geometry_label: j.geometry_label,
         harvest_window: j.harvest_window, glut: j.glut, frost: j.frost,
         notes: j.notes || [], concept_disclaimer: j.concept_disclaimer

@@ -13,6 +13,7 @@
 
 import { crops, cropById, windowsFor, glutWindow, frostFor } from "./harvest.mjs";
 import { GEOMETRIES, bedLine, familyOf, rotationCheck } from "./beds.mjs";
+import { assignBeds, planDiagram } from "./layout.mjs";
 import { buildPhases } from "./phases.mjs";
 
 const CONTAINER_OK = new Set(["cherry-tomato", "pepper", "lettuce", "kale", "swiss-chard", "spinach", "bush-bean"]);
@@ -114,15 +115,35 @@ export function buildPlan(opts = {}) {
   const ids = chosen.map((c) => c.id).concat(includeGarlic ? ["garlic"] : []);
   const cropList = chosen.concat(includeGarlic ? [cropById("garlic")] : []);
 
-  // --- counts, in the geometry asked for --------------------------------------------------------
-  const bedPlan = cropList.map((c) => ({ ...bedLine(c, geometry, bedCount), family: familyOf(c) }));
+  // --- counts and layout ------------------------------------------------------------------------
+  // The layout is the single source of the numbers: the drawing, the bed-by-bed text and the summary
+  // list all read from it, so the picture and the words cannot disagree.
   const rotation = rotationCheck(cropList);
-
-  // --- the season plan --------------------------------------------------------------------------
+  const layout = assignBeds(cropList, { geometry, bedCount });
+  const bedPlan = layout.beds.map((b) => ({
+    bed: b.n,
+    length_ft: b.length_ft,
+    text: `Bed ${b.n}: ` + b.segments
+      .map((s) => `${s.name} ${s.print}${s.tall ? " (tall — north end)" : ""}`)
+      .join(" · then ") + ".",
+    segments: b.segments.map((s) => ({
+      crop: s.crop, name: s.name, family: s.family, print: s.print,
+      length_ft: s.length_ft, spacing_in: s.spacing_in, note: s.note, tall: !!s.tall
+    }))
+  }));
   const windows = windowsFor(ids, scope);
   const glut = glutWindow(ids, scope);
+
+  // The plan drawn to scale, from our own numbers. This is the layout picture — the illustration the
+  // image model produces is decoration beside it, and is never asked to carry information again.
+  const diagram = planDiagram(layout, {
+    geometry, place: frost.known ? frost.place : (opts.zip ? "your patch" : "your patch"),
+    year, frost, glut, cropList
+  });
+
+  // --- the season plan --------------------------------------------------------------------------
   const phases = buildPhases({
-    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun
+    cropList, geometry, bedCount, existing, frost, year, windows, glut, sun, layout
   });
 
   // --- the drawing: an illustration of the ground, with no numbers to get wrong ------------------
@@ -139,6 +160,8 @@ export function buildPlan(opts = {}) {
     crop_list: chosen.map((c) => ({ id: c.id, name: c.name, family: familyOf(c), method: c.method, cold: !!c.cold })),
     phases,
     bed_plan: bedPlan,
+    layout,
+    diagram_svg: diagram,
     rotation,
     geometry,
     geometry_label: GEOMETRIES[geometry].label,

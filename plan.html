@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plan my yard — Permaculture AI</title>
-<meta name="description" content="Tell us your zip code and drop in a photo of your yard. Get a numbered planting plan, how many of each plant fits your beds, and the window each crop lands in. The first plan is free.">
+<meta name="description" content="Tell us your zip code and drop in a photo of your yard. Get a planting plan drawn to scale for your beds, the season in dated phases, and the window each crop lands in. The first plan is free.">
 <link rel="icon" href="assets/img/favicon.svg">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
@@ -110,15 +110,15 @@
         <ol style="margin-left:18px;font-size:15px">
           <li>Your zip gives us your frost dates and your season length, from NOAA records.</li>
           <li>Your photo goes to our own machine — nothing is sent to a cloud AI.</li>
-          <li>Back comes the drawing, how much of each plant your beds hold, five steps in order,
-            and the window each crop lands in.</li>
+          <li>Back comes your plan drawn to scale — what goes in each bed and how much, the season in
+            eight dated phases, and the window each crop lands in.</li>
         </ol>
         <p class="fine">If the machine is asleep or mid-render, you keep your place in line and the page
           says so. Nothing is lost.</p>
       </div>
       <div class="card flat" style="padding:18px;margin-top:14px">
         <div class="kicker">before you press it</div>
-        <p class="fine" style="margin:0">The drawing is a concept sketch, not construction drawings, and the
+        <p class="fine" style="margin:0">The plan is a concept layout, not construction drawings, and the
           dates are estimates from the nearest weather station — a cold hollow two miles from a hilltop
           can differ by a week. Confirm your own frost dates before you plant anything tender.</p>
       </div>
@@ -136,9 +136,13 @@
 
   <p id="result-frost" class="frostline hidden"></p>
 
-  <div class="shot"><img id="result-shot" alt="Your yard, drawn over with a numbered planting plan."></div>
+  <div class="diagramwrap">
+    <div class="diagram" id="result-diagram"></div>
+    <p class="fine" id="result-diagram-caption"></p>
+  </div>
   <div class="actions">
-    <a class="btn small hidden" id="download-drawing" href="#">Download the drawing</a>
+    <a class="btn small hidden" id="download-plan-png" href="#">Download the plan (PNG)</a>
+    <a class="btn small hidden" id="download-plan-svg" href="#">Download the plan (SVG)</a>
     <a class="btn small carrot hidden" id="calendar-btn" href="#">Add the harvest window to your calendar</a>
   </div>
   <p class="fine" id="result-disclaimer"></p>
@@ -146,6 +150,14 @@
   <div id="result-beds" class="bedlist hidden"></div>
 
   <div class="steps" id="result-steps"></div>
+
+  <details class="sketch" id="sketch-block">
+    <summary>An artist's sketch of your yard <span class="muted">— decorative, not the plan</span></summary>
+    <div class="shot"><img id="result-shot" alt="A stylised illustration of your yard, drawn from your photo."></div>
+    <p class="fine">The model that draws this is good at <em>style</em> and unreliable at <em>information</em>, so it isn't
+      asked for any: the layout is the drawing above, which we generate from your own numbers. Use
+      <strong>Download the plan</strong> for the one to take outside.</p>
+  </details>
 
   <div class="win">
     <h4>your preservation window</h4>

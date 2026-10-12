@@ -128,8 +128,20 @@ label.fld span { display: block; font-family: var(--font-mono); font-size: 11px;
 .bname { flex: none; min-width: 150px; font-weight: 600; }
 .bnote { font-size: 13px; color: var(--ink-soft); }
 
+.bedgroup { margin: 14px 0 4px; }
+.bedhead { font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em;
+           color: var(--leaf-dark); border-bottom: 2px solid var(--ink); padding-bottom: 4px; margin-bottom: 4px; }
+
 .notes { margin-left: 18px; font-size: 14.5px; }
 .notes li { margin-bottom: 6px; }
+
+/* the layout drawing — ours, to scale */
+.diagramwrap { margin: 18px 0 10px; }
+.diagram { border: 2.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #fffdf6; }
+.diagram svg { display: block; max-width: 100%; height: auto; }
+.sketch { margin-top: 22px; border-top: 2px dotted var(--rule); padding-top: 12px; }
+.sketch summary { cursor: pointer; font-weight: 700; }
+.sketch .shot { margin-top: 12px; }
 
 /* the plan itself: phases */
 .phase { border-top: 2.5px solid var(--ink); padding: 18px 0 6px; margin-top: 8px; }

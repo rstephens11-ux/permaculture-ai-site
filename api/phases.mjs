@@ -77,14 +77,17 @@ export function findGap(windows) {
 export function buildPhases(opts) {
   const {
     cropList = [], geometry = "coleman_30", bedCount = 1, existing = "unsure",
-    frost = {}, year = new Date().getUTCFullYear(), windows = [], glut = null, sun = "full"
+    frost = {}, year = new Date().getUTCFullYear(), windows = [], glut = null, sun = "full",
+    layout = null
   } = opts;
 
   const g = GEOMETRIES[geometry] || GEOMETRIES.coleman_30;
   const lastFrostMs = frost.known ? userWay(frost.last_spring_freeze, year) : null;
   const lastFrost = frost.known ? fmtDate(`${year}-${frost.last_spring_freeze.replace("/", "-")}`) : null;
   const frostLine = lastFrost ? `${lastFrost}` : "your last-frost date";
-  const lines = cropList.map((c) => bedLine(c, g.id, bedCount));
+  // NB: no whole-bed count lines any more. `bedLine` answers "how many if this crop had a bed to
+  // itself", and the layout allocates crops *lengths* of a shared bed, so printing both gave two
+  // different answers for the same crop. The layout is the authority; its numbers are the ones shown.
   const rotation = rotationCheck(cropList);
   const gap = findGap(windows);
   const byId = Object.fromEntries(cropList.map((c) => [c.id, c]));
@@ -188,10 +191,15 @@ export function buildPhases(opts) {
       {
         text: `Bed geometry: ${g.label}. ${g.why}`
       },
-      ...lines.map((l) => ({
-        text: `${l.name}: ${l.print}${l.detail ? ` (${l.detail})` : ""} — ${l.note}`,
-        crop: l.crop
+      // Bed by bed, because that is what you carry to the garden — and because the drawing beside this
+      // is built from the same numbers, so the picture and the text cannot drift apart.
+      ...((layout && layout.beds) || []).map((b) => ({
+        tag: `bed ${b.n}`,
+        text: `Bed ${b.n}${b.length_ft ? ` (${b.length_ft} ft long)` : ""}: ${(b.segments || [])
+          .map((s) => `${s.name} ${s.print}${s.tall ? " (tall — north end)" : ""}`)
+          .join(" · then ")}.`
       })),
+
       {
         text: rotation.clashes.length
           ? `Rotation flag: this plan has two of the same family — ${rotation.clashes.map((c) => `${c.names.join(" and ")} (${c.family})`).join(", ")}. Put them in different beds at minimum, and do not follow last year's same family with them.`

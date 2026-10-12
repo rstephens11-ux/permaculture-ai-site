@@ -116,10 +116,18 @@ test("the finished job carries the phased season plan, the counts, the local fro
   }
   assert.match(j.phases[0].title, /build the beds/i);
 
-  assert.ok(j.bed_plan.length >= 3, "a bed plan with counts");
-  assert.ok(j.bed_plan.every((b) => b.print && b.unit), "every bed line has a printable quantity");
-  assert.ok(j.bed_plan.every((b) => /\d/.test(b.print)), "with a number in it");
-  assert.ok(j.bed_plan.every((b) => b.family), "and carries its botanical family for rotation");
+  // bed_plan is now the layout itself: one entry per bed, each with its crop segments. The text, the
+  // drawing and this list all read from the same allocation, so they cannot disagree.
+  assert.equal(j.bed_plan.length, 2, "one entry per bed");
+  assert.deepEqual(j.bed_plan.map((b) => b.bed), [1, 2]);
+  for (const b of j.bed_plan) {
+    assert.ok(b.segments.length >= 1, `bed ${b.bed} has crops in it`);
+    assert.ok(b.segments.every((s) => s.print && /\d/.test(s.print)), "every segment has a quantity");
+    assert.ok(b.segments.every((s) => s.family), "and a botanical family, for the drawing and rotation");
+    assert.ok(b.text && /^Bed \d/.test(b.text), "and a printable one-liner");
+  }
+  assert.equal(j.layout.beds.length, 2, "the layout agrees with the plan list");
+  assert.ok(j.diagram_svg.includes("<svg"), "and the layout is drawn");
   assert.equal(j.beds.count, 2, "and it remembers two beds were asked for");
   assert.equal(j.geometry, "coleman_30");
   assert.equal(j.sun, "part");

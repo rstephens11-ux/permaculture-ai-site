@@ -220,6 +220,8 @@ export function createApi({
           plan_image_data_url: `data:${v.result.mime};base64,${v.result.imageB64}`,
           phases: spec ? spec.phases : [],
           bed_plan: spec ? spec.bed_plan : [],
+          layout: spec ? spec.layout : null,
+          diagram_svg: spec ? spec.diagram_svg : null,
           rotation: spec ? spec.rotation : null,
           geometry: spec ? spec.geometry : null,
           geometry_label: spec ? spec.geometry_label : null,

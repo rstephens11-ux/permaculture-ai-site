@@ -1,6 +1,100 @@
 {
   "plan_image_url": "assets/img/sample-plan.jpg",
   "engine": "mock",
+  "diagram_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 820 618\" width=\"820\" height=\"618\" font-family=\"-apple-system,Helvetica,Arial,sans-serif\"><rect width=\"820\" height=\"618\" fill=\"#fffdf6\"/><text x=\"46\" y=\"34\" font-size=\"21\" font-weight=\"800\" fill=\"#20301c\">Wiscasset, ME — the 2027 season</text><text x=\"46\" y=\"56\" font-size=\"12.5\" fill=\"#5b6a53\">last frost 04/27 · first fall freeze 10/18 · 174 frost-free days</text><text x=\"46\" y=\"76\" font-size=\"12.5\" fill=\"#2f7a3f\">30 in beds, 12-inch paths · drawn to scale, one foot = 34px · north at the top</text><text x=\"46\" y=\"84\" font-size=\"12\" fill=\"#c2455e\">peak week: everything lands 2027-06-02 to 2027-08-03</text><g transform=\"translate(760, 96)\"><path d=\"M0 22 L0 0 M-6 8 L0 0 L6 8\" fill=\"none\" stroke=\"#20301c\" stroke-width=\"2\"/><text x=\"0\" y=\"34\" font-size=\"10\" fill=\"#5b6a53\" text-anchor=\"middle\">N</text></g><rect x=\"308\" y=\"118\" width=\"85\" height=\"408\" fill=\"#fff\" stroke=\"#20301c\" stroke-width=\"2.5\" rx=\"3\"/><text x=\"350.5\" y=\"110\" font-size=\"11\" font-weight=\"700\" fill=\"#20301c\" text-anchor=\"middle\">Bed 1</text><line x1=\"350.5\" y1=\"124\" x2=\"350.5\" y2=\"520\" stroke=\"#4a86b8\" stroke-width=\"1.6\" stroke-dasharray=\"7 5\"/><rect x=\"309.5\" y=\"119.5\" width=\"82\" height=\"133\" fill=\"#f6d5cb\" fill-opacity=\"0.55\" stroke=\"#8a3a22\" stroke-width=\"1.2\" rx=\"2\"/><text x=\"350.5\" y=\"183\" font-size=\"10.5\" font-weight=\"700\" fill=\"#8a3a22\" text-anchor=\"middle\">Tomato ↑</text><text x=\"350.5\" y=\"195\" font-size=\"9\" fill=\"#8a3a22\" text-anchor=\"middle\" opacity=\"0.85\">2 plants in 4 ft</text><text x=\"350.5\" y=\"206\" font-size=\"8\" fill=\"#8a3a22\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 24 in</text><rect x=\"309.5\" y=\"255.5\" width=\"82\" height=\"133\" fill=\"#d9e7ef\" fill-opacity=\"0.55\" stroke=\"#2c5c74\" stroke-width=\"1.2\" rx=\"2\"/><line x1=\"336.3333333333333\" y1=\"258\" x2=\"336.3333333333333\" y2=\"386\" stroke=\"#2c5c74\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"364.6666666666667\" y1=\"258\" x2=\"364.6666666666667\" y2=\"386\" stroke=\"#2c5c74\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><text x=\"350.5\" y=\"319\" font-size=\"10.5\" font-weight=\"700\" fill=\"#2c5c74\" text-anchor=\"middle\">Lettuce</text><text x=\"350.5\" y=\"331\" font-size=\"9\" fill=\"#2c5c74\" text-anchor=\"middle\" opacity=\"0.85\">12 plants in 4 ft</text><text x=\"350.5\" y=\"342\" font-size=\"8\" fill=\"#2c5c74\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 10 in</text><rect x=\"309.5\" y=\"391.5\" width=\"82\" height=\"133\" fill=\"#e0efe6\" fill-opacity=\"0.55\" stroke=\"#2f6752\" stroke-width=\"1.2\" rx=\"2\"/><line x1=\"329.25\" y1=\"394\" x2=\"329.25\" y2=\"522\" stroke=\"#2f6752\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"350.5\" y1=\"394\" x2=\"350.5\" y2=\"522\" stroke=\"#2f6752\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"371.75\" y1=\"394\" x2=\"371.75\" y2=\"522\" stroke=\"#2f6752\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><text x=\"350.5\" y=\"455\" font-size=\"10.5\" font-weight=\"700\" fill=\"#2f6752\" text-anchor=\"middle\">Mâche</text><text x=\"350.5\" y=\"467\" font-size=\"9\" fill=\"#2f6752\" text-anchor=\"middle\" opacity=\"0.85\">64 plants in 4 ft</text><text x=\"350.5\" y=\"478\" font-size=\"8\" fill=\"#2f6752\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 3 in</text><rect x=\"393\" y=\"118\" width=\"34\" height=\"408\" fill=\"#f2ede0\"/><text x=\"410\" y=\"322\" font-size=\"9\" fill=\"#a89b7d\" text-anchor=\"middle\" transform=\"rotate(-90 410 322)\">12in path</text><rect x=\"427\" y=\"118\" width=\"85\" height=\"408\" fill=\"#fff\" stroke=\"#20301c\" stroke-width=\"2.5\" rx=\"3\"/><text x=\"469.5\" y=\"110\" font-size=\"11\" font-weight=\"700\" fill=\"#20301c\" text-anchor=\"middle\">Bed 2</text><line x1=\"469.5\" y1=\"124\" x2=\"469.5\" y2=\"520\" stroke=\"#4a86b8\" stroke-width=\"1.6\" stroke-dasharray=\"7 5\"/><rect x=\"428.5\" y=\"119.5\" width=\"82\" height=\"133\" fill=\"#fbe8b8\" fill-opacity=\"0.55\" stroke=\"#8a6512\" stroke-width=\"1.2\" rx=\"2\"/><text x=\"469.5\" y=\"183\" font-size=\"10.5\" font-weight=\"700\" fill=\"#8a6512\" text-anchor=\"middle\">Cucumber ↑</text><text x=\"469.5\" y=\"195\" font-size=\"9\" fill=\"#8a6512\" text-anchor=\"middle\" opacity=\"0.85\">4 plants in 4 ft</text><text x=\"469.5\" y=\"206\" font-size=\"8\" fill=\"#8a6512\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 12 in</text><rect x=\"428.5\" y=\"255.5\" width=\"82\" height=\"133\" fill=\"#e8d3e0\" fill-opacity=\"0.55\" stroke=\"#7a2f5c\" stroke-width=\"1.2\" rx=\"2\"/><line x1=\"455.3333333333333\" y1=\"258\" x2=\"455.3333333333333\" y2=\"386\" stroke=\"#7a2f5c\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"483.6666666666667\" y1=\"258\" x2=\"483.6666666666667\" y2=\"386\" stroke=\"#7a2f5c\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><text x=\"469.5\" y=\"319\" font-size=\"10.5\" font-weight=\"700\" fill=\"#7a2f5c\" text-anchor=\"middle\">Beet</text><text x=\"469.5\" y=\"331\" font-size=\"9\" fill=\"#7a2f5c\" text-anchor=\"middle\" opacity=\"0.85\">48 plants in 4 ft</text><text x=\"469.5\" y=\"342\" font-size=\"8\" fill=\"#7a2f5c\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 3 in</text><rect x=\"428.5\" y=\"391.5\" width=\"82\" height=\"133\" fill=\"#e3dcf2\" fill-opacity=\"0.55\" stroke=\"#4b3a80\" stroke-width=\"1.2\" rx=\"2\"/><line x1=\"448.25\" y1=\"394\" x2=\"448.25\" y2=\"522\" stroke=\"#4b3a80\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"469.5\" y1=\"394\" x2=\"469.5\" y2=\"522\" stroke=\"#4b3a80\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><line x1=\"490.75\" y1=\"394\" x2=\"490.75\" y2=\"522\" stroke=\"#4b3a80\" stroke-width=\"0.6\" stroke-dasharray=\"2 4\" opacity=\"0.7\"/><text x=\"469.5\" y=\"455\" font-size=\"10.5\" font-weight=\"700\" fill=\"#4b3a80\" text-anchor=\"middle\">Garlic</text><text x=\"469.5\" y=\"467\" font-size=\"9\" fill=\"#4b3a80\" text-anchor=\"middle\" opacity=\"0.85\">32 plants in 4 ft</text><text x=\"469.5\" y=\"478\" font-size=\"8\" fill=\"#4b3a80\" text-anchor=\"middle\" opacity=\"0.7\">4 ft · 6 in</text><text x=\"410\" y=\"550\" font-size=\"10.5\" fill=\"#5b6a53\" text-anchor=\"middle\">2 beds · 30-in beds, 12-in paths · about 6.0 ft across</text><g font-size=\"9.5\"><text x=\"46\" y=\"558\" font-size=\"10\" font-weight=\"700\" fill=\"#20301c\">families</text><rect x=\"46\" y=\"568\" width=\"10\" height=\"10\" fill=\"#f6d5cb\" stroke=\"#8a3a22\" stroke-width=\"1\"/><text x=\"60\" y=\"576\" fill=\"#20301c\">Tomato</text><rect x=\"99.35\" y=\"568\" width=\"10\" height=\"10\" fill=\"#d9e7ef\" stroke=\"#2c5c74\" stroke-width=\"1\"/><text x=\"113.35\" y=\"576\" fill=\"#20301c\">Lettuce</text><rect x=\"157.925\" y=\"568\" width=\"10\" height=\"10\" fill=\"#e8d3e0\" stroke=\"#7a2f5c\" stroke-width=\"1\"/><text x=\"171.925\" y=\"576\" fill=\"#20301c\">Beet</text><rect x=\"200.82500000000002\" y=\"568\" width=\"10\" height=\"10\" fill=\"#e0efe6\" stroke=\"#2f6752\" stroke-width=\"1\"/><text x=\"214.82500000000002\" y=\"576\" fill=\"#20301c\">Mâche (corn salad)</text><rect x=\"316.875\" y=\"568\" width=\"10\" height=\"10\" fill=\"#fbe8b8\" stroke=\"#8a6512\" stroke-width=\"1\"/><text x=\"330.875\" y=\"576\" fill=\"#20301c\">Cucumber</text><rect x=\"380.675\" y=\"568\" width=\"10\" height=\"10\" fill=\"#e3dcf2\" stroke=\"#4b3a80\" stroke-width=\"1\"/><text x=\"394.675\" y=\"576\" fill=\"#20301c\">Garlic</text></g></svg>",
+  "layout": {
+    "beds": [
+      {
+        "n": 1,
+        "length_ft": 12,
+        "segments": [
+          {
+            "crop": "tomato",
+            "name": "Tomato",
+            "family": "Solanaceae",
+            "length_ft": 4,
+            "rows": 1,
+            "plants": 2,
+            "spacing_in": 24,
+            "print": "2 plants in 4 ft",
+            "note": "one row down the middle, staked; the whole bed is then reachable without stepping on it",
+            "tall": true
+          },
+          {
+            "crop": "lettuce",
+            "name": "Lettuce",
+            "family": "Asteraceae",
+            "length_ft": 4,
+            "rows": 3,
+            "plants": 12,
+            "spacing_in": 10,
+            "print": "12 plants in 4 ft",
+            "note": "three rows 9 in apart; cut the outer leaves and it keeps going",
+            "tall": false
+          },
+          {
+            "crop": "mache",
+            "name": "Mâche (corn salad)",
+            "family": "Caprifoliaceae",
+            "length_ft": 4,
+            "rows": 4,
+            "plants": 64,
+            "spacing_in": 3,
+            "print": "64 plants in 4 ft",
+            "note": "scatter across the whole bed rather than in rows",
+            "tall": false
+          }
+        ],
+        "used_ft": 12
+      },
+      {
+        "n": 2,
+        "length_ft": 12,
+        "segments": [
+          {
+            "crop": "cucumber",
+            "name": "Cucumber",
+            "family": "Cucurbitaceae",
+            "length_ft": 4,
+            "rows": 1,
+            "plants": 4,
+            "spacing_in": 12,
+            "print": "4 plants in 4 ft",
+            "note": "one row up a trellis at the north end — vertical, so the bed stays usable",
+            "tall": true
+          },
+          {
+            "crop": "beet",
+            "name": "Beet",
+            "family": "Amaranthaceae",
+            "length_ft": 4,
+            "rows": 3,
+            "plants": 48,
+            "spacing_in": 3,
+            "print": "48 plants in 4 ft",
+            "note": "three rows 9 in apart, thinned hard — beets hate crowding",
+            "tall": false
+          },
+          {
+            "crop": "garlic",
+            "name": "Garlic",
+            "family": "Allium",
+            "length_ft": 4,
+            "rows": 4,
+            "plants": 32,
+            "spacing_in": 6,
+            "print": "32 plants in 4 ft",
+            "note": "four rows 6 in apart each way — 30 in beds are made for garlic",
+            "tall": false
+          }
+        ],
+        "used_ft": 12
+      }
+    ],
+    "notes": [
+      "Tall crops are placed at the north end of the block so they don't shade the beds beside them."
+    ]
+  },
   "phases": [
     {
       "n": 1,
@@ -71,28 +165,12 @@
           "text": "Bed geometry: 30-inch beds, 12-inch paths (Coleman's system). Worked from the path, never stood on. Narrow enough to reach the middle from either side, which is the whole point — compaction is what costs you yield."
         },
         {
-          "text": "Tomato: 6 plants — one row down the middle, staked; the whole bed is then reachable without stepping on it",
-          "crop": "tomato"
+          "tag": "bed 1",
+          "text": "Bed 1 (12 ft long): Tomato 2 plants in 4 ft (tall — north end) · then Lettuce 12 plants in 4 ft · then Mâche (corn salad) 64 plants in 4 ft."
         },
         {
-          "text": "Lettuce: 36 row-feet (about 42 plants once thinned) — three rows 9 in apart; cut the outer leaves and it keeps going",
-          "crop": "lettuce"
-        },
-        {
-          "text": "Beet: 36 row-feet (about 144 plants once thinned) — three rows 9 in apart, thinned hard — beets hate crowding",
-          "crop": "beet"
-        },
-        {
-          "text": "Mâche (corn salad): 48 row-feet (about 192 plants once thinned) — scatter across the whole bed rather than in rows",
-          "crop": "mache"
-        },
-        {
-          "text": "Cucumber: 12 plants — one row up a trellis at the north end — vertical, so the bed stays usable",
-          "crop": "cucumber"
-        },
-        {
-          "text": "Garlic: 96 plants — four rows 6 in apart each way — 30 in beds are made for garlic",
-          "crop": "garlic"
+          "tag": "bed 2",
+          "text": "Bed 2 (12 ft long): Cucumber 4 plants in 4 ft (tall — north end) · then Beet 48 plants in 4 ft · then Garlic 32 plants in 4 ft."
         },
         {
           "text": "Families in this plan: Solanaceae, Asteraceae, Amaranthaceae, Caprifoliaceae, Cucurbitaceae, Allium — all different, which is what you want. Next year, keep each family moving to a different bed.",
@@ -242,55 +320,78 @@
   ],
   "bed_plan": [
     {
-      "crop": "tomato",
-      "name": "Tomato",
-      "print": "6 plants",
-      "note": "one row down the middle, staked; the whole bed is then reachable without stepping on it",
-      "unit": "plants",
-      "family": "Solanaceae"
+      "bed": 1,
+      "length_ft": 12,
+      "text": "Bed 1: Tomato 2 plants in 4 ft (tall — north end) · then Lettuce 12 plants in 4 ft · then Mâche (corn salad) 64 plants in 4 ft.",
+      "segments": [
+        {
+          "crop": "tomato",
+          "name": "Tomato",
+          "family": "Solanaceae",
+          "print": "2 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 24,
+          "note": "one row down the middle, staked; the whole bed is then reachable without stepping on it",
+          "tall": true
+        },
+        {
+          "crop": "lettuce",
+          "name": "Lettuce",
+          "family": "Asteraceae",
+          "print": "12 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 10,
+          "note": "three rows 9 in apart; cut the outer leaves and it keeps going",
+          "tall": false
+        },
+        {
+          "crop": "mache",
+          "name": "Mâche (corn salad)",
+          "family": "Caprifoliaceae",
+          "print": "64 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 3,
+          "note": "scatter across the whole bed rather than in rows",
+          "tall": false
+        }
+      ]
     },
     {
-      "crop": "lettuce",
-      "name": "Lettuce",
-      "print": "36 row-feet",
-      "detail": "about 42 plants once thinned",
-      "note": "three rows 9 in apart; cut the outer leaves and it keeps going",
-      "unit": "row_feet",
-      "family": "Asteraceae"
-    },
-    {
-      "crop": "beet",
-      "name": "Beet",
-      "print": "36 row-feet",
-      "detail": "about 144 plants once thinned",
-      "note": "three rows 9 in apart, thinned hard — beets hate crowding",
-      "unit": "row_feet",
-      "family": "Amaranthaceae"
-    },
-    {
-      "crop": "mache",
-      "name": "Mâche (corn salad)",
-      "print": "48 row-feet",
-      "detail": "about 192 plants once thinned",
-      "note": "scatter across the whole bed rather than in rows",
-      "unit": "row_feet",
-      "family": "Caprifoliaceae"
-    },
-    {
-      "crop": "cucumber",
-      "name": "Cucumber",
-      "print": "12 plants",
-      "note": "one row up a trellis at the north end — vertical, so the bed stays usable",
-      "unit": "plants",
-      "family": "Cucurbitaceae"
-    },
-    {
-      "crop": "garlic",
-      "name": "Garlic",
-      "print": "96 plants",
-      "note": "four rows 6 in apart each way — 30 in beds are made for garlic",
-      "unit": "plants",
-      "family": "Allium"
+      "bed": 2,
+      "length_ft": 12,
+      "text": "Bed 2: Cucumber 4 plants in 4 ft (tall — north end) · then Beet 48 plants in 4 ft · then Garlic 32 plants in 4 ft.",
+      "segments": [
+        {
+          "crop": "cucumber",
+          "name": "Cucumber",
+          "family": "Cucurbitaceae",
+          "print": "4 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 12,
+          "note": "one row up a trellis at the north end — vertical, so the bed stays usable",
+          "tall": true
+        },
+        {
+          "crop": "beet",
+          "name": "Beet",
+          "family": "Amaranthaceae",
+          "print": "48 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 3,
+          "note": "three rows 9 in apart, thinned hard — beets hate crowding",
+          "tall": false
+        },
+        {
+          "crop": "garlic",
+          "name": "Garlic",
+          "family": "Allium",
+          "print": "32 plants in 4 ft",
+          "length_ft": 4,
+          "spacing_in": 6,
+          "note": "four rows 6 in apart each way — 30 in beds are made for garlic",
+          "tall": false
+        }
+      ]
     }
   ],
   "rotation": {
@@ -346,7 +447,7 @@
   ],
   "beds": {
     "geometry": "coleman_30",
-    "count": 1
+    "count": 2
   },
   "existing": "no",
   "sun": "full",
