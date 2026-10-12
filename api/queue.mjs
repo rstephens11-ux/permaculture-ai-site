@@ -12,7 +12,7 @@ export function makeQueue({ engine, maxDepth = 6, log = () => {}, pollMs = 1500 
   const jobs = new Map();
   const order = [];
   let pumping = false;
-  let lastJobSeconds = 45; // first estimate before we have a measurement
+  let lastJobSeconds = 30; // first estimate before we have a measurement (real renders: 20-24s at 1K)
 
   function positionOf(id) {
     const q = order.filter((j) => jobs.get(j)?.state === "queued");

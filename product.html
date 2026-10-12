@@ -81,5 +81,14 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/leads.js"></script>
 <script src="assets/js/tool.js"></script>
+<script>
+  // One number decides whether any of this is a business: how many people who got a plan went looking at
+  // the product. Server-side counter, no identifier attached, nothing stored about who you are.
+  fetch(((window.PA_CONFIG && window.PA_CONFIG.apiBase) || "") + "/api/track", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ event: "product_view" })
+  }).catch(function () {});
+</script>
 </body>
 </html>

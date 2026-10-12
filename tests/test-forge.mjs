@@ -10,10 +10,26 @@ import { buildGraph, makeForgeEngine } from "../api/engine/forge.mjs";
 test("the graph carries the reference the way the server actually accepts it", () => {
   const g = buildGraph({ imageName: "yard-1.jpg", prompt: "draw a plan" });
   assert.ok(g["474"].inputs["images.image_1"], "dotted autogrow key");
-  assert.deepEqual(g["474"].inputs["images.image_1"], ["470", 0]);
+  assert.deepEqual(g["474"].inputs["images.image_1"], ["load1", 0]);
   assert.ok(!("images" in g["474"].inputs), "and NOT a nested dict, which validates then silently drops");
   assert.equal(g["474"].inputs.vae[0], "454", "the encoder needs the vae");
-  assert.equal(g["470"].inputs.image, "yard-1.jpg");
+  assert.equal(g["load1"].inputs.image, "yard-1.jpg");
+});
+
+test("extra photos become extra references, each on its own dotted key", () => {
+  const g = buildGraph({ imageNames: ["front.jpg", "side.jpg", "overhead.jpg"], prompt: "p" });
+  assert.deepEqual(g["474"].inputs["images.image_1"], ["load1", 0]);
+  assert.deepEqual(g["474"].inputs["images.image_2"], ["load2", 0]);
+  assert.deepEqual(g["474"].inputs["images.image_3"], ["load3", 0]);
+  assert.equal(g["load3"].inputs.image, "overhead.jpg");
+  assert.equal(g["load4"], undefined, "and no spare loaders");
+});
+
+test("the sampler runs at the denoise the graph actually needs", () => {
+  // Measured, not assumed: 0.55 turns the photograph to mush in this graph because the reference is
+  // conditioning rather than an initial latent. See the comment above OVERLAY_DENOISE.
+  const g = buildGraph({ imageName: "x.jpg", prompt: "p" });
+  assert.equal(g["458"].inputs.denoise, 1.0, "the graph's own value, which is the one that works");
 });
 
 test("the canvas follows the reference photo, not an empty latent", () => {

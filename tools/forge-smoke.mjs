@@ -21,13 +21,18 @@ if ((process.env.FORGE_SMOKE || "no") !== "yes") {
 }
 
 const photo = readFileSync(join(ROOT, "tests/fixtures/garden-sample.jpg"));
-const spec = buildPlan({ zip: "04578" });
+const spec = buildPlan({ zip: process.env.FORGE_SMOKE_ZIP || "04578" });
 const engine = makeForgeEngine({ log: (m) => console.log(`[forge] ${m}`) });
+const outFile = process.argv[2] || "forge-smoke.png";
 
 console.log(`engine: forge at ${process.env.FORGE_BASE_URL || "http://forge:8188"}`);
+console.log(`denoise: ${engine.denoise}  (1.0 = redraw the photo, 0.55 = draw on it)`);
+console.log(`zip: ${spec.frost.known ? `${spec.frost.place} — last frost ${spec.frost.last_spring_freeze}, ${spec.frost.frost_free_days} frost-free days` : "no frost record"}`);
+console.log(`crops chosen: ${spec.crops.join(", ")}`);
+if (spec.notes.length) spec.notes.forEach((n) => console.log(`  note: ${n}`));
+console.log(`beds: ${spec.bed_plan.map((b) => `${b.print} ${b.name.toLowerCase()}`).join(" · ")}`);
 console.log(`photo:  ${(photo.length / 1024).toFixed(0)} KB`);
 console.log(`labels: ${spec.labels.map((l) => `(${l.n}) ${l.text}`).join(", ")}`);
-console.log("prompt:", spec.prompt);
 console.log("submitting…");
 
 if (!(await engine.available())) {
@@ -49,9 +54,9 @@ try {
   const secs = (Date.now() - t0) / 1000;
   mkdirSync(join(ROOT, "out"), { recursive: true });
   const buf = Buffer.from(out.imageB64, "base64");
-  writeFileSync(join(ROOT, "out/forge-smoke.png"), buf);
+  writeFileSync(join(ROOT, "out", outFile), buf);
   console.log(`VERDICT: PASS — ${(buf.length / 1024).toFixed(0)} KB in ${secs.toFixed(1)}s`);
-  console.log(`wrote   out/forge-smoke.png`);
+  console.log(`wrote   out/${outFile}`);
   console.log(`gpu-seconds: ${secs.toFixed(1)}`);
 } catch (err) {
   const secs = (Date.now() - t0) / 1000;

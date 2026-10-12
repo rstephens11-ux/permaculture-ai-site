@@ -103,6 +103,34 @@ label.fld span { display: block; font-family: var(--font-mono); font-size: 11px;
 .tile b { display: block; margin-bottom: 4px; font-size: 15px; }
 
 /* ---------- the tool ---------- */
+.thumbs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.thumb { position: relative; margin: 0; }
+.thumb img { width: 92px; height: 92px; object-fit: cover; border: 2.5px solid var(--ink);
+             border-radius: 12px; display: block; }
+.thumb button { position: absolute; top: -8px; right: -8px; width: 26px; height: 26px; border-radius: 50%;
+                border: 2px solid var(--ink); background: var(--carrot); color: #fff; font-size: 15px;
+                font-weight: 800; line-height: 1; cursor: pointer; padding: 0; }
+
+.gatebox { border: 2.5px solid var(--ink); border-radius: var(--radius); background: #fff9e9;
+           padding: 18px; margin-top: 16px; box-shadow: var(--shadow-sm); }
+
+.frostline { border-left: 3px solid var(--leaf); padding-left: 12px; margin: 0 0 16px;
+             font-size: 15px; }
+.frostline b { color: var(--leaf-dark); }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 6px; }
+
+.bedlist { margin-top: 22px; }
+.bedlist h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+              text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px; }
+.bedrow { display: flex; align-items: baseline; gap: 10px; padding: 9px 0; border-bottom: 2px dotted var(--rule); }
+.bcount { flex: none; min-width: 96px; font-weight: 800; color: var(--carrot); }
+.bname { flex: none; min-width: 150px; font-weight: 600; }
+.bnote { font-size: 13px; color: var(--ink-soft); }
+
+.notes { margin-left: 18px; font-size: 14.5px; }
+.notes li { margin-bottom: 6px; }
+
 .drop { border: 3px dashed #b9c9b0; border-radius: 14px; padding: 30px 20px; text-align: center;
         background: #f7fbf2; cursor: pointer; display: block; }
 .drop:hover, .drop.hot { border-color: var(--leaf); background: #eef7e6; }

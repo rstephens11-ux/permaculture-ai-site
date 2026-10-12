@@ -9,7 +9,6 @@ import { extname, join, normalize, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
 import { createApi, MAX_BODY_BYTES } from "../api/handler.mjs";
-
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PORT = Number(process.env.PORT || 8099);
 const HOST = process.env.HOST || "127.0.0.1";
@@ -49,6 +48,17 @@ function clientIp(req) {
   const fwd = req.headers["x-forwarded-for"];
   if (typeof fwd === "string" && fwd.length) return fwd.split(",")[0].trim();
   return (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
+function parseCookies(header) {
+  const out = {};
+  if (!header) return out;
+  for (const part of String(header).split(";")) {
+    const i = part.indexOf("=");
+    if (i < 0) continue;
+    out[part.slice(0, i).trim()] = decodeURIComponent(part.slice(i + 1).trim());
+  }
+  return out;
 }
 
 function send(res, status, headers, body) {
@@ -94,9 +104,12 @@ const server = createServer(async (req, res) => {
       method: req.method,
       path: url.split("?")[0],
       ip: clientIp(req),
+      cookies: parseCookies(req.headers.cookie),
       json
     });
-    return send(res, out.status, { "content-type": "application/json; charset=utf-8" }, JSON.stringify(out.json));
+    const headers = { "content-type": "application/json; charset=utf-8" };
+    if (out.setCookie) headers["set-cookie"] = out.setCookie;   // the visitor's token, minted on first use
+    return send(res, out.status, headers, JSON.stringify(out.json));
   }
 
   return serveStatic(res, url);

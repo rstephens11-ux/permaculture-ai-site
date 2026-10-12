@@ -1,42 +1,49 @@
 // assets/js/tool.js — the free tool's front end.
 //
-// The browser holds no key and talks only to our own /api. The photo never leaves as a file upload:
-// it is read into a data URL, posted, and the server drops it after the render. That is the privacy
-// promise on the page, so keep it true here.
+// The browser holds no key and talks only to our own /api. The photo never leaves as a file upload: it is
+// read into a data URL, posted, and the server drops it after the render. That is the privacy promise on
+// the page, so keep it true here.
+//
+// Three things this file is careful about:
+//   1. the gate. The first plan is free; the second asks for an email, which buys five a week. The server
+//      decides — this only renders what it's told, so the client can never grant itself renders.
+//   2. the drawing gets a visible "concept sketch · AI generated" label burned into the pixels before it
+//      can be downloaded, so the label travels with a screenshot.
+//   3. the dates become something you can put in a calendar, not just read.
 
 const $ = (s) => document.querySelector(s);
 
-// Where the machine lives. Empty = this origin (the normal case: the Mac serves pages and API together).
-// A static host with a home GPU sets apiBase to the tunnel hostname — see assets/js/config.js.
 const API_BASE = (window.PA_CONFIG && window.PA_CONFIG.apiBase) || "";
 const apiUrl = (path) => `${API_BASE}${path}`;
-const api = (path) => fetch(apiUrl(path), { headers: { accept: "application/json" } });
+const api = (path, opts) => fetch(apiUrl(path), opts);
 
 const els = {
+  form: $("#tool-form"),
   file: $("#file"),
   drop: $("#drop"),
-  thumb: $("#thumb"),
-  email: $("#email"),
+  thumbs: $("#thumbs"),
   zip: $("#zip"),
+  bedsType: $("#beds-type"),
+  bedsCount: $("#beds-count"),
+  sun: $("#sun"),
+  email: $("#email"),
   go: $("#go"),
-  form: $("#tool-form"),
-  queue: $("#queue"),
-  qpos: $("#qpos"),
-  qmsg: $("#qmsg"),
-  qbar: $("#qbar"),
-  qrow: $("#qrow"),
+  allowance: $("#allowance"),
   status: $("#status"),
+  queue: $("#queue"), qpos: $("#qpos"), qmsg: $("#qmsg"), qbar: $("#qbar"), qrow: $("#qrow"),
+  gate: $("#gate"), gateEmail: $("#gate-email"), gateBtn: $("#gate-btn"), gateStatus: $("#gate-status"),
   result: $("#result")
 };
 
-let photoDataUrl = null;
+const MAX_PHOTOS = 3;
+let photos = [];
 let pollTimer = null;
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function fmtDate(iso) {
   if (!iso) return "";
-  const [y, m, d] = iso.split("-").map(Number);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return `${months[m - 1]} ${d}`;
+  const [, m, d] = iso.split("-").map(Number);
+  return `${MONTHS[m - 1]} ${d}`;
 }
 
 function say(msg, isError = false) {
@@ -60,22 +67,144 @@ function setQueue({ position, eta, message, closed }) {
   }
 }
 
+function showAllowance(status) {
+  if (!els.allowance || !status) return;
+  if (status.free_left > 0) {
+    els.allowance.textContent = `Your free plan — the first one's on us.`;
+  } else if (status.week_left > 0) {
+    els.allowance.textContent = `${status.week_left} of ${status.renders_after_email} plans left this week.`;
+  } else if (status.needs_email) {
+    els.allowance.textContent = `That was your free plan — pop your email in and you get five a week.`;
+  } else {
+    els.allowance.textContent = `You've used this week's plans (${status.renders_after_email}). They come back in ${status.week_resets_in_days} day${status.week_resets_in_days === 1 ? "" : "s"}.`;
+  }
+}
+
+/* ------------------------------------------------------------------ the drawing, labelled */
+
+/** Draw the render onto a canvas with the AI/concept label burned in, so it survives a screenshot. */
+function labelledImage(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const pad = Math.max(14, Math.round(img.width * 0.018));
+      const strip = Math.max(46, Math.round(img.width * 0.055));
+      const c = document.createElement("canvas");
+      c.width = img.width;
+      c.height = img.height + strip;
+      const x = c.getContext("2d");
+      x.drawImage(img, 0, 0);
+      x.fillStyle = "#fffdf6";
+      x.fillRect(0, img.height, c.width, strip);
+      x.fillStyle = "#20301c";
+      x.strokeStyle = "#20301c";
+      x.lineWidth = Math.max(2, Math.round(img.width * 0.002));
+      x.strokeRect(x.lineWidth / 2, img.height + x.lineWidth / 2, c.width - x.lineWidth, strip - x.lineWidth);
+      x.font = `bold ${Math.round(strip * 0.34)}px -apple-system, Helvetica, Arial, sans-serif`;
+      x.fillStyle = "#20301c";
+      x.fillText("Concept sketch — AI generated", pad, img.height + strip * 0.42);
+      x.font = `${Math.round(strip * 0.26)}px -apple-system, Helvetica, Arial, sans-serif`;
+      x.fillStyle = "#5b6a53";
+      x.fillText("Not to scale. Not construction drawings. Confirm your own frost dates.", pad, img.height + strip * 0.78);
+      resolve(c.toDataURL("image/png"));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+function download(name, dataUrl) {
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+/** The harvest window as a calendar file — the point of knowing the dates at all. */
+function icsFor(windows, place) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const pad = (n) => String(n).padStart(2, "0");
+  const lines = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Permaculture AI//planting plan//EN", "CALSCALE:GREGORIAN"
+  ];
+  windows.filter((w) => w.known).forEach((w) => {
+    const d = w.window_open.replace(/-/g, "");
+    const end = w.window_close.replace(/-/g, "");
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:pa-${w.crop}-${d}@permacultureai.com`,
+      `DTSTAMP:${stamp}`,
+      `DTSTART;VALUE=DATE:${d}`,
+      `DTEND;VALUE=DATE:${end}`,
+      `SUMMARY:${w.name} starts coming in`,
+      `DESCRIPTION:From your Permaculture AI plan${place ? ` for ${place}` : ""}. Estimated window ${w.window_open} to ${w.window_close}. Concept sketch — confirm your own frost dates.`,
+      "END:VEVENT"
+    );
+  });
+  lines.push("END:VCALENDAR");
+  return "data:text/calendar;charset=utf-8," + encodeURIComponent(lines.join("\r\n") + "\r\n");
+}
+
+/* ------------------------------------------------------------------ rendering the result */
+
 function renderResult(j) {
-  els.queue.classList.add("hidden");
+  if (els.queue) els.queue.classList.add("hidden");
+  if (els.gate) els.gate.classList.add("hidden");
+  if (!els.result) return;
   els.result.classList.remove("hidden");
 
+  const place = j.frost && j.frost.known ? j.frost.place : null;
+  const title = $("#result-title");
+  if (title) title.textContent = place ? `Your patch — ${place}` : "Your patch";
+
+  // frost context: this is what the zip code bought
+  const frostLine = $("#result-frost");
+  if (frostLine) {
+    frostLine.innerHTML = j.frost && j.frost.known
+      ? `Last frost around <b>${j.frost.last_spring_freeze}</b>, first fall freeze around
+         <b>${j.frost.first_fall_freeze}</b> — about <b>${j.frost.frost_free_days}</b> frost-free days
+         ${j.frost.zone ? `(zone ${j.frost.zone})` : ""}.
+         <span class="muted">${j.frost.caveat || ""}</span>`
+      : `<span class="muted">No frost record for that zip — the dates below are general, not local.</span>`;
+    frostLine.classList.remove("hidden");
+  }
+
   const shot = $("#result-shot");
-  if (shot) shot.src = j.plan_image_data_url;
+  if (shot && j.plan_image_data_url) {
+    labelledImage(j.plan_image_data_url).then((labelled) => {
+      shot.src = labelled;
+      const dl = $("#download-drawing");
+      if (dl) {
+        dl.classList.remove("hidden");
+        dl.onclick = (e) => {
+          e.preventDefault();
+          download("permaculture-plan.png", labelled);
+        };
+      }
+    });
+  }
+
+  const beds = $("#result-beds");
+  if (beds && j.bed_plan && j.bed_plan.length) {
+    beds.innerHTML = `<h4>what to put in, and how much</h4>` + j.bed_plan.map((b) => `
+      <div class="bedrow">
+        <span class="bcount">${b.print}</span>
+        <span class="bname">${b.name}</span>
+        <span class="bnote">${b.spacing}</span>
+      </div>`).join("");
+    beds.classList.remove("hidden");
+  }
 
   const steps = $("#result-steps");
   steps.innerHTML = "";
-  j.steps.forEach((s, i) => {
+  (j.steps || []).forEach((s, i) => {
     const el = document.createElement("div");
     el.className = "step";
     const bits = [];
     if (s.plantVarieties && s.plantVarieties.length) bits.push(`try ${s.plantVarieties.join(", ")}`);
     if (s.companionPlants && s.companionPlants.length) bits.push(`with ${s.companionPlants.slice(0, 3).join(", ")}`);
-    if (s.wateringNeeds) bits.push(s.wateringNeeds);
     el.innerHTML = `<div class="num">${i + 1}</div>
       <div class="tx">${s.description}
         ${bits.length ? `<em>${bits.join(" · ")}</em>` : ""}
@@ -86,34 +215,54 @@ function renderResult(j) {
 
   const chips = $("#result-window");
   chips.innerHTML = "";
-  (j.harvest_window || [])
-    .filter((w) => w.known)
-    .slice()
-    .sort((a, b) => (a.window_open < b.window_open ? -1 : 1)) // earliest first — it reads as a season
-    .forEach((w) => {
+  const windows = (j.harvest_window || []).filter((w) => w.known)
+    .slice().sort((a, b) => (a.window_open < b.window_open ? -1 : 1));
+  windows.forEach((w) => {
     const el = document.createElement("div");
     el.className = "chip";
-    el.innerHTML = `${w.name.toLowerCase()} <b>${fmtDate(w.window_open)}</b>`;
+    el.innerHTML = `${w.name.toLowerCase()} <b>${fmtDate(w.window_open)}</b>`
+      + (w.fit === "stretch" ? ` <span class="muted">stretch</span>` : "");
     chips.appendChild(el);
   });
 
   const glut = $("#result-glut");
-  if (j.glut) {
-    let line = `Everything you planted lands between <b>${fmtDate(j.glut.open)}</b> and
-      <b>${fmtDate(j.glut.close)}</b>.`;
-    if (j.glut.next_season && j.glut.next_season.length) {
-      line += ` <span class="muted">And ${j.glut.next_season
-        .map((n) => `${n.name.toLowerCase()} comes off ${fmtDate(n.window_open)}, planted this fall
-          — that one's its own kind of planning`)
-        .join(", ")}.</span>`;
+  if (glut) {
+    glut.innerHTML = "";
+    if (j.glut) {
+      let line = `Everything you planted lands between <b>${fmtDate(j.glut.open)}</b> and
+        <b>${fmtDate(j.glut.close)}</b>.`;
+      if (j.glut.next_season && j.glut.next_season.length) {
+        line += ` <span class="muted">And ${j.glut.next_season
+          .map((n) => `${n.name.toLowerCase()} comes off ${fmtDate(n.window_open)}, planted this fall
+            — that one's its own kind of planning`)
+          .join(", ")}.</span>`;
+      }
+      glut.innerHTML = line;
     }
-    glut.innerHTML = line;
   }
+
+  const cal = $("#calendar-btn");
+  if (cal && windows.length) {
+    cal.classList.remove("hidden");
+    cal.onclick = (e) => {
+      e.preventDefault();
+      download("permaculture-harvest-window.ics", icsFor(windows, place));
+    };
+  }
+
+  const notes = $("#result-notes");
+  if (notes && j.notes && j.notes.length) {
+    notes.innerHTML = j.notes.map((n) => `<li>${n}</li>`).join("");
+    notes.parentElement.classList.remove("hidden");
+  }
+
   const disc = $("#result-disclaimer");
   if (disc) disc.textContent = j.concept_disclaimer;
 
   els.result.scrollIntoView({ block: "start", behavior: "smooth" });
 }
+
+/* ------------------------------------------------------------------ polling + submitting */
 
 async function poll(jobId) {
   try {
@@ -123,6 +272,10 @@ async function poll(jobId) {
       clearInterval(pollTimer);
       pollTimer = null;
       renderResult(j);
+      api("/api/track", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ event: "plan_result" })
+      }).catch(() => {});
       return;
     }
     if (j.state === "error") {
@@ -135,8 +288,7 @@ async function poll(jobId) {
       return;
     }
     setQueue({
-      position: j.position,
-      eta: j.eta_seconds,
+      position: j.position, eta: j.eta_seconds,
       message: j.message || "Waiting for the machine.",
       closed: j.reason === "forge_down"
     });
@@ -145,74 +297,158 @@ async function poll(jobId) {
   }
 }
 
+function payload() {
+  return {
+    images: photos,
+    zip: els.zip ? els.zip.value.trim() : "",
+    sun: els.sun ? els.sun.value : "full",
+    beds: {
+      type: els.bedsType ? els.bedsType.value : "raised",
+      count: els.bedsCount ? Number(els.bedsCount.value || 1) : 1
+    },
+    email: els.email ? els.email.value.trim() : ""
+  };
+}
+
 async function submit(event) {
   if (event) event.preventDefault();
-  if (!photoDataUrl) {
-    say("Pick a photo first.", true);
-    return;
-  }
+  if (!photos.length) return say("Pick a photo first.", true);
+  const zip = els.zip ? els.zip.value.replace(/\D/g, "") : "";
+  if (zip.length !== 5) return say("A five-digit zip code, please — that's what gives you local frost dates.", true);
+
   els.go.disabled = true;
   els.go.textContent = "Sending…";
   setQueue({ message: "Handing it to the machine…" });
 
+  let r;
+  let j;
   try {
-    const r = await fetch(apiUrl("/api/plan"), {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        image_data_url: photoDataUrl,
-        email: els.email ? els.email.value.trim() : "",
-        zip: els.zip ? els.zip.value.trim() : ""
-      })
+    r = await api("/api/plan", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload())
+    });
+    j = await r.json();
+  } catch {
+    if (els.queue) els.queue.classList.add("hidden");
+    say("Couldn't reach the machine. Check your connection and try again.", true);
+    els.go.disabled = false;
+    els.go.textContent = "Grow me a plan 🌱";
+    return;
+  }
+
+  if (r.status === 403 && (j.error === "email_required" || j.error === "week_used")) {
+    if (els.queue) els.queue.classList.add("hidden");
+    showAllowance(j.status);
+    say(j.message, j.error === "week_used");
+    els.go.disabled = false;
+    els.go.textContent = "Grow me a plan 🌱";
+    if (j.error === "email_required" && els.gate) {
+      els.gate.classList.remove("hidden");
+      els.gate.scrollIntoView({ block: "center", behavior: "smooth" });
+      if (els.gateEmail) els.gateEmail.focus();
+    }
+    return;
+  }
+
+  if (!r.ok) {
+    if (els.queue) els.queue.classList.add("hidden");
+    say(j.message || "Something went sideways.", true);
+    els.go.disabled = false;
+    els.go.textContent = "Grow me a plan 🌱";
+    return;
+  }
+
+  showAllowance(j.status);
+  if (j.notes && j.notes.length) say("Plan built. " + j.notes[0]);
+  els.go.textContent = "In the queue";
+  setQueue({ position: j.position, eta: j.eta_seconds, message: j.message || "Waiting for the machine." });
+  pollTimer = setInterval(() => poll(j.job_id), 2500);
+  poll(j.job_id);
+}
+
+/** The email that unlocks the weekly allowance, then tries the render again. */
+async function unlock(event) {
+  if (event) event.preventDefault();
+  const email = els.gateEmail ? els.gateEmail.value.trim() : "";
+  if (!email) {
+    if (els.gateStatus) els.gateStatus.textContent = "An email address, please.";
+    return;
+  }
+  els.gateBtn.disabled = true;
+  els.gateBtn.textContent = "Unlocking…";
+  try {
+    const r = await api("/api/email", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email, zip: els.zip ? els.zip.value.trim() : "", source: "gate" })
     });
     const j = await r.json();
     if (!r.ok) {
-      els.queue.classList.add("hidden");
-      say(j.message || "Something went sideways.", true);
-      els.go.disabled = false;
-      els.go.textContent = "Grow me a plan";
+      if (els.gateStatus) els.gateStatus.textContent = j.message || "That didn't take.";
+      els.gateBtn.disabled = false;
+      els.gateBtn.textContent = "Unlock five a week";
       return;
     }
-    els.go.textContent = "In the queue";
-    setQueue({ position: j.position, eta: j.eta_seconds, message: j.message || "Waiting for the machine." });
-    pollTimer = setInterval(() => poll(j.job_id), 2500);
-    poll(j.job_id);
+    els.gate.classList.add("hidden");
+    showAllowance(j.status);
+    say("Unlocked — five plans a week. Drawing yours now.");
+    submit();
   } catch {
-    say("Couldn't reach the machine. Check your connection and try again.", true);
-    els.go.disabled = false;
-    els.go.textContent = "Grow me a plan";
+    if (els.gateStatus) els.gateStatus.textContent = "Couldn't reach the server. Try again in a minute.";
+    els.gateBtn.disabled = false;
+    els.gateBtn.textContent = "Unlock five a week";
   }
 }
 
-function readFile(file) {
-  if (!file) return;
-  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
-    say("That isn't a JPEG, PNG or WebP — a photo straight off the phone is perfect.", true);
-    return;
-  }
-  if (file.size > 6 * 1024 * 1024) {
-    say("That photo is over 6 MB. Most phones can shrink it when they send it.", true);
-    return;
-  }
-  const fr = new FileReader();
-  fr.onload = () => {
-    photoDataUrl = String(fr.result);
-    if (els.thumb) {
-      els.thumb.src = photoDataUrl;
-      els.thumb.classList.remove("hidden");
+/* ------------------------------------------------------------------ photo picking */
+
+function readFiles(fileList) {
+  for (const file of Array.from(fileList || [])) {
+    if (photos.length >= MAX_PHOTOS) {
+      say(`${MAX_PHOTOS} photos is the limit — that's plenty to work from.`);
+      break;
     }
-    if (els.drop) {
-      const b = els.drop.querySelector("b");
-      if (b) b.textContent = file.name.length > 28 ? `${file.name.slice(0, 25)}…` : file.name;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) {
+      say(`${file.name} isn't a JPEG, PNG or WebP.`, true);
+      continue;
     }
-    els.go.disabled = false;
-    say("Ready. Add an email if you'd like it sent, then press the button.");
-  };
-  fr.readAsDataURL(file);
+    if (file.size > 6 * 1024 * 1024) {
+      say(`${file.name} is over 6 MB. Most phones can shrink it when they send it.`, true);
+      continue;
+    }
+    const fr = new FileReader();
+    fr.onload = () => {
+      photos.push(String(fr.result));
+      drawThumbs();
+      els.go.disabled = false;
+      say(`${photos.length} photo${photos.length === 1 ? "" : "s"} ready.${photos.length < MAX_PHOTOS ? " Add another angle if you like." : ""}`);
+    };
+    fr.readAsDataURL(file);
+  }
 }
+
+function drawThumbs() {
+  if (!els.thumbs) return;
+  els.thumbs.classList.toggle("hidden", photos.length === 0);
+  els.thumbs.innerHTML = photos.map((src, i) => `
+    <figure class="thumb">
+      <img src="${src}" alt="Photo ${i + 1}">
+      <button type="button" data-remove="${i}" title="Remove">×</button>
+    </figure>`).join("");
+  els.thumbs.querySelectorAll("[data-remove]").forEach((b) => {
+    b.onclick = () => {
+      photos.splice(Number(b.dataset.remove), 1);
+      drawThumbs();
+      if (!photos.length) els.go.disabled = true;
+    };
+  });
+}
+
+/* ------------------------------------------------------------------ wiring */
 
 if (els.form) els.form.addEventListener("submit", submit);
-if (els.file) els.file.addEventListener("change", (e) => readFile(e.target.files[0]));
+if (els.gateBtn) els.gateBtn.addEventListener("click", unlock);
+if (els.gate && els.gate.querySelector("form")) els.gate.querySelector("form").addEventListener("submit", unlock);
+if (els.file) els.file.addEventListener("change", (e) => readFiles(e.target.files));
 if (els.drop) {
   els.drop.addEventListener("click", () => els.file && els.file.click());
   ["dragenter", "dragover"].forEach((ev) =>
@@ -221,12 +457,13 @@ if (els.drop) {
     els.drop.addEventListener(ev, () => els.drop.classList.remove("hot")));
   els.drop.addEventListener("drop", (e) => {
     e.preventDefault();
-    if (e.dataTransfer && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+    readFiles(e.dataTransfer && e.dataTransfer.files);
   });
 }
 
-// The status line on the landing page reads the machine's real state, so the site never claims the
-// greenhouse is open when it isn't.
+// The status line reads the machine's real state, so the site never claims the greenhouse is open
+// when it isn't — and when the drawing machine isn't reachable from this address, it says so instead
+// of letting someone press a button that cannot work.
 const live = $("#live-status");
 if (live) {
   api("/api/health").then((r) => r.json()).then((h) => {
@@ -236,8 +473,6 @@ if (live) {
       : `Maker: ${engine} · resting — leave your email and it'll draw yours when it wakes`;
     live.classList.remove("hidden");
   }).catch(() => {
-    // Reached a copy of the site where the machine isn't on this origin yet. Say so, rather than
-    // letting someone press a button that silently can't work.
     live.textContent = "The machine that draws these isn't reachable from this address yet — "
       + "the drawing is done at home, not in a data centre.";
     live.classList.remove("hidden");
@@ -248,19 +483,21 @@ if (live) {
   });
 }
 
-// #demo — show a real, already-generated plan instead of asking for a photo first. The data in
-// assets/demo-plan.json is a genuine API response (same steps, same windows) with the image captured
-// from a real render, so what a visitor sees here is what they will get.
+// Allowance on arrival, so the price of the second plan is visible before anyone gets there.
+if (els.allowance) {
+  api("/api/me").then((r) => r.json()).then(showAllowance).catch(() => {});
+}
+
+// #demo — a real, already-generated plan instead of asking for a photo first. assets/demo-plan.json is a
+// genuine API response with the image captured from a real render, so what a visitor sees is what they'd get.
 if (location.hash === "#demo" && els.result) {
   fetch("assets/demo-plan.json")
     .then((r) => r.json())
     .then((j) => {
       renderResult({
         plan_image_data_url: j.plan_image_url,
-        steps: j.steps,
-        harvest_window: j.harvest_window,
-        glut: j.glut,
-        concept_disclaimer: j.concept_disclaimer
+        steps: j.steps, bed_plan: j.bed_plan, harvest_window: j.harvest_window,
+        glut: j.glut, frost: j.frost, notes: j.notes || [], concept_disclaimer: j.concept_disclaimer
       });
       const note = $("#result-demo-note");
       if (note) note.classList.remove("hidden");

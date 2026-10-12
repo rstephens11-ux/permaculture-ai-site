@@ -52,6 +52,28 @@ Alternates, if the main one wears out:
 > The drawing is a concept sketch. Not construction drawings, not a survey, and not a promise about what
 > will grow.
 
+## The gate (one free, then five a week)
+
+- Allowance line, free: **Your free plan — the first one's on us.**
+- Allowance line, unlocked: **N of 5 plans left this week.**
+- Allowance line, used up: **You've used this week's plans (5). They come back in N days.**
+- Gate heading: **That was your free one.**
+- Gate button: **Unlock five a week**
+- Gate body: Pop your email in and you get five plans a week. One email when The Preservation Run is
+  ready, and nothing else in between.
+- Server sentence when the gate blocks: *That was your free plan. Pop your email in and you'll get five a
+  week from here.* / *You've used all five for this week. They come back in a few days.*
+
+## The zip code
+
+- Field label: **your zip code — this is the one we need**
+- Why: We look up your real frost dates from NOAA's 1991-2020 climate records, and pick crops that will
+  finish in your season. Nothing is stored about where you are.
+- Refusal: A five-digit zip code, please — that's what gives you local frost dates.
+- Honest limit, when a ZIP resolves: *Estimated, measured at the nearest weather station, about N miles
+  away — a cold hollow or a hilltop can differ by a week.*
+- Honest limit, when it doesn't: *No frost record for that zip — the dates below are general, not local.*
+
 ## Things never to write
 
 - Any preserving time, temperature or pressure. Point at the USDA/NCHFP guide instead.

@@ -13,22 +13,59 @@ number is duplicated and two of them point at the wrong thing (a fence post, a b
 (turn a photo into something else) and the wrong setting for an *overlay* mode (change a little, keep
 everything else). At 1.0 the sampler is free to rebuild the whole frame, and it does.
 
-**The fix to test** (one GPU job, ~30 s):
+**MEASURED, 2026-10-12 — three real renders of the same photo, and the theory was wrong.**
 
-1. `denoise` 0.5–0.6 in the KSampler, keeping `switch: false` so the canvas still follows the photo.
-2. Harden the prompt with an explicit negative: *"The beds are empty — do not add plants, animals or
-   buildings that are not in the photograph. Do not change the fence, the trees or the horizon."*
-3. If numbers still drift, drop the labels from the image entirely and keep them in the step list
-   (labelled *the* drawing is nice-to-have; *the* numbers being right is not negotiable — a plan that
-   points at the wrong bed is worse than a plain redraw).
+| Attempt | Result | Time |
+|---|---|---|
+| `denoise 1.0`, original prompt | redrawn scene, invented crops, labels drifted | 24.3 s |
+| `denoise 0.55`, hardened prompt | **mush — an abstract texture. Unusable.** | 20.4 s |
+| `denoise 1.0`, hardened prompt (the "add nothing" negative) | still a redraw, still invented plants, numbers still wrong (1,2,3,5 — no 4) | 24.2 s |
 
-**Also worth measuring while you're in there:** 24.3 s per render at 1K is the real number; the queue's
-default estimate of 45 s is conservative and should be tuned to ~35 s with headroom.
+So denoise is **not** the lever, and the prompt cannot force "add nothing" either. The reason low denoise
+fails: in this graph the photo is **conditioning fed to the text encoder** (`images.image_1` → latent), not
+an initial latent for the sampler. Qwen-Image 2.1 expects full denoise with the reference as conditioning;
+starve it and you get mush. The img2img intuition does not transfer. The engine is therefore back on
+`denoise 1.0` with the measurement recorded above the constant so nobody re-tries it.
+
+**What will actually fix the drawing — and it is a design change, not a parameter:**
+
+1. **Stop asking the image model to place the numbers.** It will not obey, and every wrong label is a
+   promise the plan can't keep. Instead: let the model do the thing it is genuinely good at — a clean
+   illustrated *redraw of the same yard* (the current output proves it can hold the fence, the path, the
+   beds and the tree line) — and **draw the numbered markers ourselves** on a canvas, where we know the
+   crop order and control every position. Numbers then cannot drift, and step (1) is guaranteed to point
+   at (1).
+2. If the photo must stay photograph-like underneath, that is a **different graph shape**: encode the photo
+   with `VAEEncode`, feed *that* as `KSampler.latent_image` with a moderate denoise (~0.5), and skip the
+   text-encoder-latent path entirely. That is real img2img and is the honest way to "draw on my photo".
+   It is a new graph, ~30 lines, and needs one test render per setting.
+3. **Free either way:** the invented plants matter far less once the numbers are ours — a redrawn yard with
+   correct labels is a legitimate concept sketch, and the disclaimer already covers the rest.
+
+**Recommendation:** do (1) first — it is cheap, it makes the numbers correct by construction, and it
+removes the single worst failure. Do (2) only if a photograph-underneath is worth the extra work.
+
+**Also worth measuring while you're in there:** 20–24 s per render at 1K is the real number; the queue's
+default estimate of 45 s is conservative and should be tuned to ~30 s with headroom.
+
+## 1b. Hawaii and Puerto Rico resolve to "we don't know", on purpose
+
+The NOAA normals fetch covers the lower 48, Alaska, Hawaii and the Caribbean. Hawaii and Puerto Rico came
+back with no usable nearby station, so those ZIPs hit the honest guard: *"the nearest station in our
+records is 2,297 miles away, which is too far to be your weather."* That is the intended behaviour, not a
+bug — better than a confident wrong date. If those markets ever matter, the fetch filter is already
+written for them; the stations simply don't publish the 1991-2020 freeze normals we need.
 
 ## 2. Nothing can send email yet
 
-The list is collected in `leads.csv` and is inert. One Buttondown (or beehiiv/Kit) signup plus an API key
-clears it. Deliberately out of scope tonight; stated plainly on `/privacy.html`.
+The list is collected in `leads.csv` and is inert. This now matters more than it did: the site **asks for an
+email at the gate** ("that was your free plan"), which implies something will be sent. It won't, until an ESP
+is wired. One Buttondown (or beehiiv/Kit) signup plus an API key clears it, and the copy should stay honest
+until then. Stated plainly on `/privacy.html`.
+
+Also honest about the gate itself: with no confirmation email there is no verification, so it is an honour
+system with teeth against casual scraping and none against someone typing `a@a.com`. Fine for a free toy,
+not fine for anything paid.
 
 ## 3. The public path is documented but not exercised
 

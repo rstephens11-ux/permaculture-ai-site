@@ -2,6 +2,7 @@
 .env
 leads.csv
 leads.csv.*
+gate.json
 tests/fixtures/.test-leads.csv
 out/
 node_modules/

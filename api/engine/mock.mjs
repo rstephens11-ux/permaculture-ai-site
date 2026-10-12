@@ -6,14 +6,16 @@
 export function makeMockEngine() {
   return {
     name: "mock",
+    denoise: 0,
     async available() {
       return true;
     },
     async busy() {
       return false;
     },
-    async plan({ imageB64, mime }) {
-      return { imageB64, mime: mime || "image/jpeg", engine: "mock", gpu_seconds: 0 };
+    async plan({ imageB64, images, mime }) {
+      const first = (images && images[0]) || { b64: imageB64, mime };
+      return { imageB64: first.b64, mime: first.mime || "image/jpeg", engine: "mock", gpu_seconds: 0 };
     }
   };
 }

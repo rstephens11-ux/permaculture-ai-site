@@ -1,7 +1,13 @@
 # Permaculture AI — build report
 
-**Date:** 2026-10-10 · **Scope:** the whole site, built and verified locally. **Nothing was pushed,
-deployed, bought or registered.**
+> **Second pass, 2026-10-12:** the free tier, raised-bed sizing, required zip with real NOAA frost data,
+> multi-photo, download + calendar, the funnel counter and the ETA fix all landed. Tests went from 28 to 43
+> (all green) and preflight is green. The drawing-accuracy question is now *measured* rather than assumed —
+> three renders, and the answer was not what either of us expected. Details in §Drawing, and in BLOCKERS.md.
+
+**Date of first pass:** 2026-10-10 · **Scope:** the whole site, built and verified locally. **Nothing was
+pushed, deployed, bought or registered.** *(The site was published to GitHub Pages on 2026-10-12 at Ryan's
+request — see the publish note at the end.)*
 
 ## Verdict
 

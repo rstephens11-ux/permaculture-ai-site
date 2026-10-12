@@ -21,13 +21,33 @@ const CLIP = "qwen3vl_8b_int8_convrot.safetensors";
 const VAE = "qwen_image_2.1_vae_bf16.safetensors";
 const CLIENT_ID = "permaculture-ai-" + randomUUID().slice(0, 8);
 
-export function buildGraph({ imageName, prompt, seed = 0, steps = 25, resolution = 1024 }) {
-  return {
+// MEASURED, 2026-10-12 — read this before changing the number.
+//
+// The theory was that forge-lab's denoise 1.0 was the reason a "plan overlay" came back as a redraw of the
+// scene (empty beds sprouting tomatoes, a neighbour's house appearing). It isn't the reason. Three real
+// renders of the same photograph, 1K/25 steps on a 3090:
+//
+//   denoise 1.0, original prompt  -> a redrawn scene with invented crops; labels drifted      24.3s
+//   denoise 0.55, harder prompt   -> mushy abstract texture. Useless.                         20.4s
+//   denoise 1.0, harder prompt    -> still a redraw; still invented plants; labels still drift 24.2s
+//
+// Why low denoise fails here: in this graph the reference photo is CONDITIONING fed to the text encoder
+// (images.image_1 -> latent), not an initial latent for the sampler. Qwen-Image 2.1 expects to run at
+// full denoise with the reference as conditioning; starve it and you get mush. The img2img intuition
+// ("lower denoise preserves more of the input") does not apply to this graph.
+//
+// So: 1.0 stands, and the drawing's accuracy has to be fixed properly — see BLOCKERS.md. The short
+// version: stop asking the image model to draw the numbered beds (it will not obey "add nothing"), let it
+// do what it is good at, and draw the numbered markers ourselves where we control every position.
+const OVERLAY_DENOISE = Number(process.env.FORGE_DENOISE || 1.0);
+
+export function buildGraph({ imageName, imageNames, prompt, seed = 0, steps = 25, resolution = 1024, denoise = OVERLAY_DENOISE }) {
+  const refs = (imageNames && imageNames.length ? imageNames : [imageName]).filter(Boolean);
+  const graph = {
     "451": { class_type: "UNETLoader", inputs: { unet_name: UNET, weight_dtype: "default" } },
     "453": { class_type: "CLIPLoader", inputs: { clip_name: CLIP, type: "qwen_image" } },
     "454": { class_type: "VAELoader", inputs: { vae_name: VAE } },
     "469": { class_type: "QwenImage21Cache", inputs: { model: ["451", 0], device: "auto", dtype: "default" } },
-    "470": { class_type: "LoadImage", inputs: { image: imageName } },
     "474": {
       class_type: "TextEncodeQwenImage21",
       inputs: {
@@ -35,8 +55,6 @@ export function buildGraph({ imageName, prompt, seed = 0, steps = 25, resolution
         prompt,
         negative_prompt: "",
         resolution,
-        // dotted autogrow key — see trap 1 above. Do not "tidy" this into a dict.
-        "images.image_1": ["470", 0],
         vae: ["454", 0]
       }
     },
@@ -48,12 +66,23 @@ export function buildGraph({ imageName, prompt, seed = 0, steps = 25, resolution
       inputs: {
         model: ["469", 0], positive: ["474", 0], negative: ["474", 1],
         latent_image: ["468", 0], seed, steps, cfg: 1.0,
-        sampler_name: "euler", scheduler: "simple", denoise: 1.0
+        sampler_name: "euler", scheduler: "simple", denoise
       }
     },
     "457": { class_type: "VAEDecode", inputs: { samples: ["458", 0], vae: ["454", 0] } },
     "461": { class_type: "SaveImage", inputs: { images: ["457", 0], filename_prefix: "permaculture_ai" } }
   };
+
+  // One LoadImage per photo. The first is the canvas; the rest are extra context, which is worth having
+  // because a yard is not one photograph. Keys stay DOTTED (see trap 1 above) — a nested dict validates,
+  // runs, and silently ignores every reference.
+  refs.forEach((name, i) => {
+    const node = `load${i + 1}`;
+    graph[node] = { class_type: "LoadImage", inputs: { image: name } };
+    graph["474"].inputs[`images.image_${i + 1}`] = [node, 0];
+  });
+
+  return graph;
 }
 
 export function makeForgeEngine({
@@ -78,6 +107,7 @@ export function makeForgeEngine({
 
   return {
     name: "forge",
+    denoise: OVERLAY_DENOISE,
 
     /** Is the ComfyUI box answering at all? */
     async available() {
@@ -103,22 +133,31 @@ export function makeForgeEngine({
       }
     },
 
-    async plan({ imageB64, mime, prompt }) {
-      const bytes = Buffer.from(imageB64, "base64");
+    async plan({ imageB64, images, mime, prompt }) {
+      const photos = (images && images.length ? images : [{ b64: imageB64, mime }]).filter((p) => p && p.b64);
 
-      // 1. upload the photo into ComfyUI's input dir under a unique name
-      const name = `yard-${Date.now()}-${randomUUID().slice(0, 6)}.${mime === "image/png" ? "png" : "jpg"}`;
-      const form = new FormData();
-      form.append("image", new Blob([bytes], { type: mime }), name);
-      form.append("type", "input");
-      form.append("overwrite", "true");
-      const up = await fetch(`${base}/upload/image`, { method: "POST", body: form });
-      if (!up.ok) throw new Error(`upload failed: HTTP ${up.status}`);
-      const upJson = await up.json().catch(() => ({}));
-      const imageName = upJson.name || name;
+      // 1. upload each photo into ComfyUI's input dir under a unique name
+      const names = [];
+      for (let i = 0; i < photos.length; i++) {
+        const p = photos[i];
+        const ext = p.mime === "image/png" ? "png" : p.mime === "image/webp" ? "webp" : "jpg";
+        const name = `yard-${Date.now()}-${i}-${randomUUID().slice(0, 6)}.${ext}`;
+        const form = new FormData();
+        form.append("image", new Blob([Buffer.from(p.b64, "base64")], { type: p.mime }), name);
+        form.append("type", "input");
+        form.append("overwrite", "true");
+        const up = await fetch(`${base}/upload/image`, { method: "POST", body: form });
+        if (!up.ok) throw new Error(`upload failed: HTTP ${up.status}`);
+        const upJson = await up.json().catch(() => ({}));
+        names.push(upJson.name || name);
+      }
 
       // 2. submit
-      const graph = buildGraph({ imageName, prompt, seed: Math.floor(Math.random() * 1e9) });
+      const graph = buildGraph({
+        imageNames: names, prompt,
+        seed: Math.floor(Math.random() * 1e9),
+        denoise: this.denoise
+      });
       const sub = await fetch(`${base}/prompt`, {
         method: "POST",
         headers: { "content-type": "application/json" },
