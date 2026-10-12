@@ -188,16 +188,45 @@ test("with no beds yet, the plan tells you how to build them — sticks and all"
 });
 
 test("pest advice is graded, and the marigold claim is the honest one", async () => {
-  const api = mkApi();
-  const post = await render(api, null, { beds: { geometry: "coleman_30", count: 1 } });
-  const done = await settle(api, post.json.job_id);
-  const pests = done.json.phases.find((p) => p.key === "pests");
+  // A UNIT test of the pest phase with an explicit crop list. This used to run through the whole API and
+  // rely on the selection happening to pick a cucurbit — which stopped being true the moment the table
+  // went from 21 crops to 106. The assertion is about the ADVICE, so it should not depend on selection.
+  const { buildPhases } = await import("../api/phases.mjs");
+  const { cropById } = await import("../api/harvest.mjs");
+  const cropList = ["tomato", "zucchini", "winter-squash", "kale", "lettuce", "carrot"].map(cropById);
+  const phases = buildPhases({
+    cropList, geometry: "coleman_30", bedCount: 2, existing: "unsure", sun: "full",
+    frost: { known: true, last_spring_freeze: "04/27", first_fall_freeze: "10/18", frost_free_days: 174 },
+    year: 2027, windows: [], glut: null
+  });
+  const pests = phases.find((p) => p.key === "pests");
+  assert.ok(pests, "the pest phase exists");
   const text = JSON.stringify(pests);
   assert.match(text, /trap crop/i, "trap cropping is in there");
   assert.match(text, /Blue Hubbard/i);
   assert.match(text, /60–80%|trial data/i, "with the evidence behind it");
   assert.match(text, /not as a plant set beside the tomatoes/i, "and the marigold correction, not the folklore");
   assert.ok(pests.steps.some((s) => s.tag === "proven"), "claims carry a grade");
+});
+
+test("with a 106-crop table, the selection still picks a sane bed plan", async () => {
+  // The table tripled in one afternoon. The selection has to keep making sense: a handful of crops, all
+  // of which can actually finish here, no two of one family, and nothing permanent taking a bed slot.
+  const api = mkApi();
+  const post = await render(api, null, { zip: "04578", sun: "full", existing: "no", beds: { geometry: "coleman_30", count: 2 } });
+  const done = await settle(api, post.json.job_id);
+  const j = done.json;
+  assert.ok(j.crop_list.length >= 3 && j.crop_list.length <= 8, `picked ${j.crop_list.length} crops for two beds`);
+  const fams = j.crop_list.map((c) => c.family);
+  assert.equal(new Set(fams).size, fams.length, "no two crops of one family in a bed plan");
+  const PERMANENT = new Set(["perennial", "berry", "fruit-tree"]);
+  for (const c of j.crop_list) assert.ok(!PERMANENT.has(c.kind), `${c.id} is a permanent planting, not a bed crop`);
+  for (const b of j.bed_plan) for (const s of b.segments) {
+    assert.ok(s.no > 0 && s.print, `${s.name} has a number and a quantity`);
+  }
+  // and the season filter is doing its job against the real local season
+  const tooLong = j.harvest_window.filter((w) => w.known && w.fit === "no");
+  assert.equal(tooLong.length, 0, "nothing picked is impossible in this season");
 });
 
 test("up to three photos are accepted", async () => {

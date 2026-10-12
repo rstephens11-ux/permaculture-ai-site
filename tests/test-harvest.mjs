@@ -28,12 +28,29 @@ test("every crop row is sourced, sized and free of processing times", () => {
     assert.ok(c.id && c.name && c.label, `${c.id} has identity`);
     assert.ok(Array.isArray(c.days_to_maturity) && c.days_to_maturity[0] < c.days_to_maturity[1], `${c.id} range ordered`);
     assert.ok(typeof c.source === "string" && c.source.length > 20, `${c.id} cites a source`);
-    assert.ok(c.planting && ["plants", "row_feet"].includes(c.planting.unit), `${c.id} has a planting unit`);
+    // plants | row_feet are the BED units. A fruit tree is not a bed crop and says "trees"; lowbush
+    // blueberry is a sod patch and says "sod". Both are honest, and neither can reach the bed layout
+    // because permanent plantings are excluded by season — asserted separately in test-plan.mjs.
+    const UNITS = ["plants", "row_feet", "trees", "sod"];
+    assert.ok(c.planting && UNITS.includes(c.planting.unit), `${c.id} has a planting unit (${c.planting && c.planting.unit})`);
     assert.ok(Number.isInteger(c.planting.per_4x8) && c.planting.per_4x8 >= 0, `${c.id} has a 4x8 count`);
     assert.ok(typeof c.min_frost_free_days === "number", `${c.id} knows its shortest season`);
     assert.ok(["no", "part"].includes(c.shade), `${c.id} declares its shade tolerance`);
-    assert.ok(!/\b\d+\s*(minutes|psi|°|degrees)/i.test(c.method_notes),
+    // The rule is about PRESERVING, and the first draft of this assertion banned any number followed by
+    // a degree sign — which flagged 14 rows for things like "plant when the soil hits 65F" and "nights
+    // above 50F". Those are growing temperatures and they belong here. What must never appear is a
+    // processing instruction: a canning time, a pressure, a water-bath schedule, a storage temperature.
+    // Those live in the USDA/NCHFP guide, and the site says so.
+    assert.ok(!/\b\d+\s*(minutes|psi|hours?)\b/i.test(c.method_notes),
       `${c.id} must not carry a processing time — those live in the USDA/NCHFP guide`);
+    // A POINTER to the guide is exactly right ("the schedule is in the USDA/NCHFP guide"); the schedule
+    // itself is what must not be here. So the check is conditional on the row not being a pointer.
+    const preserving = /water bath|pressure canner|pressure cooker|sterilis|steriliz|processing schedule|canning (time|schedule)/i.test(c.method_notes);
+    const pointsAtTheGuide = /USDA|NCHFP|Complete Guide/i.test(c.method_notes);
+    assert.ok(!preserving || pointsAtTheGuide,
+      `${c.id} must not carry a preserving method — that is the USDA/NCHFP guide's job`);
+    assert.ok(!/\b(stored?|storage|cure[d]?|keep)\b[^.]{0,24}\b\d{2,3}\s*°?\s*F/i.test(c.method_notes),
+      `${c.id} must not carry a storage temperature — cite it from an extension source or leave the number out`);
   }
 });
 

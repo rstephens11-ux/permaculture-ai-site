@@ -99,9 +99,31 @@ console.log(`\nnew ids: ${rows.length}   already in the table: ${rows.filter((r)
 console.log(`kinds: ${[...new Set(rows.map((r) => r.kind))].sort().join(", ")}`);
 
 if (process.argv.includes("--merge") && !problems.length) {
-  const merged = (Array.isArray(existing) ? existing : existing.crops || []).concat(rows.filter((r) => !have.has(r.id)));
-  writeFileSync(join(ROOT, "api/crops.json"), JSON.stringify(merged, null, 2) + "\n");
-  console.log(`\nmerged: api/crops.json now holds ${merged.length} crops`);
+  // Normalisation the research turned up, applied once at the merge rather than leaving it to every
+  // consumer:
+  //
+  // family: the new allium rows came back as "Amaryllidaceae" (botanically the family; Allium is the
+  //   genus). The 21 rows already in the table say "Allium", and ROTATION GROUPS ON THIS STRING — so a
+  //   shallot would not have counted as related to garlic and could have been planted beside it. Matched
+  //   to the existing convention; the proper fix is to correct all of them at once, later.
+  // season: the new rows use warm/cool/overwinter/perennial. The existing rows use summer/fall as well,
+  //   and PLANT_OFFSET in api/harvest.mjs has been given a "warm" entry so nothing falls through to the
+  //   default offset by accident.
+  const fixed = rows.filter((r) => !have.has(r.id)).map((r) => {
+    const out = { ...r };
+    if (out.family === "Amaryllidaceae") out.family = "Allium";
+    return out;
+  });
+  // PRESERVE THE WRAPPER. api/crops.json is { _readme: [...], crops: [...] } and every consumer reads
+  // `.crops` — the first run of this merge wrote a bare array and broke all 76 tests at import. The
+  // readme block is documentation that belongs with the data, so it is carried over untouched.
+  const wrapper = Array.isArray(existing) ? { crops: existing } : existing;
+  const merged = (wrapper.crops || []).concat(fixed);
+  writeFileSync(join(ROOT, "api/crops.json"),
+    JSON.stringify(Object.assign({}, wrapper, { crops: merged }), null, 2) + "\n");
+  const renamed = rows.filter((r) => r.family === "Amaryllidaceae").length;
+  console.log(`\nmerged: api/crops.json now holds ${merged.length} crops (${fixed.length} new)`);
+  console.log(`normalised: ${renamed} allium rows family Amaryllidaceae -> Allium (rotation groups on this)`);
 } else if (process.argv.includes("--merge")) {
   console.log("\nNOT merged — fix the problems first");
 }

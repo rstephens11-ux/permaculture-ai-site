@@ -43,6 +43,7 @@ function ymd(d) {
 const PLANT_OFFSET = {
   spring: 0,
   cool: 7,
+  warm: 14,        // the researched rows say warm where the original 21 said summer; same window
   summer: 14,
   fall: 90,
   overwinter: 150, // garlic: planted in October for next July

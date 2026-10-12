@@ -71,7 +71,17 @@ export function buildPlan(opts = {}) {
   const scope = { ...opts, frost, year };
 
   // --- candidates -------------------------------------------------------------------------------
-  const all = crops().filter((c) => sunAllows(c, sun, geometry));
+  // Legal rather than horticultural, and it belongs here rather than in a data file's notes: Maine
+  // prohibits currants and gooseberries in the counties with white pine blister rust (Lincoln County,
+  // where this was built, is one). We have no county lookup, so the whole state is excluded and the plan
+  // says why. Over-broad is the safe side of a legal restriction.
+  const RIBES = new Set(["red-currant", "black-currant", "gooseberry"]);
+  const inMaine = /,\s*ME\b/i.test((frost && frost.place) || "");
+  const blocked = (c) => inMaine && RIBES.has(c.id);
+  const all = crops().filter((c) => sunAllows(c, sun, geometry) && !blocked(c));
+  if (inMaine && crops().some((c) => RIBES.has(c.id))) {
+    notes.push("Currants and gooseberries are left out on purpose: Maine prohibits growing them in counties with white pine blister rust, and we can't tell which county you're in from a zip alone. Check with your extension office if you're elsewhere in the state.");
+  }
   const withWindows = windowsFor(all.map((c) => c.id), scope);
   const info = Object.fromEntries(withWindows.map((w) => [w.crop, w]));
   const fitRank = (c) => (info[c.id]?.fit === "good" ? 0 : info[c.id]?.fit === "stretch" ? 1 : 2);
