@@ -144,7 +144,10 @@ test("the finished job carries the phased season plan, the counts, the local fro
 
   // The numbering that ties the drawing to the steps: one running number per crop run, in bed order.
   const nos = j.bed_plan.flatMap((b) => b.segments.map((s) => s.no));
-  assert.deepEqual(nos, [1, 2, 3, 4, 5, 6], "every crop run is numbered 1..n in bed order");
+  assert.deepEqual(nos, nos.map((_, i) => i + 1), "every crop run is numbered 1..n in bed order");
+  // and the printed list carries the same numbers in the same order as the beds
+  assert.deepEqual(j.crop_list.map((c) => c.no), nos, "the crop list is numbered in bed order");
+  assert.deepEqual(j.crop_list.map((c) => c.id), j.bed_plan.flatMap((b) => b.segments.map((s) => s.crop)), "the crop list is the beds, in order");
   for (const b of j.bed_plan) {
     for (const s of b.segments) {
       assert.ok(b.text.includes(`${s.no}. ${s.name}`), `bed text carries the same number for ${s.name}`);
@@ -220,6 +223,15 @@ test("the plantings that never enter a bed get their own section, and the law is
   // Not one of them may take a bed slot — that is the whole reason the section exists.
   const bedIds = new Set(j.bed_plan.flatMap((b) => b.segments.map((s) => s.crop)));
   for (const x of p.plantings) assert.ok(!bedIds.has(x.id), `${x.id} must not take a bed slot`);
+
+  // No crop may be planted twice in one plan. Garlic could arrive both as a staple and as the calendar
+  // anchor, which put two garlics in every bed list; ids are the check that catches it.
+  const allSegs = j.bed_plan.flatMap((b) => b.segments.map((s) => s.crop));
+  assert.equal(new Set(allSegs).size, allSegs.length, `a crop is planted twice: ${allSegs.join(", ")}`);
+  const cropIds = j.crop_list.map((c) => (typeof c === "string" ? c : c.id));
+  assert.equal(new Set(cropIds).size, cropIds.length, `crop_list repeats a crop: ${cropIds.join(", ")}`);
+  // and the wheel turned: one Allium at most, garlic winning the single slot
+  assert.ok(cropIds.filter((id) => ["garlic", "onion", "leek", "shallot", "scallion", "chives", "walking-onion"].includes(id)).length === 1, "exactly one Allium");
 
   // Each carries the facts that make it plantable: spacing, years to crop, and where it goes.
   for (const x of p.plantings) {

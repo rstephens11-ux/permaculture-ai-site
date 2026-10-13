@@ -92,45 +92,75 @@ export function buildPlan(opts = {}) {
     return (info[a.id]?.window_open || "").localeCompare(info[b.id]?.window_open || "");
   });
 
+  // --- what to grow, in order of what a household actually eats ------------------------------------
+  // With 21 crops "take what fits the season" was fine. With 106 in the table it produced an arbitrary
+  // five — whatever happened to sort first. So the list is ranked by what fills a plate and a pantry in
+  // this climate, and the season filter then decides which of those are actually possible. Ranking is
+  // horticultural and culinary, not statistical, and it is meant to be argued with.
+  // Garlic leads because the single Allium slot is contested — onion, leek, shallot, scallion and chives
+  // all want it — and garlic is the crop the calendar is built around (planted in October, harvested the
+  // following July). Everything after it is ranked by what fills a plate.
+  const STAPLES = [
+    "garlic", "tomato", "potato", "onion", "carrot", "bush-bean", "pea", "lettuce",
+    "kale", "zucchini", "winter-squash", "cucumber", "beet", "pepper", "spinach",
+    "swiss-chard", "sweet-corn", "pole-bean", "broccoli", "cabbage", "leek", "radish",
+    "cherry-tomato", "arugula", "summer-squash", "pumpkin", "turnip", "parsnip", "chard", "mustard-greens"
+  ];
+  const stapleRank = new Map(STAPLES.map((id, i) => [id, i]));
+
+  // How a SHARED bed is divided. Equal shares is how tomato ended up with 4 ft and 2 plants while the
+  // plan called it the glut crop — so the crops people want volume of get a bigger share, and tomato
+  // most of all, because it is the one the preservation half of this product exists for.
+  const SHARE = new Map([["tomato", 1.8], ["potato", 1.6], ["winter-squash", 1.45], ["sweet-corn", 1.45], ["zucchini", 1.3]]);
+  const weightOf = (id) => SHARE.get(id) || (stapleRank.has(id) ? 1.15 : 1);
+
   // --- selection, with rotation held back from spending two slots on one family -------------------
   const chosen = [];
   const families = new Set();
   const push = (c) => { chosen.push(c); families.add(familyOf(c)); };
 
-  const tomato = info.tomato?.fit === "good" && sunAllows(cropById("tomato"), sun, geometry) ? cropById("tomato") : null;
-  if (tomato) push(tomato);
+  // more beds, more variety — a four-bed garden shouldn't be five crops wide
+  const target = Math.max(4, Math.min(8, Math.round(bedCount * 2.5)));
+  const available = new Map(ordered.map((c) => [c.id, c]));
+  const inSeason = ordered.filter((c) => !["overwinter", "perennial"].includes(c.season));
 
-  const inSeason = ordered.filter((c) => !["overwinter", "perennial"].includes(c.season) && !chosen.includes(c));
-  const target = 5;
-  const spread = (list) => {
-    for (const c of list) {
-      if (chosen.length >= target) break;
-      if (chosen.includes(c) || families.has(familyOf(c))) continue;
-      push(c);
-    }
+  const take = (c) => {
+    if (!c || chosen.length >= target) return false;
+    if (chosen.includes(c) || families.has(familyOf(c))) return false;
+    push(c);
+    return true;
   };
-  // pass 1: good fits, spread across the season; pass 2: allow a repeated family; pass 3: backfill
-  const good = inSeason.filter((c) => info[c.id]?.fit === "good");
-  const pool = good.length >= 3 ? good : inSeason;
-  const stride = Math.max(1, Math.floor(pool.length / target));
-  spread(pool.filter((_, i) => i % stride === 0));
-  spread(pool);
+
+  // pass 1: the staples, in rank order, as many as the season allows and the family rule permits
+  for (const id of STAPLES) take(available.get(id));
+  // pass 2: fill the rest with the best seasonal fits, spread across the season so it doesn't all land
+  // at once — stride through the list rather than take the first few
+  const rest = inSeason.filter((c) => !chosen.includes(c));
+  const good = rest.filter((c) => info[c.id]?.fit === "good");
+  const pool = good.length >= 3 ? good : rest;
+  const stride = Math.max(1, Math.floor(pool.length / Math.max(1, target - chosen.length)));
+  pool.filter((_, i) => i % stride === 0).forEach(take);
+  pool.forEach(take);
 
   const stretchCount = chosen.filter((c) => info[c.id]?.fit === "stretch").length;
   if (stretchCount) notes.push(`${stretchCount} of these are a stretch in your season (about ${season} frost-free days) — start those inside, or use a shorter-season variety.`);
   if (sun === "shade") notes.push("Deep shade grows leaves and not much else. Nothing here claims to fruit in shade, so the list is short and leafy on purpose.");
   if (!frost.known) notes.push("We don't have a frost record for that zip, so nothing here is filtered by your season — check your own last-frost date before planting anything tender.");
 
-  // Garlic is the calendar anchor, planted in the fall for the following July.
-  const includeGarlic = geometry !== "containers";
-  const ids = chosen.map((c) => c.id).concat(includeGarlic ? ["garlic"] : []);
-  const cropList = chosen.concat(includeGarlic ? [cropById("garlic")] : []);
+  // Garlic is the calendar anchor: planted in the fall, harvested the following July, so its planting and
+  // harvest both fall outside the season window. It is added here only if the staples pass didn't already
+  // pick it — it can now arrive by either path, and adding it blind put TWO garlics in every plan (real
+  // bug, caught by reading the bed list rather than by a test).
+  const includeGarlic = geometry !== "containers" && !chosen.some((c) => c.id === "garlic");
+  const cropList = includeGarlic ? chosen.concat([cropById("garlic")]) : chosen;
+  // ids is derived from the same list, so the plan can't quote a crop it doesn't plant
+  const ids = cropList.map((c) => c.id);
 
   // --- counts and layout ------------------------------------------------------------------------
   // The layout is the single source of the numbers: the drawing, the bed-by-bed text and the summary
   // list all read from it, so the picture and the words cannot disagree.
   const rotation = rotationCheck(cropList);
-  const layout = assignBeds(cropList, { geometry, bedCount });
+  const layout = assignBeds(cropList, { geometry, bedCount, weightOf });
   // Every crop run gets a NUMBER, in bed order, and that number is what goes on the drawing, in the bed
   // list and in the phase steps. Ryan's ask: "they should label accordingly to the step plans". One
   // running number, assigned here, is the only way the three can't disagree.
@@ -149,6 +179,14 @@ export function buildPlan(opts = {}) {
       }))
     };
   });
+  // The crop list is read off the LAYOUT, in bed order, carrying the same numbers as the drawing and the
+  // steps. Built from the selection list instead, it silently missed garlic (added after selection as the
+  // calendar anchor) and disagreed with the numbering whenever the two orders differed.
+  const crop_list = bedPlan.flatMap((b) => b.segments.map((s) => s.crop)).map((id, i) => {
+    const c = cropById(id);
+    return { no: i + 1, id: c.id, name: c.name, family: familyOf(c), method: c.method, cold: !!c.cold };
+  });
+
   const windows = windowsFor(ids, scope);
   const glut = glutWindow(ids, scope);
 
@@ -178,7 +216,7 @@ export function buildPlan(opts = {}) {
 
   return {
     crops: ids,
-    crop_list: chosen.map((c) => ({ id: c.id, name: c.name, family: familyOf(c), method: c.method, cold: !!c.cold })),
+    crop_list,
     phases,
     bed_plan: bedPlan,
     layout,

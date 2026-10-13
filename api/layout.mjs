@@ -43,7 +43,14 @@ const TALL = new Set(["tomato", "cherry-tomato", "cucumber", "pea", "sweet-corn"
  *
  * @returns {{beds: object[], segmentsByBed: object, notes: string[]}}
  */
-export function assignBeds(cropList, { geometry = "coleman_30", bedCount = 1 } = {}) {
+export function assignBeds(cropList, { geometry = "coleman_30", bedCount = 1, weightOf = null } = {}) {
+  // `weightOf` decides how a SHARED bed is divided. Without it every crop in a bed gets an equal share,
+  // which is how tomatoes ended up with 4 ft and 2 plants while the plan called them the glut crop.
+  // The caller passes a weight per crop id; the split is proportional to it.
+  const weight = (id) => {
+    const w = weightOf && weightOf(id);
+    return typeof w === "number" && w > 0 ? w : 1;
+  };
   const g = GEOMETRIES[geometry] || GEOMETRIES.coleman_30;
   const notes = [];
   const beds = [];
@@ -79,12 +86,13 @@ export function assignBeds(cropList, { geometry = "coleman_30", bedCount = 1 } =
     bedList[target].segments.push({ crop: crop.id, name: crop.name, family: fam });
   }
 
-  // Split each bed's length between its crops, in half-foot steps, minimum 2 ft.
+  // Split each bed's length between its crops, in half-foot steps, minimum 2 ft, PROPORTIONAL to weight.
   for (const bed of bedList) {
-    const n = bed.segments.length || 1;
-    const share = Math.max(2, Math.floor((bed.length_ft / n) * 2) / 2);
+    const total = bed.segments.reduce((t, s) => t + weight(s.crop), 0) || 1;
     let used = 0;
     bed.segments.forEach((seg, i) => {
+      const ideal = (bed.length_ft * weight(seg.crop)) / total;
+      const share = Math.max(2, Math.floor(ideal * 2) / 2);
       const len = i === bed.segments.length - 1 ? Math.max(1, bed.length_ft - used) : share;
       seg.length_ft = Math.max(1, Math.min(len, bed.length_ft - used));
       used += seg.length_ft;

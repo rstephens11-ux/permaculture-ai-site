@@ -5,8 +5,10 @@
 // won't tell you a page is good, but they will tell you a picture quietly disappeared.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
+import { join } from "node:path";
 
+const ROOT = new URL("..", import.meta.url).pathname;
 const page = (f) => readFileSync(new URL(`../${f}`, import.meta.url), "utf8");
 const js = () => page("assets/js/tool.js");
 
@@ -56,11 +58,23 @@ test("the drawing code rasterises the layout for download, client-side", () => {
   assert.match(src, /dataset\.demoPhoto/, "the demo has a photo for the overlay to sit on");
 });
 
-test("the home page shows the photo, the illustration and the plan", () => {
+test("the home page shows the photo, the plan on the photo, and the plan", () => {
   const html = page("index.html");
   assert.match(html, /assets\/img\/sample-before\.jpg/);
-  assert.match(html, /assets\/img\/sample-overlay\.png/, "the plan-over-photo drawing");
+  assert.match(html, /assets\/img\/sample-overlay\.jpg/, "the plan drawn onto the photo");
   assert.match(html, /assets\/img\/sample-diagram\.png/, "and the to-scale layout");
+  // The sample must be the CURRENT beds-mode drawing, not the retired plan-sheet one, and it must not be a
+  // 5 MB PNG again — the old one was, on the home page, on a phone.
+  assert.ok(!/sample-overlay\.png/.test(html), "the stale plan-sheet sample is gone");
+  for (const f of ["index.html", "plan.html"]) {
+    const h = page(f);
+    const imgs = [...h.matchAll(/<img[^>]+src="(assets\/img\/[^"]+)"/g)].map((m) => m[1]);
+    for (const src of imgs) {
+      const size = existsSync(join(ROOT, src)) ? statSync(join(ROOT, src)).size : 0;
+      assert.ok(size > 0, `${f}: ${src} exists`);
+      assert.ok(size < 700 * 1024, `${f}: ${src} is ${Math.round(size / 1024)} KB — too heavy for a page`);
+    }
+  }
 });
 
 test("no page still calls it a numbered plan or promises five steps", () => {
