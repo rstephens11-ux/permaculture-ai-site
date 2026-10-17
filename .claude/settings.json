@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Bash(node --test tests/*)",
+      "Bash(node --test tests/*.mjs)",
+      "Bash(bash deploy/preflight.sh)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(node --check *)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(git commit*)",
+      "Bash(node tools/forge-smoke.mjs*)",
+      "Bash(PLANTS=yes node tools/plants-sheet.mjs*)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)",
+      "Bash(gh repo delete*)",
+      "Bash(gh release*)"
+    ]
+  }
+}
